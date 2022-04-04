@@ -1,6 +1,6 @@
 package DTO;
 
-import Engine.ABSsystem.Loan;
+import Engine.Loan;
 
 import java.util.ArrayList;
 import java.util.SortedMap;

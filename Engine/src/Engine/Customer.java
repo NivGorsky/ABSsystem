@@ -1,4 +1,4 @@
-package Engine.ABSsystem;
+package Engine;
 
 import java.util.ArrayList;
 
@@ -8,12 +8,12 @@ public class Customer {
 
     private ArrayList<Loan> loansAsBorrower;
     private ArrayList<Loan> loansAsLender;
-    private Engine.ABSsystem.Account account;
+    private Account account;
 
     public Customer (String custName, double balance)
     {
         this.name = custName;
-        this.account = new Engine.ABSsystem.Account(balance);
+        this.account = new Account(balance);
     }
 
     public String getName() { return name; }
