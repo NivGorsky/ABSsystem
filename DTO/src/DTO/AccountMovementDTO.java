@@ -28,8 +28,8 @@ public class AccountMovementDTO {
             movement = "withdraw";
         }
 
-        return "ABSsystem.Account Movement:\n" +
-                "Yaz:" + yaz + "\n" +
+        return "Account Movement:\n" +
+                "Executed on yaz:" + yaz + "\n" +
                 "Amount:" + amount + "\n" +
                 "Movement Kind:" + movement + "\n" +
                 "The balance before the movement:" + balanceBefore + "\n" +

@@ -5,12 +5,12 @@ import Engine.PaymentsDB.*;
 
 public class LoanPaymentsData {
 
+    public enum PaymentType{
+        UNPAID,
+        PAID,
+        EXPIRED
+    }
     public class Payment {
-        public enum PaymentType{
-            UNPAYED,
-            PAYED,
-            EXPIRED
-        }
 
         private PaymentType paymentType;
         private final int scheduledYaz;
@@ -37,8 +37,8 @@ public class LoanPaymentsData {
         public double getInterestPartOfThePayment() {
             return InterestPartOfThePayment;
         }
-        public boolean isPayed() {
-            return this.paymentType == PaymentType.PAYED;
+        public boolean isPaid() {
+            return this.paymentType == PaymentType.PAID;
         }
         public String getBorrowerName(){return this.borrowerName;}
         public PaymentType getPaymentType(){return this.paymentType;}
@@ -52,13 +52,14 @@ public class LoanPaymentsData {
         public void setInterestPartOfThePayment(double interestPartOfThePayment) {
             this.InterestPartOfThePayment = interestPartOfThePayment;
         }
-        public void setPayed(boolean payed) {
-            this.paymentType = PaymentType.PAYED;
+        public void setPaid(boolean payed) {
+            this.paymentType = PaymentType.PAID;
         }
         public void setPaymentType(PaymentType newType){this.paymentType = newType;}
 
         public int compare(LoanPaymentsData.Payment p1, LoanPaymentsData.Payment p2) { return (p1.scheduledYaz - p2.scheduledYaz); }
     }
+
     private final Engine.Loan containingLoan;
     private final LinkedList<PaymentsDB> paymentsDataBase;
 
@@ -82,8 +83,8 @@ public class LoanPaymentsData {
         }
     }
 
-    private Payment createNewUnpayedPayment(int scheduledYazOfPayment, double loanPartReturnedByBorrowerEveryPaymentTime, double interestPartReturnedByBorrowerEveryPaymentTime, String borrowerName){
-        Payment p = new Payment(scheduledYazOfPayment, loanPartReturnedByBorrowerEveryPaymentTime, interestPartReturnedByBorrowerEveryPaymentTime, borrowerName, Payment.PaymentType.UNPAYED);
+    private Payment createNewUnpaidPayment(int scheduledYazOfPayment, double loanPartReturnedByBorrowerEveryPaymentTime, double interestPartReturnedByBorrowerEveryPaymentTime, String borrowerName){
+        Payment p = new Payment(scheduledYazOfPayment, loanPartReturnedByBorrowerEveryPaymentTime, interestPartReturnedByBorrowerEveryPaymentTime, borrowerName, Payment.PaymentType.UNPAID);
 
         return p;
     }
@@ -96,7 +97,7 @@ public class LoanPaymentsData {
         int yazToSetForPayment = containingLoan.getActivationYaz();
 
         for (int i = 0; i < numberOfPayments; i++) {
-            Payment p = createNewUnpayedPayment(yazToSetForPayment, loanPartOfEachPayment, interestPartOfEachPayment, containingLoan.getBorrowerName());
+            Payment p = createNewUnpaidPayment(yazToSetForPayment, loanPartOfEachPayment, interestPartOfEachPayment, containingLoan.getBorrowerName());
             addNewPaymentToDataBase(p);
         }
     }

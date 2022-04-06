@@ -16,8 +16,6 @@ public class ABSsystem implements MainSystem {
     public ABSsystem()
     {
         systemTimeline = new Timeline();
-        name2customer = new Map<String, Customer>();
-        status2loan = new Map<Loan.LoanStatus, Loan>();
     }
 
     public int getCurrYaz() { return systemTimeline.getCurrentYaz(); }
@@ -41,8 +39,7 @@ public class ABSsystem implements MainSystem {
 
             for(Loan l : status2loan.values())
             {
-                LoanDTO currLoan = new LoanDTO(l.getLoanId(), l.getBorrowerName(), l.getInitialAmount(),
-                        l.getMaxYazToPay(), l.getInterestPerPaymentSetByBorrowerInPercents(), l.getPaymentRateInYaz(), l.getCategory(), l.getStatus(), l.getLendersDetails());
+                LoanDTO currLoan = createLoanDTO(l);
 
                 switch (l.getStatus())
                 {
@@ -100,6 +97,24 @@ public class ABSsystem implements MainSystem {
     @Override
     public void moveTimeline()
     {
+
+    }
+
+    public LoanDTO createLoanDTO(Loan l)
+    {
+        LoanDTO loan = new LoanDTO(l.getLoanId(), l.getBorrowerName(), l.getInitialAmount(),
+                l.getMaxYazToPay(), l.getInterestPerPaymentSetByBorrowerInPercents(), l.getPaymentRateInYaz(),
+                l.getStatus().toString(), l.getCategory().toString());
+
+        for(Loan.LenderDetails ld : l.getLendersDetails())
+        {
+            loan.addToLendersNameAndAmount(ld.lender.getName(), ld.lendersAmount);
+        }
+
+
+
+
+
 
     }
 

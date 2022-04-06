@@ -6,11 +6,11 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 public class ExpiredPaymentsByYaz implements PaymentsDB {
-    private final LoanPaymentsData.Payment.PaymentType dbPaymentsType;
+    private final LoanPaymentsData.PaymentType dbPaymentsType;
     private SortedMap<Integer, LoanPaymentsData.Payment> db;
 
     public ExpiredPaymentsByYaz(){
-        dbPaymentsType = LoanPaymentsData.Payment.PaymentType.EXPIRED;
+        dbPaymentsType = LoanPaymentsData.PaymentType.EXPIRED;
         db = new TreeMap<Integer, LoanPaymentsData.Payment>();
     }
 
@@ -39,7 +39,7 @@ public class ExpiredPaymentsByYaz implements PaymentsDB {
     }
 
     @Override
-    public LoanPaymentsData.Payment.PaymentType getPaymentType(){
+    public LoanPaymentsData.PaymentType getPaymentType(){
         return this.dbPaymentsType;
     }
 }

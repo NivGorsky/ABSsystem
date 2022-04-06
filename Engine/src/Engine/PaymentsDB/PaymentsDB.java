@@ -5,5 +5,5 @@ public interface PaymentsDB {
     public void addNewPayment(LoanPaymentsData.Payment p);
     public void clearAll();
     public void removePaymentForSpecificYaz(int yaz);
-    public LoanPaymentsData.Payment.PaymentType getPaymentType();
+    public LoanPaymentsData.PaymentType getPaymentType();
 }

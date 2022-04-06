@@ -4,11 +4,11 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 public class UnpayedPaymentsByYaz implements PaymentsDB {
-    private final LoanPaymentsData.Payment.PaymentType dbPaymentsType;
+    private final LoanPaymentsData.PaymentType dbPaymentsType;
     private SortedMap<Integer, LoanPaymentsData.Payment> db;
 
     public UnpayedPaymentsByYaz(){
-        dbPaymentsType = LoanPaymentsData.Payment.PaymentType.UNPAYED;
+        dbPaymentsType = LoanPaymentsData.PaymentType.UNPAID;
         db = new TreeMap<Integer, LoanPaymentsData.Payment>();
     }
 
@@ -37,7 +37,7 @@ public class UnpayedPaymentsByYaz implements PaymentsDB {
     }
 
     @Override
-    public LoanPaymentsData.Payment.PaymentType getPaymentType(){
+    public LoanPaymentsData.PaymentType getPaymentType(){
         return this.dbPaymentsType;
     }
 }

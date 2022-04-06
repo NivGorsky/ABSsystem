@@ -29,13 +29,14 @@ public class Loan {
     private final double initialAmount;
     private final String borrowerName;
     private final double interestPerPaymentSetByBorrowerInPercents;
+    private final double totalInterestForLoan;
     private LoanStatus status;
 
     //payments data
     private LoanPaymentsData paymentsData;
     private final int paymentRateInYaz;
-    private double interestPayed;
-    private double amountPayed;
+    private double interestPaid;
+    private double amountPaid;
     private double debt;
 
     //time-line data
@@ -47,7 +48,7 @@ public class Loan {
     //loan's lenders' data
     private LinkedList<LenderDetails> lendersBelongToLoan;
     private double loanPercentageTakenByLenders;
-    private double loanAmountfinancedByLenders;
+    private double loanAmountFinancedByLenders;
 
     public Loan(String loanName, String borrowerName, double originalLoanAmount, int yaz, int paymentRateInYaz, double interestPercentPerPayment, LoanCategory category)
     {
@@ -59,13 +60,14 @@ public class Loan {
         this.initialAmount = originalLoanAmount;
         this.borrowerName = borrowerName;
         this.interestPerPaymentSetByBorrowerInPercents = interestPercentPerPayment;
+        this.totalInterestForLoan = (1+(interestPerPaymentSetByBorrowerInPercents/100))*initialAmount;
         this.setLoanStatus(LoanStatus.NEW);
 
         //init loan's payments data
         this.paymentsData = new LoanPaymentsData(this);
         this.paymentRateInYaz = paymentRateInYaz;
-        this.interestPayed = 0;
-        this.amountPayed = 0;
+        this.interestPaid = 0;
+        this.amountPaid = 0;
         this.debt = 0;
 
         //init time-line data
@@ -77,7 +79,7 @@ public class Loan {
         //init loan's lenders data
         this.lendersBelongToLoan = new LinkedList<LenderDetails>();
         this.loanPercentageTakenByLenders = 0;
-        this.loanAmountfinancedByLenders = 0;
+        this.loanAmountFinancedByLenders = 0;
     }
 
     //getters
@@ -106,26 +108,22 @@ public class Loan {
     public int getYazRemainingToPay() {
         return yazRemainingToPay;
     }
-    public double getInterestPayed() {
-        return interestPayed;
+    public double getInterestPaid() {
+        return interestPaid;
     }
-    public double getAmountPayed() {
-        return amountPayed;
+    public double getAmountPaid() {
+        return amountPaid;
     }
     public LoanStatus getStatus() {
         return status;
-    }
-    public SortedMap<Integer, Payment> getUnpayedPayments() {
-        return unpayedPayments;
-    }
-    public SortedMap<Integer, Payment> getPayedPayments() {
-        return payedPayments;
     }
     public int getActivationYaz() {
         return activationYaz;
     }
     public int getFinishYaz() { return finishYaz; }
     public double getDebt() { return debt; }
+    public double getTotalInterestForLoan() { return totalInterestForLoan; }
+
 
     //setters
     public void setLoanStatus(Loan.LoanStatus newStatus){
@@ -159,13 +157,13 @@ public class Loan {
         newLenderDetails.lendersPartOfLoanInPercent = lendersPartOfLoanAmount / this.initialAmount;
         this.lendersBelongToLoan.add(newLenderDetails);
         this.loanPercentageTakenByLenders += newLenderDetails.lendersPartOfLoanInPercent;
-        this.loanAmountfinancedByLenders += newLenderDetails.lendersAmount;
+        this.loanAmountFinancedByLenders += newLenderDetails.lendersAmount;
     }
 
     public boolean isLoanReadyToBeActive(){
         boolean result = false;
 
-        if (this.loanAmountfinancedByLenders == this.initialAmount && this.loanPercentageTakenByLenders == 100){
+        if (this.loanAmountFinancedByLenders == this.initialAmount && this.loanPercentageTakenByLenders == 100){
             result = true;
         }
 
