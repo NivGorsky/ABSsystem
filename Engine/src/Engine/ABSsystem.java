@@ -21,7 +21,11 @@ public class ABSsystem implements MainSystem, SystemService{
     public int getCurrYaz() { return systemTimeline.getCurrentYaz(); }
 
     @Override
-    public Customer getCustomerByName(String name){return name2customer.get(name);}
+    public Object getCustomersNames()
+    {
+        return name2customer.keySet().toArray();
+    }
+
 
     @Override
     public void loadXML() //TODO
@@ -86,9 +90,8 @@ public class ABSsystem implements MainSystem, SystemService{
     }
 
     @Override
-    public void assignLoansToLender() {
-
-
+    public void assignLoansToLender(LoanPlacingDTO loanPlacingDTO){
+        LoanPlacing.LoanPlacementStatus result = LoanPlacing.placeToLoans(loanPlacingDTO, this.loans, this);
     }
 
     @Override
@@ -116,18 +119,16 @@ public class ABSsystem implements MainSystem, SystemService{
     }
 
     //system service interface
-    @Override
-    public Object getCustomersNames()
-    {
-        return name2customer.keySet().toArray();
-    }
+
 
     @Override
     public void moveMoneyBetweenAccounts(Account accountToSubtract, Account accountToAdd, double amount){
-        accountToSubtract.substructFromBalance(); // singleton getCurrentYazOfSystem
-        accountToAdd.addToBalance();
-
+        accountToSubtract.substructFromBalance(this.getCurrYaz(), amount);
+        accountToAdd.addToBalance(this.getCurrYaz(), amount);
     }
+
+    @Override
+    public Customer getCustomerByName(String name){return name2customer.get(name);}
 
 
 
