@@ -31,6 +31,7 @@ public class Loan {
     private final double interestPerPaymentSetByBorrowerInPercents;
     private final double totalInterestForLoan;
     private LoanStatus status;
+    private Account account;
 
     //payments data
     private LoanPaymentsData paymentsData;
@@ -123,6 +124,9 @@ public class Loan {
     public int getFinishYaz() { return finishYaz; }
     public double getDebt() { return debt; }
     public double getTotalInterestForLoan() { return totalInterestForLoan; }
+    public double getLoanPercentageTakenByLenders(){return this.loanPercentageTakenByLenders;}
+    public double getLoanAmountFinancedByLenders(){return this.loanAmountFinancedByLenders;}
+    public Account getLoanAccount(){return this.account;}
 
 
     //setters

@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import DTO.*;
 
-public class ABSsystem implements MainSystem {
+public class ABSsystem implements MainSystem, SystemService{
 
     //need to change data structures
     private Timeline systemTimeline;
@@ -21,10 +21,7 @@ public class ABSsystem implements MainSystem {
     public int getCurrYaz() { return systemTimeline.getCurrentYaz(); }
 
     @Override
-    public Object getCustomersNames()
-    {
-        return name2customer.keySet().toArray();
-    }
+    public Customer getCustomerByName(String name){return name2customer.get(name);}
 
     @Override
     public void loadXML() //TODO
@@ -117,5 +114,21 @@ public class ABSsystem implements MainSystem {
 
 
     }
+
+    //system service interface
+    @Override
+    public Object getCustomersNames()
+    {
+        return name2customer.keySet().toArray();
+    }
+
+    @Override
+    public void moveMoneyBetweenAccounts(Account accountToSubtract, Account accountToAdd, double amount){
+        accountToSubtract.substructFromBalance(); // singleton getCurrentYazOfSystem
+        accountToAdd.addToBalance();
+
+    }
+
+
 
 }

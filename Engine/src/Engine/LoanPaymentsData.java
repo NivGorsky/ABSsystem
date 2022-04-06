@@ -84,7 +84,7 @@ public class LoanPaymentsData {
     }
 
     private Payment createNewUnpaidPayment(int scheduledYazOfPayment, double loanPartReturnedByBorrowerEveryPaymentTime, double interestPartReturnedByBorrowerEveryPaymentTime, String borrowerName){
-        Payment p = new Payment(scheduledYazOfPayment, loanPartReturnedByBorrowerEveryPaymentTime, interestPartReturnedByBorrowerEveryPaymentTime, borrowerName, Payment.PaymentType.UNPAID);
+        Payment p = new Payment(scheduledYazOfPayment, loanPartReturnedByBorrowerEveryPaymentTime, interestPartReturnedByBorrowerEveryPaymentTime, borrowerName, LoanPaymentsData.PaymentType.UNPAID);
 
         return p;
     }

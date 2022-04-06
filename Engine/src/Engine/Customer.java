@@ -19,6 +19,7 @@ public class Customer {
     public String getName() { return name; }
     public ArrayList<Loan> getLoansAsBorrower() { return loansAsBorrower; }
     public ArrayList<Loan> getLoansAsLender() { return loansAsLender; }
+    public Account getAccount(){return account;}
 
     public void withdrawMoney(int yaz, double amount) throws Exception //TODO - exception class
     {
