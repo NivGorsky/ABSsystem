@@ -2,6 +2,8 @@ package Engine;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.TreeMap;
+
 import DTO.*;
 
 public class ABSsystem implements MainSystem, SystemService{
@@ -11,14 +13,18 @@ public class ABSsystem implements MainSystem, SystemService{
     private Map<String ,Customer> name2customer;
     private Map<Loan.LoanStatus, Loan> status2loan;
     private LinkedList<Loan> loans;
+    private LinkedList<Loan> activeLoans;
+    //private Map<String, Loan> borrowerName2ActiveLoans;
     private Map<String, Loan> loanId2Loan;
 
     public ABSsystem()
     {
         systemTimeline = new Timeline();
+        borrowerName2ActiveLoans = new TreeMap<String, Loan>();
     }
 
-    public int getCurrYaz() { return systemTimeline.getCurrentYaz(); }
+    public int getCurrYaz() { return systemTimeline.getCurrentYaz();
+    }
 
     @Override
     public Object getCustomersNames()
@@ -91,12 +97,14 @@ public class ABSsystem implements MainSystem, SystemService{
 
     @Override
     public void assignLoansToLender(LoanPlacingDTO loanPlacingDTO){
-        LoanPlacing.LoanPlacementStatus result = LoanPlacing.placeToLoans(loanPlacingDTO, this.loans, this);
+        LoanPlacing.LoanPlacementStatus result = LoanPlacing.placeToLoans(loanPlacingDTO, this.activeLoans, this);
     }
 
     @Override
     public void moveTimeline()
     {
+
+
 
     }
 
@@ -111,16 +119,9 @@ public class ABSsystem implements MainSystem, SystemService{
             loan.addToLendersNameAndAmount(ld.lender.getName(), ld.lendersAmount);
         }
 
-
-
-
-
-
     }
 
     //system service interface
-
-
     @Override
     public void moveMoneyBetweenAccounts(Account accountToSubtract, Account accountToAdd, double amount){
         accountToSubtract.substructFromBalance(this.getCurrYaz(), amount);
