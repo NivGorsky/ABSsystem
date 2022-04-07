@@ -5,8 +5,8 @@ public class Timeline {
     private int currentYaz = 1;
 
     public int getCurrentYaz() { return currentYaz; }
-    public void moveTimeline ()
+    public void moveTimeline (int yaz)
     {
-        currentYaz++;
+        currentYaz += yaz;
     }
 }

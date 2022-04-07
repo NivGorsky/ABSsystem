@@ -131,6 +131,16 @@ public class ABSsystem implements MainSystem, SystemService{
     @Override
     public Customer getCustomerByName(String name){return name2customer.get(name);}
 
+    @Override
+    public Map<String, Customer> getAllCustomers(){
+        return this.name2customer;
+    }
+
+    @Override
+    public Timeline getTimeLine(){
+        return this.systemTimeline;
+    }
+
 
 
 }

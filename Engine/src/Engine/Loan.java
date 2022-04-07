@@ -1,7 +1,6 @@
 package Engine;
 
 import java.util.LinkedList;
-import java.util.SortedMap;
 
 public class Loan {
 
@@ -63,6 +62,7 @@ public class Loan {
         this.interestPerPaymentSetByBorrowerInPercents = interestPercentPerPayment;
         this.totalInterestForLoan = (1+(interestPerPaymentSetByBorrowerInPercents/100))*initialAmount;
         this.setLoanStatus(LoanStatus.NEW);
+        this.account = new Account(0);
 
         //init loan's payments data
         this.paymentsData = new LoanPaymentsData(this);
@@ -128,7 +128,6 @@ public class Loan {
     public double getLoanAmountFinancedByLenders(){return this.loanAmountFinancedByLenders;}
     public Account getLoanAccount(){return this.account;}
 
-
     //setters
     public void setLoanStatus(Loan.LoanStatus newStatus){
 
@@ -153,6 +152,7 @@ public class Loan {
         this.status = newStatus;
     }
 
+
     //methods
     public void addNewLender(Engine.Customer newLender, double lendersPartOfLoanAmount){
         Loan.LenderDetails newLenderDetails = new Loan.LenderDetails();
@@ -173,6 +173,19 @@ public class Loan {
 
         return result;
     }
+
+    public LoanPaymentsData.Payment peekPaymentForSpecificYaz(int yaz){
+        return paymentsData.peekPaymentForYaz(yaz);
+    }
+
+    public LoanPaymentsData.Payment pollPaymentForSpecificYaz(int yaz){
+        return paymentsData.pollPaymentForYaz(yaz);
+    }
+
+    public void addNewPayment(LoanPaymentsData.Payment newPayment){
+        paymentsData.addNewPayment(newPayment);
+    }
+
 
 }
 

@@ -6,4 +6,6 @@ public interface PaymentsDB {
     public void clearAll();
     public void removePaymentForSpecificYaz(int yaz);
     public LoanPaymentsData.PaymentType getPaymentType();
+    public LoanPaymentsData.Payment peekPaymentByYaz(int yaz);
+    public LoanPaymentsData.Payment pollPaymentByYaz(int yaz);
 }

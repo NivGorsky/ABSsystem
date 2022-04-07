@@ -40,5 +40,27 @@ public class UnpayedPaymentsByYaz implements PaymentsDB {
     public LoanPaymentsData.PaymentType getPaymentType(){
         return this.dbPaymentsType;
     }
+
+    @Override
+    public LoanPaymentsData.Payment peekPaymentByYaz(int yaz){
+        LoanPaymentsData.Payment result = null;
+
+        if(db.containsKey(yaz)){
+            result = db.get(yaz);
+        }
+
+        return result;
+    }
+
+    @Override
+    public LoanPaymentsData.Payment pollPaymentByYaz(int yaz){
+       LoanPaymentsData.Payment value = db.get(yaz);
+
+       if(value != null){
+           db.remove(yaz);
+       }
+
+       return value;
+    }
 }
 

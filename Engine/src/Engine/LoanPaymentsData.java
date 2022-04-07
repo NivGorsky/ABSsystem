@@ -42,6 +42,7 @@ public class LoanPaymentsData {
         }
         public String getBorrowerName(){return this.borrowerName;}
         public PaymentType getPaymentType(){return this.paymentType;}
+        public double getBothPartsOfAmountToPay(){return this.loanPartOfThePayment + this.InterestPartOfThePayment;}
 
         public void setActualPaymentYaz(int actualPaymentYaz) {
             this.actualPaymentYaz = actualPaymentYaz;
@@ -101,4 +102,42 @@ public class LoanPaymentsData {
             addNewPaymentToDataBase(p);
         }
     }
+
+    public void addNewPayment(Payment newPayment){
+        for (PaymentsDB db:this.paymentsDataBase){
+            if(db.getPaymentType() == newPayment.paymentType){
+                db.addNewPayment(newPayment);
+            }
+        }
+    }
+
+    public LoanPaymentsData.Payment peekPaymentForYaz(int yaz){
+        LoanPaymentsData.Payment payment = null;
+
+        for (PaymentsDB singleDataBase:paymentsDataBase){
+            payment = singleDataBase.peekPaymentByYaz(yaz);
+
+            if(payment != null){
+                return payment;
+            }
+        }
+
+        return null;
+    }
+
+    public LoanPaymentsData.Payment pollPaymentForYaz(int yaz){
+        LoanPaymentsData.Payment payment = null;
+
+        for (PaymentsDB singleDataBase:paymentsDataBase){
+            payment = singleDataBase.pollPaymentByYaz(yaz);
+
+            if(payment != null){
+                return payment;
+            }
+        }
+
+        throw new Exception("There was a problem while polling payment from payments DB - null value returned");
+    }
+
+
 }
