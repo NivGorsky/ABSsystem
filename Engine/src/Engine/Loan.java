@@ -1,6 +1,7 @@
 package Engine;
 
 import java.util.LinkedList;
+import Exceptions.*;
 
 public class Loan {
 
@@ -129,11 +130,12 @@ public class Loan {
     public Account getLoanAccount(){return this.account;}
 
     //setters
-    public void setLoanStatus(Loan.LoanStatus newStatus){
+    public void setLoanStatus(Loan.LoanStatus newStatus, int currentYaz){
 
         this.status = newStatus;
         switch (newStatus) {
             case ACTIVE:
+                updateLoanToActive(currentYaz);
 
                 break;
 
@@ -157,6 +159,16 @@ public class Loan {
 
     //methods
     public void addNewLender(Engine.Customer newLender, double lendersPartOfLoanAmount){
+
+        double amountOpenToLend = this.getInitialAmount() - this.getLoanAmountFinancedByLenders();
+        if(newLender.getName().equals(this.getBorrowerName())){
+            throw new SystemRestrictionsException(this, "User is not allowed to register to a loan as lender when the user is already registered as borrower");
+        }
+
+        if(lendersPartOfLoanAmount > amountOpenToLend){
+            throw new ValueOutOfRangeException(1, amountOpenToLend, "User part of loan can't be greater than loan's open amount for lending");
+        }
+
         Loan.LenderDetails newLenderDetails = new Loan.LenderDetails();
         newLenderDetails.lender = newLender;
         newLenderDetails.lendersAmount = lendersPartOfLoanAmount;
@@ -194,6 +206,40 @@ public class Loan {
 
     public boolean isTherePaymentsOfSpecificType(LoanPaymentsData.PaymentType type){
         return paymentsData.isTherePaymentsFromSpecificType(type);
+    }
+
+    public LoanPaymentsData.Payment getEarliestUnpaidOrExpiredPayment(){
+        LoanPaymentsData.Payment earliestExpiredPayment = paymentsData.getEarliestExpiredPayment();
+        LoanPaymentsData.Payment earliestUnpaidPayment = paymentsData.getEarliestUnpaidPayment();
+
+        if(earliestUnpaidPayment == null && earliestExpiredPayment == null){
+            throw new DataBaseAccessException(paymentsData, "There was a problem while trying to get earliest payment - there are on unpaid or expired payments - loan shold be finished");
+        }
+
+        else if(earliestUnpaidPayment == null){
+            return earliestExpiredPayment;
+        }
+
+        else if(earliestExpiredPayment == null){
+            return earliestUnpaidPayment;
+        }
+
+        else{
+            double earliestUnpaidAmount = earliestUnpaidPayment.getBothPartsOfAmountToPay();
+            double earliestExpiredAmount = earliestExpiredPayment.getBothPartsOfAmountToPay();
+
+            if(earliestUnpaidAmount >= earliestExpiredAmount){
+                return earliestUnpaidPayment;
+            }
+
+            else{
+                return earliestExpiredPayment;
+            }
+        }
+    }
+
+    private void updateLoanToActive(int yaz){
+        this.paymentsData.addYazToAllPayments(yaz);
     }
 }
 

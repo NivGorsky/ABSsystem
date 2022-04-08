@@ -70,4 +70,15 @@ public class ExpiredPaymentsByYaz implements PaymentsDB {
 
     @Override
     public Object getActualData(){return this.db;}
+
+    @Override
+    public LoanPaymentsData.Payment getEarliestPayment(){
+        if(!db.isEmpty()){
+            Integer key = db.firstKey();
+
+            return db.get(key);
+        }
+
+        return null;
+    }
 }

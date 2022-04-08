@@ -1,5 +1,7 @@
 package Engine;
 
+import Exceptions.ValueOutOfRangeException;
+
 import java.util.ArrayList;
 
 public class Customer {
@@ -25,7 +27,7 @@ public class Customer {
     {
         if(account.getBalance() < amount)
         {
-            throw new Exception("You are trying to withdraw more money than you have in balance!");
+            throw new ValueOutOfRangeException(0, account.getBalance(), "You are trying to withdraw more money than you have in balance!");
         }
         else
         {

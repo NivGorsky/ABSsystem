@@ -1,8 +1,8 @@
 package Engine;
 
-import java.rmi.server.ExportException;
 import java.util.*;
 import Engine.PaymentsDB.*;
+import Exceptions.DataBaseAccessException;
 
 public class LoanPaymentsData {
 
@@ -14,14 +14,14 @@ public class LoanPaymentsData {
     public class Payment {
 
         private PaymentType paymentType;
-        private final int scheduledYaz;
+        private int scheduledYaz;
         private int actualPaymentYaz;
         private double loanPartOfThePayment;
         private double InterestPartOfThePayment;
         private String borrowerName;
 
         public Payment(int ScheduledYaz, double loanPartOfThePayment, double interestPartOfThePayment, String borrowerName, PaymentType paymentType) {
-            this.scheduledYaz = ScheduledYaz;
+            this.scheduledYaz = -1;
             this.loanPartOfThePayment = loanPartOfThePayment;
             this.InterestPartOfThePayment = interestPartOfThePayment;
             this.borrowerName = borrowerName;
@@ -58,31 +58,40 @@ public class LoanPaymentsData {
             this.paymentType = PaymentType.PAID;
         }
         public void setPaymentType(PaymentType newType){this.paymentType = newType;}
+        public void setScheduledYaz(int yaz){this.scheduledYaz = yaz;}
 
         public int compare(LoanPaymentsData.Payment p1, LoanPaymentsData.Payment p2) { return (p1.scheduledYaz - p2.scheduledYaz); }
     }
 
     private final Engine.Loan containingLoan;
-    private final LinkedList<PaymentsDB> paymentsDataBase;
+    private final LinkedList<PaymentsDB> paymentsDataBases;
 
     public LoanPaymentsData(Engine.Loan containingLoan){
         this.containingLoan = containingLoan;
-        this.paymentsDataBase = new LinkedList<PaymentsDB>();
+        this.paymentsDataBases = new LinkedList<PaymentsDB>();
         this.initPaymentDataBases();
     }
 
     private void initPaymentDataBases(){
-        paymentsDataBase.add(new UnpayedPaymentsByYaz());
-        paymentsDataBase.add(new PayedPaymentsByYaz());
-        paymentsDataBase.add(new ExpiredPaymentsByYaz());
+        paymentsDataBases.add(new UnpayedPaymentsByYaz());
+        paymentsDataBases.add(new PayedPaymentsByYaz());
+        paymentsDataBases.add(new ExpiredPaymentsByYaz());
     }
 
     private void addNewPaymentToDataBase(Payment p){
-        for (PaymentsDB db:paymentsDataBase) {
-            if(db.getPaymentType() == p.paymentType){
-                db.addNewPayment(p);
+        try{
+            for (PaymentsDB db: paymentsDataBases) {
+                if(db.getPaymentType() == p.paymentType){
+                    db.addNewPayment(p);
+                }
             }
+        } catch (Exception e){
+            throw new DataBaseAccessException(paymentsDataBases, "There was a problem when adding new payment to Data Bases");
         }
+
+
+
+
     }
 
     private Payment createNewUnpaidPayment(int scheduledYazOfPayment, double loanPartReturnedByBorrowerEveryPaymentTime, double interestPartReturnedByBorrowerEveryPaymentTime, String borrowerName){
@@ -96,18 +105,25 @@ public class LoanPaymentsData {
         double loanPartOfEachPayment = containingLoan.getInitialAmount() / numberOfPayments;
         double interestPartOfEachPayment = (containingLoan.getInterestPerPaymentSetByBorrowerInPercents() / 100) * loanPartOfEachPayment;
         double finalAmountOfEachPayment = loanPartOfEachPayment + interestPartOfEachPayment;
-        int yazToSetForPayment = containingLoan.getActivationYaz();
+        int yazToSetForPayment = 0;
+        int loanPaymentRate = containingLoan.getPaymentRateInYaz();
 
         for (int i = 0; i < numberOfPayments; i++) {
             Payment p = createNewUnpaidPayment(yazToSetForPayment, loanPartOfEachPayment, interestPartOfEachPayment, containingLoan.getBorrowerName());
             addNewPaymentToDataBase(p);
+            yazToSetForPayment += loanPaymentRate;
         }
     }
 
     public void addNewPayment(Payment newPayment){
-        for (PaymentsDB db:this.paymentsDataBase){
+
+        for (PaymentsDB db:this.paymentsDataBases){
             if(db.getPaymentType() == newPayment.paymentType){
-                db.addNewPayment(newPayment);
+                try {
+                    db.addNewPayment(newPayment);
+                } catch (Exception e){
+                    throw new DataBaseAccessException(db, "There was a problem when adding");
+                }
             }
         }
     }
@@ -115,8 +131,12 @@ public class LoanPaymentsData {
     public LoanPaymentsData.Payment peekPaymentForYaz(int yaz){
         LoanPaymentsData.Payment payment = null;
 
-        for (PaymentsDB singleDataBase:paymentsDataBase){
-            payment = singleDataBase.peekPaymentByYaz(yaz);
+        for (PaymentsDB singleDataBase: paymentsDataBases){
+            try {
+                payment = singleDataBase.peekPaymentByYaz(yaz);
+            } catch (Exception e){
+                throw new DataBaseAccessException(singleDataBase, "There was a problem while peeking for payment in data bases");
+            }
 
             if(payment != null){
                 return payment;
@@ -126,39 +146,74 @@ public class LoanPaymentsData {
         return null;
     }
 
-    public LoanPaymentsData.Payment pollPaymentForYaz(int yaz){
+    public LoanPaymentsData.Payment pollPaymentForYaz (int yaz){
         LoanPaymentsData.Payment payment = null;
 
-        for (PaymentsDB singleDataBase:paymentsDataBase){
-            payment = singleDataBase.pollPaymentByYaz(yaz);
+        for (PaymentsDB singleDataBase: paymentsDataBases){
+            try {
+                payment = singleDataBase.pollPaymentByYaz(yaz);
+            } catch (Exception e){
+                throw new DataBaseAccessException(singleDataBase, "There was a problem while polling payment from data base");
+            }
 
             if(payment != null){
                 return payment;
             }
         }
 
-//        throw new Exception("There was a problem while polling payment from payments DB - null value returned");
+        throw new DataBaseAccessException(paymentsDataBases, "There was a problem while polling payment from payments DB - null value returned - no payment found in DB");
     }
 
     public Object getPayments(PaymentType type){
-        for (PaymentsDB db:paymentsDataBase){
+        for (PaymentsDB db: paymentsDataBases){
             if(db.getPaymentType() == type){
                 return db;
             }
         }
 
-//        throw new ExportException("Tried to get data bast of type that is not exist in data bases");
+        throw new DataBaseAccessException(paymentsDataBases, "There was a problem while trying to get payments from type: " + type + " from data bases, no such type was found in data bases");
     }
 
     public boolean isTherePaymentsFromSpecificType(PaymentType type){
-        for (PaymentsDB db:paymentsDataBase){
+        for (PaymentsDB db: paymentsDataBases){
             if(db.getPaymentType() == type){
                 return !db.isEmpty();
             }
         }
 
-//        throw new Exception("Problem while trying to check if payments from specific type exist - there was not such data structure (from that specific type");
+        throw new DataBaseAccessException(paymentsDataBases, "There was a problem while trying to check if isTherePaymentsFromSpecificType: " + type + " from data bases, no such type was found in data bases");
     }
 
+    public Payment getEarliestExpiredPayment(){
+        for (PaymentsDB db: paymentsDataBases){
+            if(db.getPaymentType() == PaymentType.EXPIRED){
+                return db.getEarliestPayment();
+            }
+        }
+
+        throw new DataBaseAccessException(paymentsDataBases, "There was a problem while trying to getEarliestExpiredPayment from data bases, no such type was found in data bases");
+    }
+
+    public Payment getEarliestUnpaidPayment(){
+        for (PaymentsDB db: paymentsDataBases){
+            if(db.getPaymentType() == PaymentType.UNPAID){
+                return db.getEarliestPayment();
+            }
+        }
+
+        throw new DataBaseAccessException(paymentsDataBases, "There was a problem while trying to getEarliestUnpaidPayment from data bases, no such type was found in data bases");
+    }
+
+    public void addYazToAllPayments(int yazToAdd){
+        for (PaymentsDB db :paymentsDataBases){
+            Map<Integer, Payment> actualDataBase = (Map<Integer, Payment>)db.getActualData();
+
+            for (Map.Entry<Integer, Payment> set: actualDataBase.entrySet()){
+                Payment p = set.getValue();
+
+                p.setScheduledYaz(p.getScheduledYaz() + yazToAdd);
+            }
+        }
+    }
 
 }

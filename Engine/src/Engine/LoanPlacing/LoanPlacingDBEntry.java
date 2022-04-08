@@ -1,4 +1,4 @@
-package Engine;
+package Engine.LoanPlacing;
 
 public class LoanPlacingDBEntry {
     public Engine.Loan loan;

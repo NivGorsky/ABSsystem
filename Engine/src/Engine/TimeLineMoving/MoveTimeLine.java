@@ -1,6 +1,6 @@
-package Engine;
+package Engine.TimeLineMoving;
 
-import org.omg.PortableInterceptor.ACTIVE;
+import Engine.*;
 
 import java.util.*;
 
@@ -8,11 +8,11 @@ public abstract class MoveTimeLine {
 
     private static int currentYaz;
 
-    public static void moveTimeLineInOneYaz(SystemService absSystem){
+    public static void moveTimeLineInOneYaz(SystemService absSystem, Timeline timeLine){
         moveYaz(absSystem);
-        currentYaz = absSystem.getTimeLine().getCurrentYaz();
-        Map<String ,Customer> allCustomers = absSystem.getAllCustomers();
-        LinkedList<Loan> allRelevantLoans = new LinkedList<Loan>();
+        currentYaz = timeLine.getCurrentYaz();
+        Map<String , Customer> allCustomers = absSystem.getAllCustomers();
+        LinkedList<Loan> allRelevantLoansForCurrentBorrower = new LinkedList<Loan>();
         Customer currentCustomer = null;
         ArrayList<Loan> allLoansAsBorrower = null;
 
@@ -23,11 +23,11 @@ public abstract class MoveTimeLine {
             if(allLoansAsBorrower.isEmpty()){
                 continue;
             }
-            allRelevantLoans = getActiveAndExpiredLoansContainsPaymentsForCurrentYaz(allLoansAsBorrower, absSystem); //active loans that contain payment for curreny yaz
-            allRelevantLoans.sort();
-            IterateThroughSortedLoansAndMakePayments(allRelevantLoans, currentCustomer, absSystem);
+            allRelevantLoansForCurrentBorrower = getActiveAndExpiredLoansContainsPaymentsForCurrentYaz(allLoansAsBorrower, absSystem); //active loans that contain payment for curreny yaz
+            Collections.sort(allRelevantLoansForCurrentBorrower, new ForwardingYazLoanComparator());
+            IterateThroughSortedLoansAndMakePayments(allRelevantLoansForCurrentBorrower, currentCustomer, absSystem);
             allLoansAsBorrower.clear();
-            allRelevantLoans.clear();
+            allRelevantLoansForCurrentBorrower.clear();
         }
     }
 
@@ -93,7 +93,7 @@ public abstract class MoveTimeLine {
 
     private static void moveUnpaidActiveLoansToStatusInRisk(LinkedList<Loan> sortedLoans){
         for (Loan loan:sortedLoans){
-            loan.setLoanStatus(Loan.LoanStatus.IN_RISK);
+            loan.setLoanStatus(Loan.LoanStatus.IN_RISK, currentYaz);
             LoanPaymentsData.Payment paymentToMoveToExpiredPayments = loan.pollPaymentForSpecificYaz(currentYaz);
             paymentToMoveToExpiredPayments.setPaymentType(LoanPaymentsData.PaymentType.EXPIRED);
             loan.addNewPayment(paymentToMoveToExpiredPayments);
@@ -145,7 +145,7 @@ public abstract class MoveTimeLine {
         }
 
         if(!loan.isTherePaymentsOfSpecificType(LoanPaymentsData.PaymentType.EXPIRED)){
-            loan.setLoanStatus(Loan.LoanStatus.ACTIVE);
+            loan.setLoanStatus(Loan.LoanStatus.ACTIVE, currentYaz);
         }
     }
 
@@ -159,13 +159,13 @@ public abstract class MoveTimeLine {
             splitLoanMoneyToLenders(loan, absSystem);
 
             if(isLoanFinished(loan)){
-                loan.setLoanStatus(Loan.LoanStatus.FINISHED);
+                loan.setLoanStatus(Loan.LoanStatus.FINISHED, currentYaz);
             }
         }
 
         else{ //not enough funds to complete payment
             changePaymentStatus(loan, payment, LoanPaymentsData.PaymentType.EXPIRED);
-            loan.setLoanStatus(Loan.LoanStatus.IN_RISK);
+            loan.setLoanStatus(Loan.LoanStatus.IN_RISK, currentYaz);
         }
 
     }
@@ -187,7 +187,7 @@ public abstract class MoveTimeLine {
         double amountToTransfer = payment.getBothPartsOfAmountToPay();
 
         if(loanAccount.getBalance() != 0){
-//            throw new Exception("There was a problem while making a payment from borrower to loan - there is already money in loan account");
+           throw new RuntimeException("There was a problem while making a payment from borrower to loan - there is already money in loan account");
         }
         absSystem.moveMoneyBetweenAccounts(borrowersAccount, loanAccount, amountToTransfer);
     }

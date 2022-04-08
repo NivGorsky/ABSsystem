@@ -10,5 +10,6 @@ public interface PaymentsDB {
     public LoanPaymentsData.Payment pollPaymentByYaz(int yaz);
     public boolean isEmpty();
     public Object getActualData();
+    public LoanPaymentsData.Payment getEarliestPayment();
 
 }

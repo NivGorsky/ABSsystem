@@ -1,10 +1,14 @@
 package Engine;
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
 
 import DTO.*;
+import Engine.LoanPlacing.LoanPlacing;
+import Engine.TimeLineMoving.MoveTimeLine;
+import Exceptions.DataBaseAccessException;
 
 public class ABSsystem implements MainSystem, SystemService{
 
@@ -14,7 +18,7 @@ public class ABSsystem implements MainSystem, SystemService{
     private Map<Loan.LoanStatus, Loan> status2loan;
     private LinkedList<Loan> loans;
     private LinkedList<Loan> activeLoans;
-    //private Map<String, Loan> borrowerName2ActiveLoans;
+    private Map<String, Loan> borrowerName2ActiveLoans;
     private Map<String, Loan> loanId2Loan;
 
     public ABSsystem()
@@ -23,8 +27,8 @@ public class ABSsystem implements MainSystem, SystemService{
         borrowerName2ActiveLoans = new TreeMap<String, Loan>();
     }
 
-    public int getCurrYaz() { return systemTimeline.getCurrentYaz();
-    }
+    @Override
+    public int getCurrYaz() { return systemTimeline.getCurrentYaz();}
 
     @Override
     public Object getCustomersNames()
@@ -40,34 +44,36 @@ public class ABSsystem implements MainSystem, SystemService{
     @Override
     public ArrayList<LoanDTO> showLoansInfo() //TODO
     {
-        if (status2loan != null) {
-            ArrayList<LoanDTO> LoansInfo = new ArrayList<LoanDTO>();
+        try {
+            if (status2loan != null) {
+                ArrayList<LoanDTO> LoansInfo = new ArrayList<LoanDTO>();
 
 
-            for(Loan l : status2loan.values())
-            {
-                LoanDTO currLoan = createLoanDTO(l);
+                for (Loan l : status2loan.values()) {
+                    LoanDTO currLoan = createLoanDTO(l);
 
-                switch (l.getStatus())
-                {
-                    case ACTIVE:
-                    {
-                        if(l.getPayedPayments() != null)
-                        {
-                            for(l.getPayedPayments())
+                    switch (l.getStatus()) {
+                        case ACTIVE: {
+                            if (l.getPayedPayments() != null) {
+                                for (l.getPayedPayments())
+                            }
+
+                            break;
                         }
-
-                        break;
                     }
-                }
 
+                }
+            } else {
+                return null;
             }
-        }
-        else {
+
             return null;
         }
 
-        return null;
+        catch (RuntimeException e1){ //user exceptions will be catched in UI
+            System.out.println(e1.getMessage());
+            System.exit(1);
+        }
     }
 
     @Override
@@ -79,8 +85,15 @@ public class ABSsystem implements MainSystem, SystemService{
     @Override
     public void depositMoney(String customerName, double amount)
     {
-        Customer chosenCustomer = name2customer.get(customerName);
-        chosenCustomer.depositMoney(systemTimeline.getCurrentYaz(), amount);
+        try {
+            Customer chosenCustomer = name2customer.get(customerName);
+            chosenCustomer.depositMoney(systemTimeline.getCurrentYaz(), amount);
+        }
+
+        catch (RuntimeException e1){ //user exceptions will be catched in UI
+            System.out.println(e1.getMessage());
+            System.exit(1);
+        }
     }
 
     @Override
@@ -89,23 +102,37 @@ public class ABSsystem implements MainSystem, SystemService{
         try {
             chosenCustomer.withdrawMoney(systemTimeline.getCurrentYaz(), amount);
         }
-        catch (Exception ex)
-        {
-            throw ex;
+
+        catch (RuntimeException e1){ //user exceptions will be catched in UI
+            System.out.println(e1.getMessage());
+            System.exit(1);
         }
     }
 
     @Override
     public void assignLoansToLender(LoanPlacingDTO loanPlacingDTO){
-        LoanPlacing.LoanPlacementStatus result = LoanPlacing.placeToLoans(loanPlacingDTO, this.activeLoans, this);
+        try {
+            LoanPlacing.placeToLoans(loanPlacingDTO, this.activeLoans, this);
+
+        }
+
+        catch (RuntimeException e1){ //user exceptions will be catched in UI
+            System.out.println(e1.getMessage());
+            System.exit(1);
+        }
     }
 
     @Override
-    public void moveTimeline()
+    public void moveTimeLine()
     {
+        try {
+            MoveTimeLine.moveTimeLineInOneYaz(this, systemTimeline);
+        }
 
-
-
+        catch (RuntimeException e1){ //user exceptions will be catched in UI
+            System.out.println(e1.getMessage());
+            System.exit(1);
+        }
     }
 
     public LoanDTO createLoanDTO(Loan l)
@@ -124,8 +151,15 @@ public class ABSsystem implements MainSystem, SystemService{
     //system service interface
     @Override
     public void moveMoneyBetweenAccounts(Account accountToSubtract, Account accountToAdd, double amount){
-        accountToSubtract.substructFromBalance(this.getCurrYaz(), amount);
-        accountToAdd.addToBalance(this.getCurrYaz(), amount);
+        try {
+            accountToSubtract.substructFromBalance(this.getCurrYaz(), amount);
+            accountToAdd.addToBalance(this.getCurrYaz(), amount);
+        }
+
+        catch (RuntimeException e1){ //user exceptions will be catched in UI
+            System.out.println(e1.getMessage());
+            System.exit(1);
+        }
     }
 
     @Override

@@ -1,26 +1,25 @@
-package Engine;
+package Engine.LoanPlacing;
 import DTO.*;
+import Engine.Account;
+import Engine.Customer;
+import Engine.Loan;
+import Engine.SystemService;
+import Exceptions.DataBaseAccessException;
+import Exceptions.SystemRestrictionsException;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 
 public abstract class LoanPlacing {
-    public enum LoanPlacementStatus{
-        SUCCESS,
-        FAILED
-    }
 
-    public static LoanPlacementStatus placeToLoans(LoanPlacingDTO loanPlacingDto, LinkedList<Engine.Loan> loans, SystemService absService){
+    public static void placeToLoans(LoanPlacingDTO loanPlacingDto, LinkedList<Engine.Loan> loans, SystemService absService){
         LinkedList<Engine.Loan> relevantLoans = getRelevantLoans(loanPlacingDto, loans, absService);
 
         if(relevantLoans.isEmpty()){ //there were no relevant loans
-            return LoanPlacementStatus.FAILED;
+            throw new SystemRestrictionsException(null, "There are no relevant loans");
         }
         LinkedList<LoanPlacingDBEntry> loansToPlaceMoney = createLoanPlacingDB(relevantLoans);
         placingAlgorithm(loansToPlaceMoney, loanPlacingDto, absService);
-
-        return LoanPlacementStatus.SUCCESS;
     }
 
     private static void placingAlgorithm(LinkedList<LoanPlacingDBEntry> openLoansDB, LoanPlacingDTO dto, SystemService absService){
@@ -129,14 +128,20 @@ public abstract class LoanPlacing {
     }
 
     private static  LinkedList<LoanPlacingDBEntry> createLoanPlacingDB(LinkedList<Engine.Loan> relevantLoans){
-        LinkedList<LoanPlacingDBEntry> loanPlacingDB = new LinkedList<LoanPlacingDBEntry>();
+        try {
+            LinkedList<LoanPlacingDBEntry> loanPlacingDB = new LinkedList<LoanPlacingDBEntry>();
 
-        for (Engine.Loan l: relevantLoans){
-             LoanPlacingDBEntry newDatum = createLoanPlacingDBDatumFromLoan(l);
-             loanPlacingDB.add(newDatum);
+            for (Engine.Loan l : relevantLoans) {
+                LoanPlacingDBEntry newDatum = createLoanPlacingDBDatumFromLoan(l);
+                loanPlacingDB.add(newDatum);
+            }
+
+            return loanPlacingDB;
         }
 
-        return loanPlacingDB;
+        catch (Exception e){
+            throw new DataBaseAccessException(null, "There was a problem while trying to createLoanPlacingDB ");
+        }
     }
 
     private static LoanPlacingDBEntry createLoanPlacingDBDatumFromLoan(Engine.Loan l){

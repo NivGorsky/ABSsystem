@@ -10,8 +10,10 @@ public interface MainSystem {
     public void depositMoney(String customerName, double amount);
     public void withdrawMoney(String customerName, double amount) throws Exception;
     public void assignLoansToLender(LoanPlacingDTO dto);
-    public void moveTimeline();
+    public void moveTimeLine();
     public Object getCustomersNames();
+    public int getCurrYaz();
+
 
 
 }
