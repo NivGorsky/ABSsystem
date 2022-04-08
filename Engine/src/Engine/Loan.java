@@ -131,25 +131,27 @@ public class Loan {
     //setters
     public void setLoanStatus(Loan.LoanStatus newStatus){
 
+        this.status = newStatus;
         switch (newStatus) {
             case ACTIVE:
-                paymentsData.createAllLoanPayments();
+
                 break;
 
             case PENDING:
+
                 break;
 
             case IN_RISK:
+
                 break;
 
             case FINISHED:
+
                 break;
 
             case NEW:
                 break;
         }
-
-        this.status = newStatus;
     }
 
 
@@ -186,7 +188,13 @@ public class Loan {
         paymentsData.addNewPayment(newPayment);
     }
 
+    public Object getPayments(LoanPaymentsData.PaymentType paymentType){
+        return paymentsData.getPayments(paymentType);
+    }
 
+    public boolean isTherePaymentsOfSpecificType(LoanPaymentsData.PaymentType type){
+        return paymentsData.isTherePaymentsFromSpecificType(type);
+    }
 }
 
 

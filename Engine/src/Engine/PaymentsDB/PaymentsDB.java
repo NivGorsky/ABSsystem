@@ -8,4 +8,7 @@ public interface PaymentsDB {
     public LoanPaymentsData.PaymentType getPaymentType();
     public LoanPaymentsData.Payment peekPaymentByYaz(int yaz);
     public LoanPaymentsData.Payment pollPaymentByYaz(int yaz);
+    public boolean isEmpty();
+    public Object getActualData();
+
 }

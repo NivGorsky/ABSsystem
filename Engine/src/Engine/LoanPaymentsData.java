@@ -1,5 +1,6 @@
 package Engine;
 
+import java.rmi.server.ExportException;
 import java.util.*;
 import Engine.PaymentsDB.*;
 
@@ -136,7 +137,27 @@ public class LoanPaymentsData {
             }
         }
 
-        throw new Exception("There was a problem while polling payment from payments DB - null value returned");
+//        throw new Exception("There was a problem while polling payment from payments DB - null value returned");
+    }
+
+    public Object getPayments(PaymentType type){
+        for (PaymentsDB db:paymentsDataBase){
+            if(db.getPaymentType() == type){
+                return db;
+            }
+        }
+
+//        throw new ExportException("Tried to get data bast of type that is not exist in data bases");
+    }
+
+    public boolean isTherePaymentsFromSpecificType(PaymentType type){
+        for (PaymentsDB db:paymentsDataBase){
+            if(db.getPaymentType() == type){
+                return !db.isEmpty();
+            }
+        }
+
+//        throw new Exception("Problem while trying to check if payments from specific type exist - there was not such data structure (from that specific type");
     }
 
 

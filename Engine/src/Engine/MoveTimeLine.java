@@ -1,5 +1,7 @@
 package Engine;
 
+import org.omg.PortableInterceptor.ACTIVE;
+
 import java.util.*;
 
 public abstract class MoveTimeLine {
@@ -10,7 +12,7 @@ public abstract class MoveTimeLine {
         moveYaz(absSystem);
         currentYaz = absSystem.getTimeLine().getCurrentYaz();
         Map<String ,Customer> allCustomers = absSystem.getAllCustomers();
-        LinkedList<Loan> sortedLoans = new LinkedList<Loan>();
+        LinkedList<Loan> allRelevantLoans = new LinkedList<Loan>();
         Customer currentCustomer = null;
         ArrayList<Loan> allLoansAsBorrower = null;
 
@@ -21,11 +23,11 @@ public abstract class MoveTimeLine {
             if(allLoansAsBorrower.isEmpty()){
                 continue;
             }
-            LinkedList<Loan> allRelevantLoans = getActiveAndExpiredLoansContainsPaymentsForCurrentYaz(allLoansAsBorrower, absSystem); //active loans that contain payment for curreny yaz
+            allRelevantLoans = getActiveAndExpiredLoansContainsPaymentsForCurrentYaz(allLoansAsBorrower, absSystem); //active loans that contain payment for curreny yaz
             allRelevantLoans.sort();
-            IterateThroughSortedLoansAndMakePayments(allRelevantLoans, currentCustomer);
+            IterateThroughSortedLoansAndMakePayments(allRelevantLoans, currentCustomer, absSystem);
             allLoansAsBorrower.clear();
-            sortedLoans.clear();
+            allRelevantLoans.clear();
         }
     }
 
@@ -98,54 +100,119 @@ public abstract class MoveTimeLine {
         }
     }
 
-    private static void IterateThroughSortedLoansAndMakePayments(LinkedList<Loan> allRelevantLoans, Customer borrower){
+    private static void IterateThroughSortedLoansAndMakePayments(LinkedList<Loan> allRelevantLoans, Customer borrower, SystemService absSystem){
 
         for (Loan loan:allRelevantLoans){
             switch (loan.getStatus()){
                 case IN_RISK:
-                    makePaymentsForLoanThatIsInRisk(borrower);
+                    makePaymentsForLoanThatIsInRisk(loan, borrower, absSystem);
 
                     break;
                 case ACTIVE:
-                    makePaymentsForLoanThatIsActive();
+                    makePaymentsForLoanThatIsActive(loan, borrower, absSystem);
 
                     break;
 
                 case NEW:
-                    throw new Exception("In function IterateThroughSortedLoansAndMakePayments, loan should not be relevant, its NEW");
+//                    throw new Exception("In function IterateThroughSortedLoansAndMakePayments, loan should not be relevant, its NEW");
 
                     break;
 
                 case FINISHED:
-                    throw new Exception("In function IterateThroughSortedLoansAndMakePayments, loan should not be relevant, its FINISHED");
+//                    throw new Exception("In function IterateThroughSortedLoansAndMakePayments, loan should not be relevant, its FINISHED");
 
                     break;
                 case PENDING:
-                    throw new Exception("In function IterateThroughSortedLoansAndMakePayments, loan should not be relevant, its PENDING");
+//                    throw new Exception("In function IterateThroughSortedLoansAndMakePayments, loan should not be relevant, its PENDING");
             }
 
         }
     }
 
-    private static void makePaymentsForLoanThatIsInRisk(Loan loan, Customer borrower){
-        SortedMap<Integer, LoanPaymentsData.Payment> expiredPayments = loan.getAllPayments(LoanPaymentsData.PaymentType.EXPIRED);
+    private static void makePaymentsForLoanThatIsInRisk(Loan loan, Customer borrower, SystemService absSystem){
+        Map<Integer, LoanPaymentsData.Payment> expiredPayments = (Map<Integer, Engine.LoanPaymentsData.Payment>)loan.getPayments(LoanPaymentsData.PaymentType.EXPIRED); //need to change to use polymorphysm
         Account borrowersAccount = borrower.getAccount();
 
-        for (LoanPaymentsData.Payment payment:expiredPayments){
-            if(isThereEnoughFundsForPayment(borowerAccount, payment)){
-                makePayment(borrower,payment);
-                changePaymentStatus()
-                updatePaymentDataBase(key)
+        for (Map.Entry<Integer, LoanPaymentsData.Payment> set:expiredPayments.entrySet()){
+            LoanPaymentsData.Payment currentPayment = set.getValue();
+
+            if(isThereEnoughFundsForPayment(borrowersAccount, currentPayment)){
+                makePayment(borrower,currentPayment, loan, absSystem);
+                changePaymentStatus(loan, currentPayment, LoanPaymentsData.PaymentType.PAID);
+                splitLoanMoneyToLenders(loan, absSystem);
             }
+
         }
 
-        if(!loan.isThereExpiredPayments()){
-            changeLoanStatus(loan, active)
+        if(!loan.isTherePaymentsOfSpecificType(LoanPaymentsData.PaymentType.EXPIRED)){
+            loan.setLoanStatus(Loan.LoanStatus.ACTIVE);
         }
     }
 
-    private static void makePaymentsForLoanThatIsActive(Loan loan){
+    private static void makePaymentsForLoanThatIsActive(Loan loan, Customer borrower, SystemService absSystem){
         LoanPaymentsData.Payment payment = loan.pollPaymentForSpecificYaz(currentYaz);
+        Account borrowersAccount = borrower.getAccount();
+
+        if(isThereEnoughFundsForPayment(borrowersAccount, payment)){
+            makePayment(borrower,payment, loan, absSystem);
+            changePaymentStatus(loan, payment, LoanPaymentsData.PaymentType.PAID);
+            splitLoanMoneyToLenders(loan, absSystem);
+
+            if(isLoanFinished(loan)){
+                loan.setLoanStatus(Loan.LoanStatus.FINISHED);
+            }
+        }
+
+        else{ //not enough funds to complete payment
+            changePaymentStatus(loan, payment, LoanPaymentsData.PaymentType.EXPIRED);
+            loan.setLoanStatus(Loan.LoanStatus.IN_RISK);
+        }
+
+    }
+
+    private static boolean isLoanFinished(Loan loan){
+        return !loan.isTherePaymentsOfSpecificType(LoanPaymentsData.PaymentType.EXPIRED) && !loan.isTherePaymentsOfSpecificType(LoanPaymentsData.PaymentType.UNPAID);
+    }
+
+    private static boolean isThereEnoughFundsForPayment(Account borrowersAccount, LoanPaymentsData.Payment payment){
+        double amountToPay = payment.getBothPartsOfAmountToPay();
+        double balance = borrowersAccount.getBalance();
+
+        return balance >= amountToPay;
+    }
+
+    private static void makePayment(Customer borrower, LoanPaymentsData.Payment payment, Loan loan, SystemService absSystem){
+        Account loanAccount = loan.getLoanAccount();
+        Account borrowersAccount = borrower.getAccount();
+        double amountToTransfer = payment.getBothPartsOfAmountToPay();
+
+        if(loanAccount.getBalance() != 0){
+//            throw new Exception("There was a problem while making a payment from borrower to loan - there is already money in loan account");
+        }
+        absSystem.moveMoneyBetweenAccounts(borrowersAccount, loanAccount, amountToTransfer);
+    }
+
+    private static void changePaymentStatus(Loan loan, LoanPaymentsData.Payment payment, LoanPaymentsData.PaymentType newType){
+        payment.setPaymentType(newType);
+        int paymentYaz = payment.getScheduledYaz();
+        loan.pollPaymentForSpecificYaz(paymentYaz);
+        loan.addNewPayment(payment);
+    }
+
+    private static void splitLoanMoneyToLenders(Loan loan, SystemService absSystem){
+        LinkedList<Loan.LenderDetails> lenders = loan.getLendersDetails();
+
+        for (Loan.LenderDetails lenderDetails: lenders){
+            Account lendersAccount = lenderDetails.lender.getAccount();
+            Account loansAccount = loan.getLoanAccount();
+            double amountInLoan = loansAccount.getBalance();
+            double lendersPartOfLoanInPercent = lenderDetails.lendersPartOfLoanInPercent;
+            double amountToTransfer = (lendersPartOfLoanInPercent / 100) * amountInLoan;
+
+            absSystem.moveMoneyBetweenAccounts(loansAccount, lendersAccount, amountToTransfer);
+        }
+
+
 
     }
 }

@@ -18,7 +18,7 @@ public class ExpiredPaymentsByYaz implements PaymentsDB {
     public void addNewPayment(LoanPaymentsData.Payment p) {
         Integer yazWhenPaymentSupposedToBePayed = p.getScheduledYaz();
         if(db.containsKey(yazWhenPaymentSupposedToBePayed)){
-            throw new IllegalAccessException("There was a problem while adding new payment to 'UnpayedPaymentsByYaz' - there is already a payment for this yaz");
+//            throw new IllegalAccessException("There was a problem while adding new payment to 'UnpayedPaymentsByYaz' - there is already a payment for this yaz");
         }
 
         db.put(yazWhenPaymentSupposedToBePayed, p);
@@ -32,7 +32,7 @@ public class ExpiredPaymentsByYaz implements PaymentsDB {
     @Override
     public void removePaymentForSpecificYaz(int yaz){
         if(!db.containsKey(yaz)){
-            throw new IllegalAccessException("There was a problem while removing payment to 'UnpayedPaymentsByYaz' - there is no payment in DB for this yaz");
+//            throw new IllegalAccessException("There was a problem while removing payment to 'UnpayedPaymentsByYaz' - there is no payment in DB for this yaz");
         }
 
         db.remove(yaz);
@@ -64,4 +64,10 @@ public class ExpiredPaymentsByYaz implements PaymentsDB {
 
         return value;
     }
+
+    @Override
+    public boolean isEmpty(){return db.isEmpty();}
+
+    @Override
+    public Object getActualData(){return this.db;}
 }
