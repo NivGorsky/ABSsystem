@@ -9,6 +9,7 @@ import com.sun.xml.internal.ws.api.pipe.Engine;
 import javax.xml.bind.JAXBException;
 import java.lang.System;
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 
 public class ConsoleUI {
@@ -38,11 +39,12 @@ public class ConsoleUI {
         int userChoice, i = 0;
         ArrayList<String> customersNames;
 
-        customersNames = (ArrayList<String>) engine.getCustomersNames();
+        customersNames = (ArrayList<String>)engine.getCustomersNames();
         System.out.println("Please choose a customer:");
 
         for (String name : customersNames) {
             System.out.println(i + ". " + name);
+            ++i;
         }
 
         userChoice = InputHandler.getCustomer(customersNames.size());
@@ -58,6 +60,7 @@ public class ConsoleUI {
         for(CustomerDTO c : customers)
         {
             System.out.println(i + ". name: " + c.getCustomerName() + " balance: " + c.getBalance());
+            ++i;
         }
 
         userChoice = InputHandler.getCustomer(customers.size());

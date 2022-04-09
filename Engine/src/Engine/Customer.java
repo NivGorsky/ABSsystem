@@ -7,16 +7,16 @@ import java.util.ArrayList;
 public class Customer {
 
     private final String name;
-
     private ArrayList<Loan> loansAsBorrower;
     private ArrayList<Loan> loansAsLender;
-
     private Account account;
 
     public Customer (String custName, double balance)
     {
         this.name = custName;
         this.account = new Account(balance);
+        loansAsBorrower = new ArrayList<Loan>();
+        loansAsLender = new ArrayList<Loan>();
     }
 
     public String getName() { return name; }

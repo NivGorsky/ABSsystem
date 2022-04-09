@@ -32,6 +32,7 @@ public class Account {
     public Account(double balance)
     {
         this.balance = balance;
+        this.movements = new ArrayList<AccountMovement>();
     }
 
     public double getBalance() { return balance; }

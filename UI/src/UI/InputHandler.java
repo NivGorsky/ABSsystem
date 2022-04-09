@@ -52,7 +52,7 @@ public class InputHandler {
 
     private static void checkCustomer(int userChoice, int numOfCustomers) throws ValueOutOfRangeException
     {
-        if(userChoice > numOfCustomers || userChoice <= 0)
+        if(userChoice > numOfCustomers || userChoice < 0)
         {
             throw new ValueOutOfRangeException(1, numOfCustomers);
         }
@@ -102,8 +102,9 @@ public class InputHandler {
         Scanner sc = new Scanner(System.in);
         ArrayList<String> categories = new ArrayList<String>();
 
-        for (int i=0;i<numberOfCategoriesToChoose; ++i){
-            String category = sc.toString();
+        for (int i=1;i<=numberOfCategoriesToChoose; ++i){
+            System.out.println("Category " + i + ":");
+            String category = sc.nextLine();
             while(!isCategorySupported(category, supportedCategories)){
                 category = sc.toString();
             }
@@ -122,7 +123,7 @@ public class InputHandler {
             res = sc.nextInt();
         }
 
-        return sc.nextInt();
+        return res;
     }
 
     private static boolean isCategorySupported(String category,ArrayList<String> categories){
@@ -149,6 +150,19 @@ public class InputHandler {
 
     private static boolean isMinInterestSupported(double minInterest){
         return minInterest > 0 || minInterest == -1;
+    }
+
+    public static int getMinYazForReturn(){
+        Scanner sc = new Scanner(System.in);
+
+        int res = sc.nextInt();
+
+        while(res < 0 && res != -1){
+            System.out.println("Please choose a valid value");
+            res = sc.nextInt();
+        }
+
+        return res;
     }
 
 

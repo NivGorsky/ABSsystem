@@ -44,7 +44,7 @@ public class ABSsystem implements MainSystem, SystemService
     @Override
     public Object getCustomersNames()
     {
-        return name2customer.keySet().toArray();
+        return new ArrayList<String>(name2customer.keySet());
     }
 
 

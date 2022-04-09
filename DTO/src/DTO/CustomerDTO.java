@@ -14,6 +14,9 @@ public class CustomerDTO
     {
         this.customerName = name;
         this.balance = balance;
+        loansAsBorrower = new ArrayList<LoanDTO>();
+        loansAsLender = new ArrayList<LoanDTO>();
+        accountMovements = new ArrayList<AccountMovementDTO>();
     }
 
     public String getCustomerName() { return customerName; }

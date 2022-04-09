@@ -50,6 +50,7 @@ public class AssignLoanToLenders {
 
         System.out.println("How many categories would you like to choose?");
         int numberOfCategories = InputHandler.getPositiveNumber();
+        System.out.println("Please choose categories, seperated by Enter");
         categoriesWillingToInvestIn = InputHandler.chooseCategories(numberOfCategories, categoriesWillingToInvestIn); //init to all categories
 
         System.out.println("Please choose minimum interest per yaz, if you want to pass, enter -1");
@@ -58,8 +59,8 @@ public class AssignLoanToLenders {
             minimumInterestPerYaz = 0;
         }
 
-        System.out.println("Please choose minimum total yaz for a loan"); //need to add the pass option
-        minimumYazForReturn = InputHandler.getPositiveNumber();
+        System.out.println("Please choose minimum total yaz for a loan, if you want to pass enter -1"); //need to add the pass option
+        minimumYazForReturn = InputHandler.getMinYazForReturn();
     }
 
 }
