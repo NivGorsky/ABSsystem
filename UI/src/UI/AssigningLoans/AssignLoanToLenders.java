@@ -19,12 +19,12 @@ public class AssignLoanToLenders {
 
     public AssignLoanToLenders(String customerName, ArrayList<String> loanCategories){
         this.customerName = customerName;
+        amountToInvest = -1;
         categoriesWillingToInvestIn = new ArrayList<String>();
         categoriesWillingToInvestIn.addAll(loanCategories);
         minimumInterestPerYaz = 0;
         minimumYazForReturn = - 1;
         maximumPercentOwnership = 100;
-        amountToInvest = -1;
         maximumOpenLoansForBorrower = -1;
     }
 
@@ -60,20 +60,6 @@ public class AssignLoanToLenders {
 
         System.out.println("Please choose minimum total yaz for a loan"); //need to add the pass option
         minimumYazForReturn = InputHandler.getPositiveNumber();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 
 }

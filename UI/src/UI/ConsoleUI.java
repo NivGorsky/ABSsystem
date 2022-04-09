@@ -209,6 +209,7 @@ public class ConsoleUI {
         try{
             CustomerDTO chosenCustomer = chooseCustomerWithBalance();
             AssignLoanToLenders assignLoanToLendersForm = new AssignLoanToLenders(chosenCustomer.getCustomerName(), this.engine.getSystemLoanCategories());
+            assignLoanToLendersForm.getAssigningParamatersFromUser();
             engine.assignLoansToLender(assignLoanToLendersForm.getDTO());
         }
 

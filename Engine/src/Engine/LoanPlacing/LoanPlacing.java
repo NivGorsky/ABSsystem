@@ -115,18 +115,23 @@ public abstract class LoanPlacing {
         }
 
         else if(loanDto.getMinimumInterestPerYaz() > loan.getInterestPerPaymentSetByBorrowerInPercents()){
-            result = false;
+            if(loanDto.getMinimumInterestPerYaz() != -1){
+                result = false;
+            }
         }
 
 //        else if(loanDto.getMinimumYazForReturn()) need to verify what does that mean
 
         else if(loanDto.getMaximumPercentOwnership() >  100 - loan.getLoanPercentageTakenByLenders()){
-            result = false;
+            if(loanDto.getMaximumPercentOwnership() != -1){
+                result = false;
+            }
         }
 
-
         else if(loanDto.getMaximumOpenLoansForBorrower() > maximumOpenLoansForLoanBorrower){
-            result = false;
+            if(loanDto.getMaximumOpenLoansForBorrower() != -1){
+                result = false;
+            }
         }
 
         return result;
