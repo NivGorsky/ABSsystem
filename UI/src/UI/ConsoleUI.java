@@ -48,7 +48,7 @@ public class ConsoleUI {
         return customersNames.get(userChoice);
     }
 
-    public String chooseCustomerWithBalance()
+    public CustomerDTO chooseCustomerWithBalance()
     {
         ArrayList<CustomerDTO> customers = engine.showCustomersInfo();
         System.out.println("Please choose a customer:");
@@ -60,7 +60,7 @@ public class ConsoleUI {
         }
 
         userChoice = InputHandler.getCustomer(customers.size());
-        return customers.get(userChoice).getCustomerName();
+        return customers.get(userChoice);
     }
 
     public double chooseAmount(String action) {
@@ -205,8 +205,7 @@ public class ConsoleUI {
     public void assignLoansToLender(){ //TODO
         //get the data from user and create dto, then send it to Engine
         try{
-
-            //...//
+            CustomerDTO chosenCustomer = chooseCustomerWithBalance();
             engine.assignLoansToLender(new LoanPlacingDTO());
         }
 
@@ -217,7 +216,7 @@ public class ConsoleUI {
 
     public void moveTimeline()
     {
-        TimelineDTO systemTimeline = engine.moveTimeline(); //TODO:return TimelineDTO from engine
+        TimelineDTO systemTimeline = engine.moveTimeLine();
         System.out.println("Action succeeded!");
         System.out.println("The previous yaz: " + (systemTimeline.getCurrentYaz() -1) + "The current yaz: " + systemTimeline.getCurrentYaz());
     }
