@@ -9,4 +9,5 @@ public class Timeline {
     {
         currentYaz++;
     }
+    public void resetSystemYaz() { currentYaz = 1; }
 }

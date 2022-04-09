@@ -1,15 +1,10 @@
 package Engine;
 
 import java.util.LinkedList;
-import java.util.SortedMap;
 
 public class Loan {
 
     static int loansNum = 0;
-
-    public enum LoanCategory {
-        OPENING_BUSINESS, PROPERTY_RENOVATION, CLOSE_OVERDRAW, EVENT, PURCHASE_CAR, PURCHASE_HOUSE
-    }
 
     public enum LoanStatus {
         NEW, PENDING, ACTIVE, IN_RISK, FINISHED
@@ -25,9 +20,9 @@ public class Loan {
     //loan's general data
     private final String loanName;
     private final int loanId; //string uuid
-    private final LoanCategory category;
+    private final String category;
     private final double initialAmount;
-    private final String borrowerName;
+    private final java.lang.String borrowerName;
     private final double interestPerPaymentSetByBorrowerInPercents;
     private final double totalInterestForLoan;
     private LoanStatus status;
@@ -50,7 +45,7 @@ public class Loan {
     private double loanPercentageTakenByLenders;
     private double loanAmountFinancedByLenders;
 
-    public Loan(String loanName, String borrowerName, double originalLoanAmount, int yaz, int paymentRateInYaz, double interestPercentPerPayment, LoanCategory category)
+    public Loan(String loanName, String borrowerName, double originalLoanAmount, int yaz, int paymentRateInYaz, double interestPercentPerPayment, String category)
     {
         //init loan's general data
         this.loanName = loanName;
@@ -99,7 +94,7 @@ public class Loan {
     public double getInterestPerPaymentSetByBorrowerInPercents() {
         return interestPerPaymentSetByBorrowerInPercents;
     }
-    public LoanCategory getCategory() {
+    public String getCategory() {
         return category;
     }
     public LinkedList<LenderDetails> getLendersDetails() {
@@ -123,7 +118,8 @@ public class Loan {
     public int getFinishYaz() { return finishYaz; }
     public double getDebt() { return debt; }
     public double getTotalInterestForLoan() { return totalInterestForLoan; }
-
+    public LoanPaymentsData getPaymentsData() { return paymentsData; }
+    public LinkedList<LenderDetails> getLendersBelongToLoan() { return lendersBelongToLoan; }
 
     //setters
     public void setLoanStatus(Loan.LoanStatus newStatus){

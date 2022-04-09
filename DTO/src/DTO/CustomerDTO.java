@@ -8,9 +8,23 @@ public class CustomerDTO {
     private ArrayList<AccountMovementDTO> accountMovements;
     private ArrayList<LoanDTO> loansAsBorrower;
     private ArrayList<LoanDTO> loansAsLender;
+    private double balance;
+
+    public CustomerDTO(String name, double balance)
+    {
+        this.customerName = name;
+        this.balance = balance;
+    }
 
     public String getCustomerName() { return customerName; }
     public ArrayList<AccountMovementDTO> getAccountMovements() { return accountMovements; }
+    public ArrayList<LoanDTO> getLoansAsBorrower() { return loansAsBorrower; }
+    public ArrayList<LoanDTO> getLoansAsLender() { return loansAsLender; }
+    public double getBalance() { return balance; }
+
+    public void setAccountMovements(ArrayList<AccountMovementDTO> accountMovements) {
+        this.accountMovements = accountMovements;
+    }
 
     @Override
     public String toString()

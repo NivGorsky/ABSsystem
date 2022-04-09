@@ -2,7 +2,10 @@ package UI;
 
 import Engine.MainSystem;
 import DTO.*;
+import Exceptions.XMLFileException;
+import com.sun.xml.internal.ws.api.pipe.Engine;
 
+import javax.xml.bind.JAXBException;
 import java.lang.System;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -30,9 +33,9 @@ public class ConsoleUI {
                 "8- Exit");
     }
 
-    public String chooseCustomer() {
+    public String chooseCustomer()
+    {
         int userChoice, i = 0;
-
         ArrayList<String> customersNames;
 
         customersNames = (ArrayList<String>) engine.getCustomersNames();
@@ -46,6 +49,21 @@ public class ConsoleUI {
         return customersNames.get(userChoice);
     }
 
+    public String chooseCustomerWithBalance()
+    {
+        ArrayList<CustomerDTO> customers = engine.showCustomersInfo();
+        System.out.println("Please choose a customer:");
+        int userChoice, i=0;
+
+        for(CustomerDTO c : customers)
+        {
+            System.out.println(i + ". name: " + c.getCustomerName() + " balance: " + c.getBalance());
+        }
+
+        userChoice = InputHandler.getCustomer(customers.size());
+        return customers.get(userChoice).getCustomerName();
+    }
+
     public double chooseAmount(String action) {
         System.out.println("Please enter amount of money you would like to " + action + ":");
         double amount =  InputHandler.getAmount();
@@ -56,6 +74,7 @@ public class ConsoleUI {
     public void runMainMenu() //main menu
     {
         int input;
+        boolean isFileLoaded = false;
         MainMenu userChoice = MainMenu.LoadXML; //initialized to something != exit
 
         while (userChoice != MainMenu.Exit) {
@@ -63,47 +82,77 @@ public class ConsoleUI {
 
             input = InputHandler.getOptionFromMenu();
             userChoice = MainMenu.values()[input];
-
-            switch (userChoice) {
-                case LoadXML: {
-                    loadXML();
-                    break;
+            try {
+                switch (userChoice) {
+                    case LoadXML: {
+                        loadXML();
+                        isFileLoaded = true;
+                        break;
+                    }
+                    case ShowLoansInfo: {
+                        if (checkFileLoaded(isFileLoaded)) {
+                            showLoansInfo();
+                            break;
+                        }
+                    }
+                    case ShowCustomersInfo: {
+                        if (checkFileLoaded(isFileLoaded)) {
+                            showCustomersInfo();
+                            break;
+                        }
+                    }
+                    case DepositMoney: {
+                        if (checkFileLoaded(isFileLoaded)) {
+                            depositMoney();
+                            break;
+                        }
+                    }
+                    case WithdrawMoney: {
+                        if (checkFileLoaded(isFileLoaded)) {
+                            withdrawMoney();
+                            break;
+                        }
+                    }
+                    case AssignLoansToLender: {
+                        if (checkFileLoaded(isFileLoaded)) {
+                            String customer = chooseCustomer();
+                            //insert parameters
+                            break;
+                        }
+                    }
+                    case MoveTimeline: {
+                        if (checkFileLoaded(isFileLoaded)) {
+                            moveTimeline();
+                            break;
+                        }
+                    }
+                    case Exit: {
+                        System.exit(1);
+                    }
                 }
-                case ShowLoansInfo: {
-                    showLoansInfo();
-                    break;
-                }
-                case ShowCustomersInfo: {
-                    showCustomersInfo();
-                    break;
-                }
-                case DepositMoney: {
-                    depositMoney();
-                    break;
-                }
-                case WithdrawMoney: {
-                    withdrawMoney();
-                    break;
-                }
-                case AssignLoansToLender: {
-                    String customer = chooseCustomer();
-                    //insert parameters
-                    break;
-                }
-                case MoveTimeline: {
-                    moveTimeline();
-                    break;
-                }
-                case Exit: {
-                    System.exit(1);
-                }
-
+            } catch (XMLFileException ex) {
+                System.out.println(ex.getExceptionMsg());
             }
+
         }
     }
 
-    public void loadXML() {
-    }; //TODO
+    public void loadXML()
+    {
+        System.out.println("Please enter a path to the XML file (the path will contain english letters only!)");
+        String path = InputHandler.getPathToFile();
+
+        try{
+            engine.loadXML(path);
+        }
+
+        catch (JAXBException e) {
+            e.printStackTrace();
+         }
+        catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
 
     public void showLoansInfo() {
 
@@ -147,13 +196,27 @@ public class ConsoleUI {
         }
     }
 
-    public void assignLoansToLender(){};
-
-    public void moveTimeline(){
-        System.out.println("Previous yaz: " + engine.getCurrYaz());
-        engine.moveTimeLine();
-        System.out.println("Current yaz: " + engine.getCurrYaz());
+    public void assignLoansToLender()
+    {
+        System.out.println();
     };
+
+    public void moveTimeline()
+    {
+        TimelineDTO systemTimeline = engine.moveTimeline(); //TODO:return TimelineDTO from engine
+        System.out.println("Action succeeded!");
+        System.out.println("The previous yaz: " + (systemTimeline.getCurrentYaz() -1) + "The current yaz: " + systemTimeline.getCurrentYaz());
+    }
+
+    private boolean checkFileLoaded(boolean isFileLoaded) throws XMLFileException
+    {
+        if(isFileLoaded == false)
+        {
+            throw new XMLFileException("XML file not loaded!");
+        }
+
+        return true;
+    }
 
 
 }

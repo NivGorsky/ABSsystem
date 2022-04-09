@@ -5,13 +5,20 @@ import Engine.LoanPaymentsData;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-public class ExpiredPaymentsByYaz implements PaymentsDB {
+public class ExpiredPaymentsByYaz implements PaymentsDB
+{
     private final LoanPaymentsData.PaymentType dbPaymentsType;
     private SortedMap<Integer, LoanPaymentsData.Payment> db;
 
     public ExpiredPaymentsByYaz(){
         dbPaymentsType = LoanPaymentsData.PaymentType.EXPIRED;
         db = new TreeMap<Integer, LoanPaymentsData.Payment>();
+    }
+
+    @Override
+    public SortedMap<Integer, LoanPaymentsData.Payment> getPayments()
+    {
+        return db;
     }
 
     @Override

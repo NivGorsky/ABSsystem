@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Account {
 
-    private class AccountMovement{
+    public class AccountMovement{
         private final int yaz;
         private final double amount;
         private final char movementKind;   // +/-
@@ -47,6 +47,7 @@ public class Account {
         movements.add(new AccountMovement(yaz, amount, '-'));
         balance -= amount;
     }
+
 
 
 }

@@ -1,6 +1,7 @@
 package DTO;
 
 import Engine.Loan;
+import Engine.LoanPaymentsData;
 
 import java.util.ArrayList;
 import java.util.SortedMap;
@@ -38,18 +39,14 @@ public class LoanDTO {
         }
     }
 
-    public enum LoanCategory {
-        OPENING_BUSINESS, PROPERTY_RENOVATION, CLOSE_OVERDRAW, EVENT, PURCHASE_CAR, PURCHASE_HOUSE
-    }
-
     public enum LoanStatus {
         NEW, PENDING, ACTIVE, IN_RISK, FINISHED
     }
 
-    public class LenderDetailsDTO {
+    public static class LenderDetailsDTO {
+
         public String lenderName;
         public double lendersInvestAmount;
-
 
         public LenderDetailsDTO(String lender, double amount)
         {
@@ -194,8 +191,28 @@ public class LoanDTO {
         return sum;
     }
 
-    public void setUnpaidPayments() //TODO
-    public void setpaidPayments() //TODO
+    public void setUnpaidPayments(Engine.PaymentsDB.PaymentsDB payments)
+    {
+
+        for(LoanPaymentsData.Payment p : payments.getPayments().values())
+        {
+            PaymentDTO payment = new PaymentDTO(p.getScheduledYaz(), p.getLoanPartOfThePayment(),
+                    p.getInterestPartOfThePayment());
+
+            unpaidPayments.put(payment.actualPaymentYaz, payment);
+        }
+
+    }
+    public void setPaidPayments(Engine.PaymentsDB.PaymentsDB payments)
+    {
+        for(LoanPaymentsData.Payment p : payments.getPayments().values())
+        {
+            PaymentDTO payment = new PaymentDTO(p.getScheduledYaz(), p.getLoanPartOfThePayment(),
+                    p.getInterestPartOfThePayment());
+
+            paidPayments.put(payment.actualPaymentYaz, payment);
+        }
+    }
 
 
     @Override

@@ -13,6 +13,12 @@ public class UnpayedPaymentsByYaz implements PaymentsDB {
     }
 
     @Override
+    public SortedMap<Integer, LoanPaymentsData.Payment> getPayments()
+    {
+        return db;
+    }
+
+    @Override
     public void addNewPayment(LoanPaymentsData.Payment p) {
         Integer scheduledYazOfNewPayment = p.getScheduledYaz();
         if(db.containsKey(scheduledYazOfNewPayment)){

@@ -68,6 +68,36 @@ public class InputHandler {
         return amount;
     }
 
+    public static String getPathToFile()
+    {
+        Scanner sc = new Scanner(System.in);
+        String path = sc.toString();
+
+        try {
+            checkPath(path);
+        }
+
+        catch(Exception ex) {
+            System.out.println(ex.getMessage());
+            getPathToFile();
+        }
+
+        return path;
+    }
+
+    private static void checkPath(String path) throws Exception
+    {
+        if(path == null)
+        {
+            throw new Exception("Non path received, please try again");
+        }
+
+        else if(!path.matches("[a-zA-Z]+"))
+        {
+            throw new Exception("The path contains non-English characters! \nplease try again");
+        }
+    }
+
 
 
 

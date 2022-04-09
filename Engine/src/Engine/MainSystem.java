@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public interface MainSystem {
 
-    public void loadXML();
+    public void loadXML(String path) throws Exception;
     public ArrayList<LoanDTO> showLoansInfo();
     public ArrayList<CustomerDTO> showCustomersInfo();
     public void depositMoney(String customerName, double amount);

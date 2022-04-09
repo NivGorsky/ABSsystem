@@ -1,17 +1,26 @@
 package Engine;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Map;
+
 import DTO.*;
+import Engine.XML_Handler.*;
+import Exceptions.XMLFileException;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 
 public class ABSsystem implements MainSystem {
 
     //need to change data structures
     private Timeline systemTimeline;
-    private Map<String ,Customer> name2customer;
+    private Map<String,Customer> name2customer;
     private Map<Loan.LoanStatus, Loan> status2loan;
     private LinkedList<Loan> loans;
-    private Map<String, Loan> loanId2Loan;
+    private Map<Integer, Loan> loanId2Loan;
+    private File loadedXMLFile = null;
 
     public ABSsystem()
     {
@@ -27,46 +36,52 @@ public class ABSsystem implements MainSystem {
     }
 
     @Override
-    public void loadXML() //TODO
-    {}
-
-    @Override
-    public ArrayList<LoanDTO> showLoansInfo() //TODO
+    public void loadXML(String path) throws XMLFileException, JAXBException
     {
-        if (status2loan != null) {
-            ArrayList<LoanDTO> LoansInfo = new ArrayList<LoanDTO>();
+        try {
+            File file = new File(path);
+            XMLFileChecker.isFileExists(file);
+            XMLFileChecker.isXMLFile(path);
 
+            JAXBContext jaxbContext = JAXBContext.newInstance(AbsDescriptor.class);
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+            AbsDescriptor descriptor = (AbsDescriptor) jaxbUnmarshaller.unmarshal(file);
 
-            for(Loan l : status2loan.values())
-            {
-                LoanDTO currLoan = createLoanDTO(l);
-
-                switch (l.getStatus())
-                {
-                    case ACTIVE:
-                    {
-                        if(l.getPayedPayments() != null)
-                        {
-                            for(l.getPayedPayments())
-                        }
-
-                        break;
-                    }
-                }
-
-            }
+            takeDataFromDescriptor(descriptor);
+            loadedXMLFile = file;
+            systemTimeline.resetSystemYaz();
         }
-        else {
-            return null;
+        catch (Exception e) {
+           throw e;
         }
-
-        return null;
     }
 
     @Override
-    public ArrayList<CustomerDTO> showCustomersInfo() //TODO
+    public ArrayList<LoanDTO> showLoansInfo()
     {
-        return null;
+        ArrayList<LoanDTO> loansInfo = new ArrayList<>();
+
+        for(Loan l : loans)
+        {
+           LoanDTO curr = createLoanDTO(l);
+           loansInfo.add(curr);
+        }
+
+        return loansInfo;
+    }
+
+    @Override
+    public ArrayList<CustomerDTO> showCustomersInfo()
+    {
+        ArrayList<CustomerDTO> customersInfo = new ArrayList<>();
+
+        for(Customer c : name2customer.values())
+        {
+            CustomerDTO curr = createCustomerDTO(c);
+            customersInfo.add(curr);
+        }
+
+        return customersInfo;
     }
 
     @Override
@@ -100,22 +115,146 @@ public class ABSsystem implements MainSystem {
 
     }
 
-    public LoanDTO createLoanDTO(Loan l)
+    private LoanDTO createLoanDTO(Loan l)
     {
-        LoanDTO loan = new LoanDTO(l.getLoanId(), l.getBorrowerName(), l.getInitialAmount(),
-                l.getMaxYazToPay(), l.getInterestPerPaymentSetByBorrowerInPercents(), l.getPaymentRateInYaz(),
-                l.getStatus().toString(), l.getCategory().toString());
+        LoanDTO loan = new LoanDTO(l.getLoanId(), l.getBorrowerName(), l.getInitialAmount(), l.getMaxYazToPay(),
+                 l.getInterestPerPaymentSetByBorrowerInPercents(), l.getPaymentRateInYaz(), l.getStatus(), l.getCategory());
 
         for(Loan.LenderDetails ld : l.getLendersDetails())
         {
             loan.addToLendersNameAndAmount(ld.lender.getName(), ld.lendersAmount);
         }
 
+        loan.setUnpaidPayments(l.getPaymentsData().getPaymentsDataBase().get(LoanPaymentsData.PaymentType.UNPAID));
+        loan.setPaidPayments(l.getPaymentsData().getPaymentsDataBase().get(LoanPaymentsData.PaymentType.PAID));
 
+        initStatusInfo(loan, l);
+        return loan;
+    }
 
-
+    private void initLendersInfo(LoanDTO loanToInit, Loan l)
+    {
+        int size = l.getLendersBelongToLoan().size();
+        for(int i=0; i<size; i++)
+        {
+            loanToInit.addToLendersNameAndAmount(l.getLendersBelongToLoan().get(i).lender.getName(),
+                    l.getLendersBelongToLoan().get(i).lendersAmount);
+        }
 
 
     }
 
+    private void initStatusInfo(LoanDTO loanToInit, Loan l)
+    {
+        switch (l.getStatus())
+        {
+            case PENDING:
+            {
+                int sum = 0;
+
+                initLendersInfo(loanToInit, l);
+                for(LoanDTO.LenderDetailsDTO le : loanToInit.getLendersNamesAndAmounts())
+                {
+                    sum += le.lendersInvestAmount;
+                }
+
+                loanToInit.setTotalMoneyRaised(sum);
+                break;
+            }
+            case ACTIVE:
+            {
+                initLendersInfo(loanToInit, l);
+                loanToInit.setActivationYaz(l.getActivationYaz());
+                loanToInit.setNextPaymentYaz(loanToInit.getUnpaidPayments().firstKey());
+                break;
+            }
+            case IN_RISK:
+            {
+                initLendersInfo(loanToInit, l);
+                break;
+            }
+
+            case FINISHED:
+            {
+                initLendersInfo(loanToInit, l);
+                loanToInit.setActivationYaz(l.getActivationYaz());
+                loanToInit.setFinishYaz(l.getFinishYaz());
+                break;
+            }
+        }
+    }
+
+    private CustomerDTO createCustomerDTO(Customer c)
+    {
+        CustomerDTO customer = new CustomerDTO(c.getName(), c.getAccount().getBalance());
+        ArrayList<Account.AccountMovement> customerMovements = c.getAccount().getMovements();
+        ArrayList<AccountMovementDTO> customerDTOMovements = new ArrayList<>();
+
+        for (Account.AccountMovement m : customerMovements)
+        {
+            AccountMovementDTO curr = new AccountMovementDTO(m.getYaz(), m.getAmount(), m.getMovementKind(),
+                    m.getBalanceBefore(), m.getBalanceAfter());
+
+            customerDTOMovements.add(curr);
+        }
+
+        customer.setAccountMovements(customerDTOMovements);
+
+        return customer;
+    }
+
+    private void takeDataFromDescriptor(AbsDescriptor descriptor) throws XMLFileException
+    {
+        AbsCategories categories = descriptor.getAbsCategories();
+        AbsLoans loans = descriptor.getAbsLoans();
+        AbsCustomers customers = descriptor.getAbsCustomers();
+
+        takeCategoriesData(categories);
+        takeCustomersData(customers);
+
+        try {
+            takeLoansData(loans);
+        }
+        catch (XMLFileException ex)
+        {
+            name2customer = null;
+            LoanCategories.setCategories(null);
+            throw ex;
+        }
+    }
+
+    private void takeCategoriesData(AbsCategories categories)
+    {
+        for(String category : categories.getAbsCategory())
+        {
+            LoanCategories.addCategory(category);
+        }
+    }
+
+    private void takeCustomersData(AbsCustomers customers)
+    {
+        for(AbsCustomer c : customers.getAbsCustomer())
+        {
+            Customer customer = new Customer(c.getName(), c.getAbsBalance()); //TODO: change balance to int like aviad?
+        }
+    }
+
+    private void takeLoansData(AbsLoans loans) throws XMLFileException
+    {
+        try
+        {
+            XMLFileChecker.checkAllLoans(loans, name2customer);
+            for(AbsLoan l : loans.getAbsLoan())
+            {
+                Loan newLoan =  JAXBConvertor.convertLoan(l);
+                this.status2loan.put(newLoan.getStatus(), newLoan);
+                this.loanId2Loan.put(newLoan.getLoanId(), newLoan);
+                this.loans.add(newLoan); //TODO: delete some loan fields from system
+            }
+        }
+        catch (XMLFileException ex)
+        {
+            throw ex;
+        }
+    }
 }

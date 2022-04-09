@@ -15,6 +15,12 @@ public class PayedPaymentsByYaz implements PaymentsDB {
     }
 
     @Override
+    public SortedMap<Integer, LoanPaymentsData.Payment> getPayments()
+    {
+        return db;
+    }
+
+    @Override
     public void addNewPayment(LoanPaymentsData.Payment p) {
         Integer paymentCompletionYaz = p.getActualPaymentYaz();
         if(db.containsKey(paymentCompletionYaz)){

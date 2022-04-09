@@ -61,30 +61,27 @@ public class LoanPaymentsData {
     }
 
     private final Engine.Loan containingLoan;
-    private final LinkedList<PaymentsDB> paymentsDataBase;
+    private final Map<LoanPaymentsData.PaymentType, PaymentsDB> paymentsDataBase;
 
     public LoanPaymentsData(Engine.Loan containingLoan){
         this.containingLoan = containingLoan;
-        this.paymentsDataBase = new LinkedList<PaymentsDB>();
+        this.paymentsDataBase = new TreeMap<LoanPaymentsData.PaymentType, PaymentsDB>();
         this.initPaymentDataBases();
     }
 
     private void initPaymentDataBases(){
-        paymentsDataBase.add(new UnpayedPaymentsByYaz());
-        paymentsDataBase.add(new PayedPaymentsByYaz());
-        paymentsDataBase.add(new ExpiredPaymentsByYaz());
+        paymentsDataBase.put(PaymentType.UNPAID, new UnpayedPaymentsByYaz());
+        paymentsDataBase.put(PaymentType.PAID, new PayedPaymentsByYaz());
+        paymentsDataBase.put(PaymentType.EXPIRED, new ExpiredPaymentsByYaz());
     }
 
-    private void addNewPaymentToDataBase(Payment p){
-        for (PaymentsDB db:paymentsDataBase) {
-            if(db.getPaymentType() == p.paymentType){
-                db.addNewPayment(p);
-            }
-        }
+    private void addNewPaymentToDataBase(Payment p)
+    {
+        paymentsDataBase.get(p.paymentType).addNewPayment(p);
     }
 
     private Payment createNewUnpaidPayment(int scheduledYazOfPayment, double loanPartReturnedByBorrowerEveryPaymentTime, double interestPartReturnedByBorrowerEveryPaymentTime, String borrowerName){
-        Payment p = new Payment(scheduledYazOfPayment, loanPartReturnedByBorrowerEveryPaymentTime, interestPartReturnedByBorrowerEveryPaymentTime, borrowerName, Payment.PaymentType.UNPAID);
+        Payment p = new Payment(scheduledYazOfPayment, loanPartReturnedByBorrowerEveryPaymentTime, interestPartReturnedByBorrowerEveryPaymentTime, borrowerName, PaymentType.UNPAID);
 
         return p;
     }
@@ -94,11 +91,13 @@ public class LoanPaymentsData {
         double loanPartOfEachPayment = containingLoan.getInitialAmount() / numberOfPayments;
         double interestPartOfEachPayment = (containingLoan.getInterestPerPaymentSetByBorrowerInPercents() / 100) * loanPartOfEachPayment;
         double finalAmountOfEachPayment = loanPartOfEachPayment + interestPartOfEachPayment;
-        int yazToSetForPayment = containingLoan.getActivationYaz();
+        int yazToSetForPayment = containingLoan.getActivationYaz(); //TODO:ask niv
 
         for (int i = 0; i < numberOfPayments; i++) {
             Payment p = createNewUnpaidPayment(yazToSetForPayment, loanPartOfEachPayment, interestPartOfEachPayment, containingLoan.getBorrowerName());
             addNewPaymentToDataBase(p);
         }
     }
+
+    public Map<LoanPaymentsData.PaymentType, PaymentsDB> getPaymentsDataBase() { return paymentsDataBase; }
 }
