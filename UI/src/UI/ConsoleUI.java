@@ -115,6 +115,7 @@ public class ConsoleUI {
         }
     }
 
+
     public void showCustomersInfo()
     {
         ArrayList<CustomerDTO> customers = engine.showCustomersInfo();
@@ -127,10 +128,15 @@ public class ConsoleUI {
 
     public void depositMoney()
     {
-        String customerName = chooseCustomer();
-        double amount = chooseAmount("deposit");
-        engine.depositMoney(customerName, amount);
-        System.out.println("Deposit succeeded!");
+        try {
+            String customerName = chooseCustomer();
+            double amount = chooseAmount("deposit");
+            engine.depositMoney(customerName, amount);
+            System.out.println("Deposit succeeded!");
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+        }
     };
 
     public void withdrawMoney()
@@ -147,7 +153,18 @@ public class ConsoleUI {
         }
     }
 
-    public void assignLoansToLender(){};
+    public void assignLoansToLender(){ //TODO
+        //get the data from user and create dto, then send it to Engine
+        try{
+
+            //...//
+            engine.assignLoansToLender(new LoanPlacingDTO());
+        }
+
+        catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+    };
 
     public void moveTimeline(){
         System.out.println("Previous yaz: " + engine.getCurrYaz());
