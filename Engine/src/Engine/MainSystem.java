@@ -9,9 +9,11 @@ public interface MainSystem {
     public ArrayList<CustomerDTO> showCustomersInfo();
     public void depositMoney(String customerName, double amount);
     public void withdrawMoney(String customerName, double amount) throws Exception;
-    public void assignLoansToLender();
-    public void moveTimeline();
+    public void assignLoansToLender(LoanPlacingDTO dto);
+    public void moveTimeLine();
     public Object getCustomersNames();
+    public int getCurrYaz();
+
 
 
 }

@@ -1,14 +1,13 @@
 package UI;
 
 import Engine.MainSystem;
+import Engine.ABSsystem;
 import DTO.*;
 import Exceptions.XMLFileException;
 import com.sun.xml.internal.ws.api.pipe.Engine;
-
 import javax.xml.bind.JAXBException;
 import java.lang.System;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 
 public class ConsoleUI {
@@ -17,7 +16,7 @@ public class ConsoleUI {
         MoveTimeline, Exit
     }
 
-    private MainSystem engine = new Engine.ABSsystem();
+    private MainSystem engine = new ABSsystem();
     private MainMenu menu;
 
     public void showMenu() {
@@ -164,6 +163,7 @@ public class ConsoleUI {
         }
     }
 
+
     public void showCustomersInfo()
     {
         ArrayList<CustomerDTO> customers = engine.showCustomersInfo();
@@ -176,10 +176,15 @@ public class ConsoleUI {
 
     public void depositMoney()
     {
-        String customerName = chooseCustomer();
-        double amount = chooseAmount("deposit");
-        engine.depositMoney(customerName, amount);
-        System.out.println("Deposit succeeded!");
+        try {
+            String customerName = chooseCustomer();
+            double amount = chooseAmount("deposit");
+            engine.depositMoney(customerName, amount);
+            System.out.println("Deposit succeeded!");
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+        }
     };
 
     public void withdrawMoney()
@@ -196,9 +201,18 @@ public class ConsoleUI {
         }
     }
 
-    public void assignLoansToLender()
-    {
-        System.out.println();
+
+    public void assignLoansToLender(){ //TODO
+        //get the data from user and create dto, then send it to Engine
+        try{
+
+            //...//
+            engine.assignLoansToLender(new LoanPlacingDTO());
+        }
+
+        catch (Exception e){
+            System.out.println(e.getMessage());
+        }
     };
 
     public void moveTimeline()

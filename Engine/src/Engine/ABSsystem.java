@@ -1,18 +1,20 @@
 package Engine;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Map;
 
+import Engine.LoanPlacing.LoanPlacing;
+import Engine.TimeLineMoving.MoveTimeLine;
 import DTO.*;
 import Engine.XML_Handler.*;
 import Exceptions.XMLFileException;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-public class ABSsystem implements MainSystem {
+public class ABSsystem implements MainSystem, SystemService{
 
     //need to change data structures
     private Timeline systemTimeline;
@@ -21,13 +23,16 @@ public class ABSsystem implements MainSystem {
     private LinkedList<Loan> loans;
     private Map<Integer, Loan> loanId2Loan;
     private File loadedXMLFile = null;
+    private LinkedList<Loan> activeLoans;
+
 
     public ABSsystem()
     {
         systemTimeline = new Timeline();
     }
 
-    public int getCurrYaz() { return systemTimeline.getCurrentYaz(); }
+    @Override
+    public int getCurrYaz() { return systemTimeline.getCurrentYaz();}
 
     @Override
     public Object getCustomersNames()
@@ -35,60 +40,84 @@ public class ABSsystem implements MainSystem {
         return name2customer.keySet().toArray();
     }
 
+
     @Override
     public void loadXML(String path) throws XMLFileException, JAXBException
     {
-        try {
+        try
+        {
             File file = new File(path);
             XMLFileChecker.isFileExists(file);
             XMLFileChecker.isXMLFile(path);
 
-            JAXBContext jaxbContext = JAXBContext.newInstance(AbsDescriptor.class);
-            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            AbsDescriptor descriptor = (AbsDescriptor) jaxbUnmarshaller.unmarshal(file);
+            if (status2loan != null)
+            {
+                ArrayList<LoanDTO> LoansInfo = new ArrayList<LoanDTO>();
 
-            takeDataFromDescriptor(descriptor);
-            loadedXMLFile = file;
-            systemTimeline.resetSystemYaz();
+                JAXBContext jaxbContext = JAXBContext.newInstance(AbsDescriptor.class);
+                Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+                AbsDescriptor descriptor = (AbsDescriptor) jaxbUnmarshaller.unmarshal(file);
+
+                takeDataFromDescriptor(descriptor);
+                loadedXMLFile = file;
+                systemTimeline.resetSystemYaz();
+            }
         }
-        catch (Exception e) {
-           throw e;
+        catch (Exception ex)
+        {
+           throw ex;
         }
     }
 
     @Override
-    public ArrayList<LoanDTO> showLoansInfo()
-    {
+    public ArrayList<LoanDTO> showLoansInfo() {
         ArrayList<LoanDTO> loansInfo = new ArrayList<>();
 
-        for(Loan l : loans)
-        {
-           LoanDTO curr = createLoanDTO(l);
-           loansInfo.add(curr);
+        for (Loan l : loans) {
+            LoanDTO curr = createLoanDTO(l);
+            loansInfo.add(curr);
         }
 
         return loansInfo;
     }
+
+
 
     @Override
     public ArrayList<CustomerDTO> showCustomersInfo()
     {
         ArrayList<CustomerDTO> customersInfo = new ArrayList<>();
 
-        for(Customer c : name2customer.values())
+        try
         {
-            CustomerDTO curr = createCustomerDTO(c);
-            customersInfo.add(curr);
+            for(Customer c : name2customer.values())
+            {
+                CustomerDTO curr = createCustomerDTO(c);
+                customersInfo.add(curr);
+            }
+        }
+        catch (RuntimeException ex)
+        {
+            System.out.println(ex.getMessage());
+            System.exit(1);
         }
 
         return customersInfo;
     }
 
+
     @Override
     public void depositMoney(String customerName, double amount)
     {
-        Customer chosenCustomer = name2customer.get(customerName);
-        chosenCustomer.depositMoney(systemTimeline.getCurrentYaz(), amount);
+        try {
+            Customer chosenCustomer = name2customer.get(customerName);
+            chosenCustomer.depositMoney(systemTimeline.getCurrentYaz(), amount);
+        }
+
+        catch (RuntimeException e1){ //user exceptions will be cached in UI
+            System.out.println(e1.getMessage());
+            System.exit(1);
+        }
     }
 
     @Override
@@ -97,22 +126,42 @@ public class ABSsystem implements MainSystem {
         try {
             chosenCustomer.withdrawMoney(systemTimeline.getCurrentYaz(), amount);
         }
-        catch (Exception ex)
-        {
-            throw ex;
+
+        catch (RuntimeException e1){ //user exceptions will be catched in UI
+            System.out.println(e1.getMessage());
+            System.exit(1);
         }
     }
 
     @Override
-    public void assignLoansToLender() {
+    public void assignLoansToLender(LoanPlacingDTO loanPlacingDTO){
+        try {
+            LoanPlacing.placeToLoans(loanPlacingDTO, this.activeLoans, this);
 
+        }
 
+        catch (RuntimeException e1){ //user exceptions will be catched in UI
+            System.out.println(e1.getMessage());
+            System.exit(1);
+        }
     }
 
     @Override
-    public void moveTimeline()
+    public TimelineDTO moveTimeLine()
     {
+        TimelineDTO timeline;
 
+        try {
+            MoveTimeLine.moveTimeLineInOneYaz(this, systemTimeline);
+        }
+
+        catch (RuntimeException e1){ //user exceptions will be catched in UI
+            System.out.println(e1.getMessage());
+            System.exit(1);
+        }
+
+        timeline = new TimelineDTO(systemTimeline.getCurrentYaz());
+        return timeline;
     }
 
     private LoanDTO createLoanDTO(Loan l)
@@ -125,8 +174,8 @@ public class ABSsystem implements MainSystem {
             loan.addToLendersNameAndAmount(ld.lender.getName(), ld.lendersAmount);
         }
 
-        loan.setUnpaidPayments(l.getPaymentsData().getPaymentsDataBase().get(LoanPaymentsData.PaymentType.UNPAID));
-        loan.setPaidPayments(l.getPaymentsData().getPaymentsDataBase().get(LoanPaymentsData.PaymentType.PAID));
+        loan.setUnpaidPayments(l.getPaymentsData().getPaymentsDataBases().get(LoanPaymentsData.PaymentType.UNPAID));
+        loan.setPaidPayments(l.getPaymentsData().getPaymentsDataBases().get(LoanPaymentsData.PaymentType.PAID));
 
         initStatusInfo(loan, l);
         return loan;
@@ -135,13 +184,27 @@ public class ABSsystem implements MainSystem {
     private void initLendersInfo(LoanDTO loanToInit, Loan l)
     {
         int size = l.getLendersBelongToLoan().size();
-        for(int i=0; i<size; i++)
-        {
+        for(int i=0; i<size; i++) {
             loanToInit.addToLendersNameAndAmount(l.getLendersBelongToLoan().get(i).lender.getName(),
                     l.getLendersBelongToLoan().get(i).lendersAmount);
         }
+    }
 
+    //system service interface
+    @Override
+    public void moveMoneyBetweenAccounts(Account accountToSubtract, Account accountToAdd, double amount)
+    {
+        try
+        {
+            accountToSubtract.substructFromBalance(this.getCurrYaz(), amount);
+            accountToAdd.addToBalance(this.getCurrYaz(), amount);
+        }
 
+        catch (RuntimeException e1)
+        { //user exceptions will be catched in UI
+            System.out.println(e1.getMessage());
+            System.exit(1);
+        }
     }
 
     private void initStatusInfo(LoanDTO loanToInit, Loan l)
@@ -235,7 +298,7 @@ public class ABSsystem implements MainSystem {
     {
         for(AbsCustomer c : customers.getAbsCustomer())
         {
-            Customer customer = new Customer(c.getName(), c.getAbsBalance()); //TODO: change balance to int like aviad?
+            Customer customer = new Customer(c.getName(), c.getAbsBalance());
         }
     }
 
@@ -256,5 +319,18 @@ public class ABSsystem implements MainSystem {
         {
             throw ex;
         }
+    }
+
+    @Override
+    public Customer getCustomerByName(String name){return name2customer.get(name);}
+
+    @Override
+    public Map<String, Customer> getAllCustomers(){
+        return this.name2customer;
+    }
+
+    @Override
+    public Timeline getTimeLine(){
+        return this.systemTimeline;
     }
 }

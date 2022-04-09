@@ -1,9 +1,10 @@
 package Engine;
 
 import java.util.LinkedList;
+import Exceptions.*;
 
-public class Loan {
-
+public class Loan
+{
     static int loansNum = 0;
 
     public enum LoanStatus {
@@ -26,6 +27,7 @@ public class Loan {
     private final double interestPerPaymentSetByBorrowerInPercents;
     private final double totalInterestForLoan;
     private LoanStatus status;
+    private Account account;
 
     //payments data
     private LoanPaymentsData paymentsData;
@@ -45,18 +47,20 @@ public class Loan {
     private double loanPercentageTakenByLenders;
     private double loanAmountFinancedByLenders;
 
-    public Loan(String loanName, String borrowerName, double originalLoanAmount, int yaz, int paymentRateInYaz, double interestPercentPerPayment, String category)
+    public Loan(String loanName, String borrowerName, double originalLoanAmount, int yaz, int paymentRateInYaz, double interestPercentPerPayment, String category, int currentYaz)
     {
         //init loan's general data
         this.loanName = loanName;
         this.loanId = loansNum;
         loansNum++;
+
         this.category = category;
         this.initialAmount = originalLoanAmount;
         this.borrowerName = borrowerName;
         this.interestPerPaymentSetByBorrowerInPercents = interestPercentPerPayment;
         this.totalInterestForLoan = (1+(interestPerPaymentSetByBorrowerInPercents/100))*initialAmount;
-        this.setLoanStatus(LoanStatus.NEW);
+        this.setLoanStatus(LoanStatus.NEW, currentYaz);
+        this.account = new Account(0);
 
         //init loan's payments data
         this.paymentsData = new LoanPaymentsData(this);
@@ -120,33 +124,50 @@ public class Loan {
     public double getTotalInterestForLoan() { return totalInterestForLoan; }
     public LoanPaymentsData getPaymentsData() { return paymentsData; }
     public LinkedList<LenderDetails> getLendersBelongToLoan() { return lendersBelongToLoan; }
+    public double getLoanPercentageTakenByLenders(){return this.loanPercentageTakenByLenders;}
+    public double getLoanAmountFinancedByLenders(){return this.loanAmountFinancedByLenders;}
+    public Account getLoanAccount(){return this.account;}
 
     //setters
-    public void setLoanStatus(Loan.LoanStatus newStatus){
+    public void setLoanStatus(Loan.LoanStatus newStatus, int currentYaz){
 
+        this.status = newStatus;
         switch (newStatus) {
             case ACTIVE:
-                paymentsData.createAllLoanPayments();
+                updateLoanToActive(currentYaz);
+
                 break;
 
             case PENDING:
+
                 break;
 
             case IN_RISK:
+
                 break;
 
             case FINISHED:
+
                 break;
 
             case NEW:
                 break;
         }
-
-        this.status = newStatus;
     }
+
 
     //methods
     public void addNewLender(Engine.Customer newLender, double lendersPartOfLoanAmount){
+
+        double amountOpenToLend = this.getInitialAmount() - this.getLoanAmountFinancedByLenders();
+        if(newLender.getName().equals(this.getBorrowerName())){
+            throw new SystemRestrictionsException(this, "User is not allowed to register to a loan as lender when the user is already registered as borrower");
+        }
+
+        if(lendersPartOfLoanAmount > amountOpenToLend){
+            throw new ValueOutOfRangeException(1, amountOpenToLend, "User part of loan can't be greater than loan's open amount for lending");
+        }
+
         Loan.LenderDetails newLenderDetails = new Loan.LenderDetails();
         newLenderDetails.lender = newLender;
         newLenderDetails.lendersAmount = lendersPartOfLoanAmount;
@@ -166,6 +187,59 @@ public class Loan {
         return result;
     }
 
+    public LoanPaymentsData.Payment peekPaymentForSpecificYaz(int yaz){
+        return paymentsData.peekPaymentForYaz(yaz);
+    }
+
+    public LoanPaymentsData.Payment pollPaymentForSpecificYaz(int yaz){
+        return paymentsData.pollPaymentForYaz(yaz);
+    }
+
+    public void addNewPayment(LoanPaymentsData.Payment newPayment){
+        paymentsData.addNewPaymentToDataBase(newPayment);
+    }
+
+    public Object getPayments(LoanPaymentsData.PaymentType paymentType){
+        return paymentsData.getPayments(paymentType);
+    }
+
+    public boolean isTherePaymentsOfSpecificType(LoanPaymentsData.PaymentType type){
+        return paymentsData.isTherePaymentsFromSpecificType(type);
+    }
+
+    public LoanPaymentsData.Payment getEarliestUnpaidOrExpiredPayment(){
+        LoanPaymentsData.Payment earliestExpiredPayment = paymentsData.getEarliestExpiredPayment();
+        LoanPaymentsData.Payment earliestUnpaidPayment = paymentsData.getEarliestUnpaidPayment();
+
+        if(earliestUnpaidPayment == null && earliestExpiredPayment == null){
+            throw new DataBaseAccessException(paymentsData, "There was a problem while trying to get earliest payment - there are on unpaid or expired payments - loan shold be finished");
+        }
+
+        else if(earliestUnpaidPayment == null){
+            return earliestExpiredPayment;
+        }
+
+        else if(earliestExpiredPayment == null){
+            return earliestUnpaidPayment;
+        }
+
+        else{
+            double earliestUnpaidAmount = earliestUnpaidPayment.getBothPartsOfAmountToPay();
+            double earliestExpiredAmount = earliestExpiredPayment.getBothPartsOfAmountToPay();
+
+            if(earliestUnpaidAmount >= earliestExpiredAmount){
+                return earliestUnpaidPayment;
+            }
+
+            else{
+                return earliestExpiredPayment;
+            }
+        }
+    }
+
+    private void updateLoanToActive(int yaz){
+        this.paymentsData.addYazToAllPayments(yaz);
+    }
 }
 
 

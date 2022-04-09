@@ -7,7 +7,8 @@ import java.util.ArrayList;
 public class LoanPlacingDTO {
     private final String customerName;
     private final double amountToInvest;
-    private final ArrayList<String> catogoriesWillingToInvestIn; //TODO: REMANE
+
+    private final ArrayList<String> categoriesWillingToInvestIn;
     private final double minimumInterestPerYaz;
     private final int minimumYazForReturn;
     private final int maximumPercentOwnership;
@@ -15,7 +16,7 @@ public class LoanPlacingDTO {
 
     public LoanPlacingDTO(double amountToInvest, ArrayList<String> categoriesWillingToInvestIn, double minimumInterestPerYaz, int minimumYazForReturn, int maximumPercentOwnership, int maximumOpenLoansForBorrower, String customerName){
         this.amountToInvest = amountToInvest;
-        this.catogoriesWillingToInvestIn = categoriesWillingToInvestIn;
+        this.categoriesWillingToInvestIn = categoriesWillingToInvestIn;
         this.minimumInterestPerYaz = minimumInterestPerYaz;
         this.minimumYazForReturn = minimumYazForReturn;
         this.maximumPercentOwnership = maximumPercentOwnership;
@@ -25,7 +26,7 @@ public class LoanPlacingDTO {
 
     //getters
     public double getAmountToInvest(){return this.amountToInvest;}
-    public ArrayList<String> getCatogoriesWillingToInvestIn(){return this.catogoriesWillingToInvestIn;}
+    public ArrayList<String> getCategoriesWillingToInvestIn(){return this.categoriesWillingToInvestIn;}
     public double getMinimumInterestPerYaz() {
         return minimumInterestPerYaz;
     }
