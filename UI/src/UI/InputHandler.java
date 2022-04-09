@@ -10,8 +10,11 @@ public class InputHandler {
     public static int getOptionFromMenu()
     {
         int input;
+        String line;
         Scanner sc = new Scanner(System.in);
-        input  = sc.nextInt();
+        //input  = sc.nextInt();
+        line = sc.nextLine();
+        input = Integer.parseInt(line);
 
         try {
             checkOptionFromMenu(input);
