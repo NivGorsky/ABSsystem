@@ -4,6 +4,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.TreeMap;
+
 import Exceptions.*;
 import Engine.LoanPlacing.LoanPlacing;
 import Engine.TimeLineMoving.MoveTimeLine;
@@ -23,13 +25,17 @@ public class ABSsystem implements MainSystem, SystemService
     private Map<Loan.LoanStatus, Loan> status2loan;
     private LinkedList<Loan> loans;
     private Map<Integer, Loan> loanId2Loan;
-    private File loadedXMLFile = null;
+    private InputStream loadedXMLFile = null;
     private LinkedList<Loan> activeLoans;
 
 
     public ABSsystem()
     {
         systemTimeline = new Timeline();
+        name2customer = new TreeMap<>();
+        loanId2Loan = new TreeMap<>();
+        loans = new LinkedList<>();
+        status2loan = new TreeMap<>();
     }
 
     @Override
@@ -47,21 +53,9 @@ public class ABSsystem implements MainSystem, SystemService
     {
         try
         {
-            //InputStream inputStream = new FileInputStream(new File(path));
-            File file = new File("ex1-big.xml");
-           // XMLFileChecker.isFileExists(file);
-           // XMLFileChecker.isXMLFile("ex1-big.xml");
-
-            ArrayList<LoanDTO> LoansInfo = new ArrayList<LoanDTO>();
-
-            JAXBContext jaxbContext = JAXBContext.newInstance(AbsDescriptor.class);
-            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            AbsDescriptor descriptor = (AbsDescriptor) jaxbUnmarshaller.unmarshal(file);
-
-            takeDataFromDescriptor(descriptor);
-            loadedXMLFile = file;
+            loadedXMLFile = SchemaForLAXB.getDescriptorFromXML(path);
+            takeDataFromDescriptor(SchemaForLAXB.descriptor);
             systemTimeline.resetSystemYaz();
-
         }
         catch (Exception ex)
         {
@@ -300,6 +294,7 @@ public class ABSsystem implements MainSystem, SystemService
         for(AbsCustomer c : customers.getAbsCustomer())
         {
             Customer customer = new Customer(c.getName(), c.getAbsBalance());
+            name2customer.put(customer.getName(), customer);
         }
     }
 

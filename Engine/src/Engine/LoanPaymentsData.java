@@ -20,8 +20,8 @@ public class LoanPaymentsData {
         private double InterestPartOfThePayment;
         private String borrowerName;
 
-        public Payment(int ScheduledYaz, double loanPartOfThePayment, double interestPartOfThePayment, String borrowerName, PaymentType paymentType) {
-            this.scheduledYaz = -1;
+        public Payment(int scheduledYaz, double loanPartOfThePayment, double interestPartOfThePayment, String borrowerName, PaymentType paymentType) {
+            this.scheduledYaz = scheduledYaz;
             this.loanPartOfThePayment = loanPartOfThePayment;
             this.InterestPartOfThePayment = interestPartOfThePayment;
             this.borrowerName = borrowerName;

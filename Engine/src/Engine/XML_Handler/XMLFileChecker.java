@@ -51,7 +51,7 @@ public class XMLFileChecker {
             throw new XMLFileException("Loan number " + loan.id + ": The loan's owner isn't a registered customer!");
         }
 
-        if((loan.absTotalYazTime/loan.absPaysEveryYaz)%10 != 0)
+        if((loan.absTotalYazTime%loan.absPaysEveryYaz) != 0)
         {
             throw new XMLFileException("Loan number "+ loan.id + ": The payments rate does not divides with the total yaz of the loan");
         }

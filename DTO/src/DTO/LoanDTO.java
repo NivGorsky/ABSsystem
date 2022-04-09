@@ -5,6 +5,7 @@ import Engine.LoanPaymentsData;
 
 import java.util.ArrayList;
 import java.util.SortedMap;
+import java.util.TreeMap;
 
 public class LoanDTO {
 
@@ -97,10 +98,9 @@ public class LoanDTO {
         this.yazPerPayment = yazPerPayment;
         this.category = category;
         this.status = status;
-        /*this.lendersNameAndAmount = lendersAndAmounts;
-        this.debt = debt;
-        this.paidInterest = paidInterest;
-        this.paidLoan = paidLoan;*/
+
+        unpaidPayments = new TreeMap<>();
+        paidPayments = new TreeMap<>();
     }
 
     //getters
