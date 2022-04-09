@@ -141,10 +141,11 @@ public class ConsoleUI {
     public void loadXML()
     {
         System.out.println("Please enter a path to the XML file (the path will contain english letters only!)");
-        String path = InputHandler.getPathToFile();
+        String path = "";//InputHandler.getPathToFile();
 
         try{
             engine.loadXML(path);
+            System.out.println("File loaded successfully!\n\n");
         }
 
         catch (JAXBException e) {
@@ -153,6 +154,8 @@ public class ConsoleUI {
         catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
+
+
     }
 
     public void showLoansInfo() {

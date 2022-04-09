@@ -71,7 +71,7 @@ public class InputHandler {
     public static String getPathToFile()
     {
         Scanner sc = new Scanner(System.in);
-        String path = sc.toString();
+        String path = sc.nextLine();
 
         try {
             checkPath(path);
@@ -92,10 +92,10 @@ public class InputHandler {
             throw new Exception("Non path received, please try again");
         }
 
-        else if(!path.matches("[a-zA-Z0-9'.''\']"));
+        /*else if(path.matches("\"([a-zA-Z]:)?(\\\\\\\\[a-zA-Z0-9_.-]+)+\\\\\\\\?\"\n"));
         {
             throw new Exception("The path contains non-English characters! \nplease try again");
-        }
+        }*/
     }
 
     public static ArrayList<String> chooseCategories(int numberOfCategoriesToChoose, ArrayList<String> supportedCategories){

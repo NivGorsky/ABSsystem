@@ -47,22 +47,21 @@ public class ABSsystem implements MainSystem, SystemService
     {
         try
         {
-            File file = new File(path);
-            XMLFileChecker.isFileExists(file);
-            XMLFileChecker.isXMLFile(path);
+            //InputStream inputStream = new FileInputStream(new File(path));
+            File file = new File("ex1-big.xml");
+           // XMLFileChecker.isFileExists(file);
+           // XMLFileChecker.isXMLFile("ex1-big.xml");
 
-            if (status2loan != null)
-            {
-                ArrayList<LoanDTO> LoansInfo = new ArrayList<LoanDTO>();
+            ArrayList<LoanDTO> LoansInfo = new ArrayList<LoanDTO>();
 
-                JAXBContext jaxbContext = JAXBContext.newInstance(AbsDescriptor.class);
-                Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-                AbsDescriptor descriptor = (AbsDescriptor) jaxbUnmarshaller.unmarshal(file);
+            JAXBContext jaxbContext = JAXBContext.newInstance(AbsDescriptor.class);
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+            AbsDescriptor descriptor = (AbsDescriptor) jaxbUnmarshaller.unmarshal(file);
 
-                takeDataFromDescriptor(descriptor);
-                loadedXMLFile = file;
-                systemTimeline.resetSystemYaz();
-            }
+            takeDataFromDescriptor(descriptor);
+            loadedXMLFile = file;
+            systemTimeline.resetSystemYaz();
+
         }
         catch (Exception ex)
         {
