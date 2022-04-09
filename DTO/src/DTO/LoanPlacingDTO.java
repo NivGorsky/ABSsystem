@@ -7,7 +7,6 @@ import java.util.ArrayList;
 public class LoanPlacingDTO {
     private final String customerName;
     private final double amountToInvest;
-
     private final ArrayList<String> categoriesWillingToInvestIn;
     private final double minimumInterestPerYaz;
     private final int minimumYazForReturn;

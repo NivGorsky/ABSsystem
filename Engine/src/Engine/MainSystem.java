@@ -13,7 +13,6 @@ public interface MainSystem {
     public TimelineDTO moveTimeLine();
     public Object getCustomersNames();
     public int getCurrYaz();
-
-
+    public ArrayList<String> getSystemLoanCategories();
 
 }

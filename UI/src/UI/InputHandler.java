@@ -1,8 +1,8 @@
 package UI;
 
-import Engine.ABSsystem;
 import Exceptions.ValueOutOfRangeException;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class InputHandler {
@@ -97,6 +97,61 @@ public class InputHandler {
             throw new Exception("The path contains non-English characters! \nplease try again");
         }
     }
+
+    public static ArrayList<String> chooseCategories(int numberOfCategoriesToChoose, ArrayList<String> supportedCategories){
+        Scanner sc = new Scanner(System.in);
+        ArrayList<String> categories = new ArrayList<String>();
+
+        for (int i=0;i<numberOfCategoriesToChoose; ++i){
+            String category = sc.toString();
+            while(!isCategorySupported(category, supportedCategories)){
+                category = sc.toString();
+            }
+            categories.add(sc.toString());
+        }
+
+        return categories;
+    }
+
+    public static int getPositiveNumber()
+    {
+        Scanner sc = new Scanner(System.in);
+        int res = sc.nextInt();
+
+        while(res <= 0){
+            res = sc.nextInt();
+        }
+
+        return sc.nextInt();
+    }
+
+    private static boolean isCategorySupported(String category,ArrayList<String> categories){
+        for (String supportedCategory:categories) {
+            if(category.equals(supportedCategory)) {
+                return true;
+            }
+        }
+
+        System.out.println("Category is not supported, please choose only supported categories");
+        return false;
+    }
+
+    public static double getMinInterestPerYaz(){
+        Scanner sc = new Scanner(System.in);
+        double minInterest = sc.nextDouble();
+
+        while(!isMinInterestSupported(minInterest)){
+            minInterest = sc.nextDouble();
+        }
+
+        return minInterest;
+    }
+
+    private static boolean isMinInterestSupported(double minInterest){
+        return minInterest > 0 || minInterest == -1;
+    }
+
+
 
 
 

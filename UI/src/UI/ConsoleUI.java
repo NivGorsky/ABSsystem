@@ -4,6 +4,7 @@ import Engine.MainSystem;
 import Engine.ABSsystem;
 import DTO.*;
 import Exceptions.XMLFileException;
+import UI.AssigningLoans.AssignLoanToLenders;
 import com.sun.xml.internal.ws.api.pipe.Engine;
 import javax.xml.bind.JAXBException;
 import java.lang.System;
@@ -206,7 +207,8 @@ public class ConsoleUI {
         //get the data from user and create dto, then send it to Engine
         try{
             CustomerDTO chosenCustomer = chooseCustomerWithBalance();
-            engine.assignLoansToLender(new LoanPlacingDTO());
+            AssignLoanToLenders assignLoanToLendersForm = new AssignLoanToLenders(chosenCustomer.getCustomerName(), this.engine.getSystemLoanCategories());
+            engine.assignLoansToLender(assignLoanToLendersForm.getDTO());
         }
 
         catch (Exception e){
@@ -230,6 +232,4 @@ public class ConsoleUI {
 
         return true;
     }
-
-
 }
