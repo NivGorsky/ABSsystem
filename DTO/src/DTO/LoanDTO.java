@@ -8,7 +8,7 @@ import java.util.SortedMap;
 
 public class LoanDTO {
 
-    private class PaymentDTO{
+    public class PaymentDTO{
 
         private final int originalYazToPay;
         private int actualPaymentYaz;
@@ -60,6 +60,7 @@ public class LoanDTO {
     private final double initialAmount;
     private final int maxYazToPay;
     private final double interestPerPayment;
+    private final double totalInterest;
     private final int yazPerPayment;
     private final String category;
     private Loan.LoanStatus status;
@@ -84,14 +85,15 @@ public class LoanDTO {
     private int finishYaz;
 
 
-    public LoanDTO(int id, String custName, double initialAmount, int totalYaz, double interest, int yazPerPayment,
+    public LoanDTO(int id, String custName, double initialAmount, int totalYaz, double interestPerPayment, double totalInterest, int yazPerPayment,
                    Loan.LoanStatus status, String category)
     {
         loanId = id;
         customerName = custName;
         this.initialAmount = initialAmount;
         this.maxYazToPay = totalYaz;
-        this.interestPerPayment = interest;
+        this.interestPerPayment = interestPerPayment;
+        this.totalInterest = totalInterest;
         this.yazPerPayment = yazPerPayment;
         this.category = category;
         this.status = status;
@@ -234,7 +236,7 @@ public class LoanDTO {
                         "\n Loan needs " + amountMissing + " more to become active\n");
                 break;
             }
-            case ACTIVE, IN_RISK:
+            case ACTIVE:
             {
                 toReturn +=("Registered lenders for loan:\n");
 
@@ -255,11 +257,31 @@ public class LoanDTO {
                 }
 
                 toReturn+= ("Total loan paid: " + paidLoan + " , remained to pay: " + (initialAmount-paidLoan) +
-                        "\nTotal interest paid: " + paidInterest + " , remained to pay: "+ () + "\n");
+                        "\nTotal interest paid: " + paidInterest + " , remained to pay: " + (totalInterest-paidInterest) + "\n");
                 break;
             }
             case IN_RISK:
             {
+                toReturn +=("Registered lenders for loan:\n");
+
+                for(LenderDetailsDTO ld : lendersNameAndAmount)
+                {
+                    toReturn += ("Name: " + ld.lenderName + " Amount invested: " + ld.lendersInvestAmount + "\n");
+                }
+
+                toReturn += ("The loan became active in yaz number " + activationYaz +
+                        "\nNext payment in yaz number " + findNextPaymentYaz() + "\n" +
+                        "All payments made so far:\n");
+
+                int i=1;
+                for (PaymentDTO p : paidPayments.values())
+                {
+                    toReturn += i +". " + p.toString();
+                    i++;
+                }
+
+                toReturn+= ("Total loan paid: " + paidLoan + " , remained to pay: " + (initialAmount-paidLoan) +
+                        "\nTotal interest paid: " + paidInterest + " , remained to pay: " + (totalInterest-paidInterest) + "\n");
                     toReturn+=lendersNameAndAmountToString();
                     //show unpaid payments
                     break;
@@ -281,7 +303,7 @@ public class LoanDTO {
                 break;
             }
         }
-
+        return toReturn;
     }
 
     public String LoanBasicInfoToString()

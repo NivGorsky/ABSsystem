@@ -2,8 +2,8 @@ package DTO;
 
 import java.util.ArrayList;
 
-public class CustomerDTO {
-
+public class CustomerDTO
+{
     private String customerName;
     private ArrayList<AccountMovementDTO> accountMovements;
     private ArrayList<LoanDTO> loansAsBorrower;
@@ -90,6 +90,4 @@ public class CustomerDTO {
 
         return toReturn;
     }
-    }
-
 }

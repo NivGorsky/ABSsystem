@@ -4,18 +4,19 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Map;
-
+import Exceptions.*;
 import Engine.LoanPlacing.LoanPlacing;
 import Engine.TimeLineMoving.MoveTimeLine;
 import DTO.*;
 import Engine.XML_Handler.*;
+import Exceptions.SystemRestrictionsException;
 import Exceptions.XMLFileException;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-public class ABSsystem implements MainSystem, SystemService{
-
+public class ABSsystem implements MainSystem, SystemService
+{
     //need to change data structures
     private Timeline systemTimeline;
     private Map<String,Customer> name2customer;
@@ -134,7 +135,8 @@ public class ABSsystem implements MainSystem, SystemService{
     }
 
     @Override
-    public void assignLoansToLender(LoanPlacingDTO loanPlacingDTO){
+    public void assignLoansToLender(LoanPlacingDTO loanPlacingDTO) throws Exception
+    {
         try {
             LoanPlacing.placeToLoans(loanPlacingDTO, this.activeLoans, this);
 
@@ -167,7 +169,7 @@ public class ABSsystem implements MainSystem, SystemService{
     private LoanDTO createLoanDTO(Loan l)
     {
         LoanDTO loan = new LoanDTO(l.getLoanId(), l.getBorrowerName(), l.getInitialAmount(), l.getMaxYazToPay(),
-                 l.getInterestPerPaymentSetByBorrowerInPercents(), l.getPaymentRateInYaz(), l.getStatus(), l.getCategory());
+                 l.getInterestPerPaymentSetByBorrowerInPercents(), l.getTotalInterestForLoan(), l.getPaymentRateInYaz(), l.getStatus(), l.getCategory());
 
         for(Loan.LenderDetails ld : l.getLendersDetails())
         {
@@ -309,7 +311,7 @@ public class ABSsystem implements MainSystem, SystemService{
             XMLFileChecker.checkAllLoans(loans, name2customer);
             for(AbsLoan l : loans.getAbsLoan())
             {
-                Loan newLoan =  JAXBConvertor.convertLoan(l);
+                Loan newLoan =  JAXBConvertor.convertLoan(l, systemTimeline.getCurrentYaz());
                 this.status2loan.put(newLoan.getStatus(), newLoan);
                 this.loanId2Loan.put(newLoan.getLoanId(), newLoan);
                 this.loans.add(newLoan); //TODO: delete some loan fields from system
@@ -333,4 +335,11 @@ public class ABSsystem implements MainSystem, SystemService{
     public Timeline getTimeLine(){
         return this.systemTimeline;
     }
+
+    @Override
+    public ArrayList<String> getSystemLoanCategories()
+    {
+        return LoanCategories.getCategories();
+    }
+
 }

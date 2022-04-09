@@ -92,7 +92,7 @@ public class InputHandler {
             throw new Exception("Non path received, please try again");
         }
 
-        else if(!path.matches("[a-zA-Z]+"))
+        else if(!path.matches("[a-zA-Z0-9'.''\']"));
         {
             throw new Exception("The path contains non-English characters! \nplease try again");
         }

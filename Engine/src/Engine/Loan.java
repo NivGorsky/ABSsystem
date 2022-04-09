@@ -22,9 +22,9 @@ public class Loan
     private final String loanName;
     private final int loanId; //string uuid
     private final String category;
-    private final double initialAmount;
-    private final java.lang.String borrowerName;
-    private final double interestPerPaymentSetByBorrowerInPercents;
+    private final int initialAmount;
+    private final String borrowerName;
+    private final int interestPerPaymentSetByBorrowerInPercents;
     private final double totalInterestForLoan;
     private LoanStatus status;
     private Account account;
@@ -47,7 +47,8 @@ public class Loan
     private double loanPercentageTakenByLenders;
     private double loanAmountFinancedByLenders;
 
-    public Loan(String loanName, String borrowerName, double originalLoanAmount, int yaz, int paymentRateInYaz, double interestPercentPerPayment, String category, int currentYaz)
+    public Loan(String loanName, String borrowerName, int originalLoanAmount, int yaz, int paymentRateInYaz,
+                int interestPercentPerPayment, String category, int currentYaz)
     {
         //init loan's general data
         this.loanName = loanName;
@@ -157,9 +158,10 @@ public class Loan
 
 
     //methods
-    public void addNewLender(Engine.Customer newLender, double lendersPartOfLoanAmount){
-
+    public void addNewLender(Engine.Customer newLender, double lendersPartOfLoanAmount) throws Exception
+    {
         double amountOpenToLend = this.getInitialAmount() - this.getLoanAmountFinancedByLenders();
+
         if(newLender.getName().equals(this.getBorrowerName())){
             throw new SystemRestrictionsException(this, "User is not allowed to register to a loan as lender when the user is already registered as borrower");
         }
@@ -168,14 +170,24 @@ public class Loan
             throw new ValueOutOfRangeException(1, amountOpenToLend, "User part of loan can't be greater than loan's open amount for lending");
         }
 
+        for(LenderDetails lender : this.lendersBelongToLoan)
+        {
+            if(newLender.getName() == lender.lender.getName())
+            {
+                lender.lendersAmount += lendersPartOfLoanAmount;
+                lender.lendersPartOfLoanInPercent = (lendersPartOfLoanAmount/initialAmount)*100;
+                return;
+            }
+        }
+
         Loan.LenderDetails newLenderDetails = new Loan.LenderDetails();
         newLenderDetails.lender = newLender;
         newLenderDetails.lendersAmount = lendersPartOfLoanAmount;
         newLenderDetails.lendersPartOfLoanInPercent = lendersPartOfLoanAmount / this.initialAmount;
         this.lendersBelongToLoan.add(newLenderDetails);
-        this.loanPercentageTakenByLenders += newLenderDetails.lendersPartOfLoanInPercent;
-        this.loanAmountFinancedByLenders += newLenderDetails.lendersAmount;
+        this.loanPercentageTakenByLenders += newLenderDetails.lendersPartOfLoanInPercent;this.loanAmountFinancedByLenders += newLenderDetails.lendersAmount;
     }
+
 
     public boolean isLoanReadyToBeActive(){
         boolean result = false;

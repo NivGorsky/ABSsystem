@@ -12,10 +12,10 @@ public class JAXBConvertor {
         return customer; //TODO:add customer to the map in system
     }
 
-    public static Loan convertLoan(AbsLoan generatedLoan)
+    public static Loan convertLoan(AbsLoan generatedLoan, int currentYaz)
     {
         Loan loan = new Loan(generatedLoan.id, generatedLoan.absOwner, generatedLoan.absCapital, generatedLoan.absTotalYazTime,
-                generatedLoan.absPaysEveryYaz, generatedLoan.absIntristPerPayment, generatedLoan.absCategory);
+                generatedLoan.absPaysEveryYaz, generatedLoan.absIntristPerPayment, generatedLoan.absCategory, currentYaz);
 
         //TODO: fix loanId and loanName - dont need both i think name==id
         LoanPaymentsData loanPayments = new LoanPaymentsData(loan);

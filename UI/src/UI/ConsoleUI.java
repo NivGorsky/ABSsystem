@@ -81,7 +81,7 @@ public class ConsoleUI {
             showMenu();
 
             input = InputHandler.getOptionFromMenu();
-            userChoice = MainMenu.values()[input];
+            userChoice = MainMenu.values()[input-1];
             try {
                 switch (userChoice) {
                     case LoadXML: {
@@ -114,9 +114,9 @@ public class ConsoleUI {
                         }
                     }
                     case AssignLoansToLender: {
-                        if (checkFileLoaded(isFileLoaded)) {
-                            String customer = chooseCustomer();
-                            //insert parameters
+                        if (checkFileLoaded(isFileLoaded))
+                        {
+                            assignLoansToLender();
                             break;
                         }
                     }
@@ -130,7 +130,8 @@ public class ConsoleUI {
                         System.exit(1);
                     }
                 }
-            } catch (XMLFileException ex) {
+            }
+            catch (XMLFileException ex) {
                 System.out.println(ex.getExceptionMsg());
             }
 
@@ -203,7 +204,7 @@ public class ConsoleUI {
     }
 
 
-    public void assignLoansToLender(){ //TODO
+    public void assignLoansToLender(){
         //get the data from user and create dto, then send it to Engine
         try{
             CustomerDTO chosenCustomer = chooseCustomerWithBalance();

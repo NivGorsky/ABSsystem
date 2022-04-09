@@ -12,7 +12,8 @@ import java.util.LinkedList;
 
 public abstract class LoanPlacing {
 
-    public static void placeToLoans(LoanPlacingDTO loanPlacingDto, LinkedList<Engine.Loan> loans, SystemService absService){
+    public static void placeToLoans(LoanPlacingDTO loanPlacingDto, LinkedList<Engine.Loan> loans, SystemService absService) throws Exception
+    {
         LinkedList<Engine.Loan> relevantLoans = getRelevantLoans(loanPlacingDto, loans, absService);
 
         if(relevantLoans.isEmpty()){ //there were no relevant loans
@@ -22,7 +23,8 @@ public abstract class LoanPlacing {
         placingAlgorithm(loansToPlaceMoney, loanPlacingDto, absService);
     }
 
-    private static void placingAlgorithm(LinkedList<LoanPlacingDBEntry> openLoansDB, LoanPlacingDTO dto, SystemService absService){
+    private static void placingAlgorithm(LinkedList<LoanPlacingDBEntry> openLoansDB, LoanPlacingDTO dto, SystemService absService) throws Exception
+    {
         double amountLeftToInvest = dto.getAmountToInvest();
         int numberOfOpenLoans = openLoansDB.size();
         double amountToPutInEachLoan = amountLeftToInvest / numberOfOpenLoans;
@@ -39,6 +41,7 @@ public abstract class LoanPlacing {
             }
             amountToPutInEachLoan = amountLeftToInvest / numberOfOpenLoans;
         }
+
         transferMoneyToLoansAccountsAndRegisterLenders(closedLoans, dto, absService);
     }
 
@@ -71,13 +74,15 @@ public abstract class LoanPlacing {
         return updatedAmountLeftToLend;
     }
 
-    private static void transferMoneyToLoansAccountsAndRegisterLenders(LinkedList<LoanPlacingDBEntry> loansToTransfer, LoanPlacingDTO dto, SystemService absService){
+    private static void transferMoneyToLoansAccountsAndRegisterLenders(LinkedList<LoanPlacingDBEntry> loansToTransfer, LoanPlacingDTO dto, SystemService absService) throws Exception
+    {
         double currentAmountToTransfer = -1;
         Customer lender = absService.getCustomerByName(dto.getCustomerName());
         Account lendersAccount = lender.getAccount();
         Account loansAccount = null;
 
-        for (LoanPlacingDBEntry loanEntry: loansToTransfer){
+        for (LoanPlacingDBEntry loanEntry: loansToTransfer)
+        {
             currentAmountToTransfer = loanEntry.amountToLend;
             loansAccount = loanEntry.loan.getLoanAccount();
             absService.moveMoneyBetweenAccounts(lendersAccount, loansAccount, currentAmountToTransfer);
