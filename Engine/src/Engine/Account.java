@@ -16,7 +16,13 @@ public class Account {
             this.amount = amount;
             this.movementKind = movementKind;
             this.balanceBefore = balance;
-            this.balanceAfter = balance + amount;
+            if(movementKind == '+'){
+                this.balanceAfter = balance + amount;
+            }
+
+            else{
+                this.balanceAfter = balance - amount;
+            }
         }
 
         public int getYaz() { return yaz; }
