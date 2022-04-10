@@ -68,11 +68,8 @@ public class LoanDTO {
     private double debt;
     private double paidInterest;
     private double paidLoan;
-
-
     private  SortedMap<Integer, PaymentDTO> unpaidPayments;
     private  SortedMap<Integer, PaymentDTO> paidPayments;
-
 
     //pending info
     private ArrayList<LenderDetailsDTO> lendersNameAndAmount;
@@ -98,6 +95,7 @@ public class LoanDTO {
         this.yazPerPayment = yazPerPayment;
         this.category = category;
         this.status = status;
+        this.lendersNameAndAmount = new ArrayList<LenderDetailsDTO>();
 
         unpaidPayments = new TreeMap<>();
         paidPayments = new TreeMap<>();
@@ -229,7 +227,7 @@ public class LoanDTO {
             {
                 for(LenderDetailsDTO ld : lendersNameAndAmount)
                 {
-                    toReturn += ("Name: " + ld.lenderName + " Amount invested: " + ld.lendersInvestAmount);
+                    toReturn += ("Name: " + ld.lenderName + " Amount invested: " + ld.lendersInvestAmount + "\n");
                 }
                 double amountMissing = initialAmount -  totalMoneyRaised;
                 toReturn += ("The amount raised so far is: " + totalMoneyRaised +

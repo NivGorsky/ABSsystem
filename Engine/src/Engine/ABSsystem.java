@@ -131,7 +131,7 @@ public class ABSsystem implements MainSystem, SystemService
     public void assignLoansToLender(LoanPlacingDTO loanPlacingDTO) throws Exception
     {
         try {
-            LoanPlacing.placeToLoans(loanPlacingDTO, this.activeLoans, this);
+            LoanPlacing.placeToLoans(loanPlacingDTO, this.loans, this, getCurrYaz());
 
         }
 
@@ -210,7 +210,7 @@ public class ABSsystem implements MainSystem, SystemService
             {
                 int sum = 0;
 
-                initLendersInfo(loanToInit, l);
+//                initLendersInfo(loanToInit, l);
                 for(LoanDTO.LenderDetailsDTO le : loanToInit.getLendersNamesAndAmounts())
                 {
                     sum += le.lendersInvestAmount;
@@ -221,20 +221,20 @@ public class ABSsystem implements MainSystem, SystemService
             }
             case ACTIVE:
             {
-                initLendersInfo(loanToInit, l);
+//                initLendersInfo(loanToInit, l);
                 loanToInit.setActivationYaz(l.getActivationYaz());
                 loanToInit.setNextPaymentYaz(loanToInit.getUnpaidPayments().firstKey());
                 break;
             }
             case IN_RISK:
             {
-                initLendersInfo(loanToInit, l);
+//                initLendersInfo(loanToInit, l);
                 break;
             }
 
             case FINISHED:
             {
-                initLendersInfo(loanToInit, l);
+//                initLendersInfo(loanToInit, l);
                 loanToInit.setActivationYaz(l.getActivationYaz());
                 loanToInit.setFinishYaz(l.getFinishYaz());
                 break;

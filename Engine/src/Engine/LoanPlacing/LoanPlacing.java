@@ -12,28 +12,36 @@ import java.util.LinkedList;
 
 public abstract class LoanPlacing {
 
-    public static void placeToLoans(LoanPlacingDTO loanPlacingDto, LinkedList<Engine.Loan> loans, SystemService absService) throws Exception
+    private static int currentYaz;
+
+    public static void placeToLoans(LoanPlacingDTO loanPlacingDto, LinkedList<Engine.Loan> loans, SystemService absService, int currentYaz) throws Exception
     {
         LinkedList<Engine.Loan> relevantLoans = getRelevantLoans(loanPlacingDto, loans, absService);
+        LinkedList<Loan> loansMadePaymentsTo;
 
         if(relevantLoans.isEmpty()){ //there were no relevant loans
             throw new SystemRestrictionsException(null, "There are no relevant loans");
         }
-        LinkedList<LoanPlacingDBEntry> loansToPlaceMoney = createLoanPlacingDB(relevantLoans);
-        placingAlgorithm(loansToPlaceMoney, loanPlacingDto, absService);
+//        LinkedList<LoanPlacingDBEntry> loansToPlaceMoney = createLoanPlacingDB(relevantLoans);
+        loansMadePaymentsTo = placingAlgorithm(relevantLoans, loanPlacingDto, absService);
+        changeLoansStatuses(loansMadePaymentsTo);
     }
 
-    private static void placingAlgorithm(LinkedList<LoanPlacingDBEntry> openLoansDB, LoanPlacingDTO dto, SystemService absService) throws Exception
+    private static  LinkedList<Loan> placingAlgorithm(LinkedList<Loan> relevantLoans, LoanPlacingDTO dto, SystemService absService) throws Exception
     {
+        //closed loans - loans that were exactly filled to their requested amount
+        //open loans - loans that are still waiting for more lenders, have not passed the initial amount threshold
+        LinkedList<LoanPlacingDBEntry> openLoansDB = createLoanPlacingDB(relevantLoans);
+        LinkedList<Loan> loansMadePaymentsTo = new LinkedList<Loan>();
         double amountLeftToInvest = dto.getAmountToInvest();
         int numberOfOpenLoans = openLoansDB.size();
         double amountToPutInEachLoan = amountLeftToInvest / numberOfOpenLoans;
-//        LinkedList<LoanPlacingDBEntry> loansPassedAmountThreshold = new LinkedList<LoanPlacingDBEntry>();
-        LinkedList<LoanPlacingDBEntry> closedLoans = new LinkedList<LoanPlacingDBEntry>();
+        LinkedList<LoanPlacingDBEntry> closedLoansDB = new LinkedList<LoanPlacingDBEntry>();
+        LinkedList<LoanPlacingDBEntry> loanEntriesToMakeActualPayments = new LinkedList<LoanPlacingDBEntry>();
 
-        while(amountLeftToInvest > 0 && numberOfOpenLoans > 0){
-            putMoneyInEachOpenLoan(openLoansDB, amountToPutInEachLoan);
-            amountLeftToInvest = moveClosedAndPassedThresholdLoansAndReturnGapToAmountLeftToLend(openLoansDB, closedLoans, amountLeftToInvest);
+        while(amountLeftToInvest > 0.001 && numberOfOpenLoans > 0){
+            amountLeftToInvest = putMoneyInEachOpenLoan(openLoansDB, amountToPutInEachLoan, amountLeftToInvest);
+            amountLeftToInvest = moveClosedAndPassedThresholdLoansAndReturnGapToAmountLeftToLend(openLoansDB, closedLoansDB, amountLeftToInvest);
             numberOfOpenLoans = openLoansDB.size();
 
             if(numberOfOpenLoans == 0){
@@ -41,14 +49,48 @@ public abstract class LoanPlacing {
             }
             amountToPutInEachLoan = amountLeftToInvest / numberOfOpenLoans;
         }
+        loanEntriesToMakeActualPayments.addAll(closedLoansDB);
+        loanEntriesToMakeActualPayments.addAll(openLoansDB);
+        transferMoneyToLoansAccountsAndRegisterLenders(loanEntriesToMakeActualPayments, dto, absService);
+        loansMadePaymentsTo = getLoansMadePaymentsTo(loanEntriesToMakeActualPayments);
 
-        transferMoneyToLoansAccountsAndRegisterLenders(closedLoans, dto, absService);
+        return loansMadePaymentsTo;
     }
 
-    private static void putMoneyInEachOpenLoan(LinkedList<LoanPlacingDBEntry> openLoansDB, double amountToPutInEachLoan){
+    private static LinkedList<Loan> getLoansMadePaymentsTo(LinkedList<LoanPlacingDBEntry> loanEntries){
+        LinkedList<Loan> actualLoans = new LinkedList<Loan>();
+
+        for (LoanPlacingDBEntry entry:loanEntries){
+            actualLoans.add(entry.loan);
+        }
+
+        return actualLoans;
+    }
+
+    private static void changeLoansStatuses(LinkedList<Loan> loansMadePaymentsTo){
+        for (Loan loan:loansMadePaymentsTo){
+
+            if(loan.getInitialAmount() == loan.getLoanAmountFinancedByLenders()){
+                loan.setLoanStatus(Loan.LoanStatus.ACTIVE, currentYaz);
+            }
+
+            else if(loan.getInitialAmount() > loan.getLoanAmountFinancedByLenders()){
+                loan.setLoanStatus(Loan.LoanStatus.PENDING, currentYaz);
+            }
+
+            else{
+                throw new RuntimeException("Loan: " + loan + "raised more money than possible");
+            }
+        }
+    }
+
+    private static double putMoneyInEachOpenLoan(LinkedList<LoanPlacingDBEntry> openLoansDB, double amountToPutInEachLoan, double amountLeftToInvest){
         for (LoanPlacingDBEntry loanEntry:openLoansDB){
             loanEntry.amountToLend += amountToPutInEachLoan;
+            amountLeftToInvest -= amountToPutInEachLoan;
         }
+
+        return amountLeftToInvest;
     }
 
     private static double moveClosedAndPassedThresholdLoansAndReturnGapToAmountLeftToLend(LinkedList<LoanPlacingDBEntry> openLoansDB,LinkedList<LoanPlacingDBEntry> closedLoans, double amountLeftToLend){
@@ -114,6 +156,11 @@ public abstract class LoanPlacing {
             result = false;
         }
 
+        //
+        else if(loan.getBorrowerName().equals(loanDto.getCustomerName())){
+            result = false;
+        }
+
         else if(loanDto.getMinimumInterestPerYaz() > loan.getInterestPerPaymentSetByBorrowerInPercents()){
             if(loanDto.getMinimumInterestPerYaz() != -1){
                 result = false;
@@ -122,11 +169,11 @@ public abstract class LoanPlacing {
 
 //        else if(loanDto.getMinimumYazForReturn()) need to verify what does that mean
 
-        else if(loanDto.getMaximumPercentOwnership() >  100 - loan.getLoanPercentageTakenByLenders()){
-            if(loanDto.getMaximumPercentOwnership() != -1){
-                result = false;
-            }
-        }
+//        else if(loanDto.getMaximumPercentOwnership() >  100 - loan.getLoanPercentageTakenByLenders()){
+//            if(loanDto.getMaximumPercentOwnership() != -1){
+//                result = false;
+//            }
+//        }
 
         else if(loanDto.getMaximumOpenLoansForBorrower() > maximumOpenLoansForLoanBorrower){
             if(loanDto.getMaximumOpenLoansForBorrower() != -1){
@@ -157,7 +204,7 @@ public abstract class LoanPlacing {
     private static LoanPlacingDBEntry createLoanPlacingDBDatumFromLoan(Engine.Loan l){
         LoanPlacingDBEntry newDatum = new LoanPlacingDBEntry();
         newDatum.loan = l;
-        newDatum.amountOpenToLending = l.getLoanAmountFinancedByLenders();
+        newDatum.amountOpenToLending = l.getInitialAmount() - l.getLoanAmountFinancedByLenders();
         newDatum.amountToLend = 0;
 
         return newDatum;
