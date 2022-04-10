@@ -194,6 +194,20 @@ public abstract class MoveTimeLine {
 
     private static void changePaymentStatus(Loan loan, LoanPaymentsData.Payment payment, LoanPaymentsData.PaymentType newType){
         payment.setPaymentType(newType);
+
+        switch (newType){
+            case PAID:
+                payment.setActualPaymentYaz(currentYaz);
+                break;
+
+            case EXPIRED:
+                break;
+
+            case UNPAID:
+                break;
+        }
+
+
         int paymentYaz = payment.getScheduledYaz();
         loan.pollPaymentForSpecificYaz(paymentYaz);
         loan.addNewPayment(payment);
