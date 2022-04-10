@@ -189,7 +189,7 @@ public class LoanDTO {
             PaymentDTO payment = new PaymentDTO(p.getScheduledYaz(), p.getLoanPartOfThePayment(),
                     p.getInterestPartOfThePayment(), p.getActualPaymentYaz(), p.getPaymentType().toString());
 
-            unpaidPayments.put(payment.actualPaymentYaz, payment);
+            unpaidPayments.put(payment.originalYazToPay, payment);
         }
     }
 

@@ -64,7 +64,7 @@ public class Loan
         this.account = new Account(0);
 
         //init loan's payments data
-        this.paymentsData = new LoanPaymentsData(this);
+        this.paymentsData = new LoanPaymentsData();
         this.paymentRateInYaz = paymentRateInYaz;
         this.interestPaid = 0;
         this.amountPaid = 0;
@@ -132,7 +132,8 @@ public class Loan
         this.status = newStatus;
         switch (newStatus) {
             case ACTIVE:
-                updateLoanToActive(currentYaz);
+                updateLoanToActive(currentYaz + this.paymentRateInYaz);
+
 
                 break;
 
@@ -180,7 +181,7 @@ public class Loan
         Loan.LenderDetails newLenderDetails = new Loan.LenderDetails();
         newLenderDetails.lender = newLender;
         newLenderDetails.lendersAmount = lendersPartOfLoanAmount;
-        newLenderDetails.lendersPartOfLoanInPercent = lendersPartOfLoanAmount / this.initialAmount;
+        newLenderDetails.lendersPartOfLoanInPercent = (lendersPartOfLoanAmount / this.initialAmount) * 100;
         this.lendersBelongToLoan.add(newLenderDetails);
         this.loanPercentageTakenByLenders += newLenderDetails.lendersPartOfLoanInPercent;this.loanAmountFinancedByLenders += newLenderDetails.lendersAmount;
     }

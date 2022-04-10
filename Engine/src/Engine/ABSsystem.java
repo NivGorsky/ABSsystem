@@ -117,6 +117,11 @@ public class ABSsystem implements MainSystem, SystemService
             loan.addToLendersNameAndAmount(ld.lender.getName(), ld.lendersAmount);
         }
 
+        //test
+        if(loan.getCustomerName() == "Avrum"){
+
+        }
+
         loan.setUnpaidPayments(l.getPaymentsData().getPaymentsDataBases().get(LoanPaymentsData.PaymentType.UNPAID));
         loan.setPaidPayments(l.getPaymentsData().getPaymentsDataBases().get(LoanPaymentsData.PaymentType.PAID));
 
@@ -195,6 +200,10 @@ public class ABSsystem implements MainSystem, SystemService
         }
         customerDTO.setLoansAsLender(customerLoansAsLender);
 
+        //test
+        if(c.getName() == "Mosh"){
+
+        }
         for (Loan loan:c.getLoansAsBorrower())
         {
             LoanDTO newLoanDTO = createLoanDTO(loan);
@@ -216,13 +225,13 @@ public class ABSsystem implements MainSystem, SystemService
         takeCustomersData(customers);
 
 
-//        try {
-//            takeLoansData(loans);
-//        }
-//        catch (XMLFileException ex) {
-//            resetSystem();
-//            throw ex;
-//        }
+        try {
+            takeLoansData(loans);
+        }
+        catch (XMLFileException ex) {
+            resetSystem();
+            throw ex;
+        }
 
     }
 

@@ -63,12 +63,12 @@ public class LoanPaymentsData {
         public int compare(LoanPaymentsData.Payment p1, LoanPaymentsData.Payment p2) { return (p1.scheduledYaz - p2.scheduledYaz); }
     }
 
-    private final Engine.Loan containingLoan;
+//    private final Engine.Loan containingLoan;
 
     private final Map<LoanPaymentsData.PaymentType, PaymentsDB> paymentsDataBases;
 
-    public LoanPaymentsData(Engine.Loan containingLoan){
-        this.containingLoan = containingLoan;
+    public LoanPaymentsData(){
+//        this.containingLoan = containingLoan;
         this.paymentsDataBases = new TreeMap<LoanPaymentsData.PaymentType, PaymentsDB>();
         this.initPaymentDataBases();
     }
@@ -91,16 +91,16 @@ public class LoanPaymentsData {
         return p;
     }
 
-    public void createAllLoanPayments(){
-        int numberOfPayments = containingLoan.getMaxYazToPay() / containingLoan.getPaymentRateInYaz();
-        double loanPartOfEachPayment = containingLoan.getInitialAmount() / numberOfPayments;
-        double interestPartOfEachPayment = (containingLoan.getInterestPerPaymentSetByBorrowerInPercents() / 100) * loanPartOfEachPayment;
+    public void createAllLoanPayments(int maxYazToPay, int paymentRateInYaz, double initialAmount, double interestPerPaymentSetByBorrowerInPercents, String borrowerName){
+        int numberOfPayments = maxYazToPay / paymentRateInYaz;
+        double loanPartOfEachPayment = initialAmount / numberOfPayments;
+        double interestPartOfEachPayment = (interestPerPaymentSetByBorrowerInPercents / 100) * loanPartOfEachPayment;
         double finalAmountOfEachPayment = loanPartOfEachPayment + interestPartOfEachPayment;
         int yazToSetForPayment = 0;
-        int loanPaymentRate = containingLoan.getPaymentRateInYaz();
+        int loanPaymentRate = paymentRateInYaz;
 
         for (int i = 0; i < numberOfPayments; i++) {
-            Payment p = createNewUnpaidPayment(yazToSetForPayment, loanPartOfEachPayment, interestPartOfEachPayment, containingLoan.getBorrowerName());
+            Payment p = createNewUnpaidPayment(yazToSetForPayment, loanPartOfEachPayment, interestPartOfEachPayment, borrowerName);
             addNewPaymentToDataBase(p);
             yazToSetForPayment += loanPaymentRate;
         }
@@ -134,7 +134,8 @@ public class LoanPaymentsData {
         {
             try {
                 payment = singleDataBase.pollPaymentByYaz(yaz);
-            } catch (Exception e){
+            }
+            catch (Exception e){
                 throw new DataBaseAccessException(singleDataBase, "There was a problem while polling payment from data base");
             }
 
@@ -202,12 +203,18 @@ public class LoanPaymentsData {
         for (PaymentsDB db :paymentsDataBases.values())
         {
             Map<Integer, Payment> actualDataBase = (Map<Integer, Payment>)db.getActualData();
+            LinkedList<Payment> payments = new LinkedList<Payment>();
 
             for (Map.Entry<Integer, Payment> set: actualDataBase.entrySet()){
-                Payment p = set.getValue();
-
-                p.setScheduledYaz(p.getScheduledYaz() + yazToAdd);
+                payments.add(set.getValue());
             }
+            actualDataBase.clear();
+
+            for (Payment p:payments){
+                p.setScheduledYaz(p.getScheduledYaz() + yazToAdd);
+                actualDataBase.put(p.scheduledYaz, p);
+            }
+            payments.clear();
         }
     }
 }

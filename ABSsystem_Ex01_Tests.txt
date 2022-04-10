@@ -1,5 +1,5 @@
 1
-C:\Users\ofekc\Desktop\java\ex1 Files\ex1-big.xml
+/Users/nivos/Downloads/ex1-big.xml
 2
 3
 4

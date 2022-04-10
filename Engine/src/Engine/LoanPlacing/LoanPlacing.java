@@ -120,14 +120,20 @@ public abstract class LoanPlacing {
     {
         double currentAmountToTransfer = -1;
         Customer lender = absService.getCustomerByName(dto.getCustomerName());
+        String borrowerName;
+        Customer borrower;
         Account lendersAccount = lender.getAccount();
         Account loansAccount = null;
 
         for (LoanPlacingDBEntry loanEntry: loansToTransfer)
         {
+            borrowerName = loanEntry.loan.getBorrowerName();
+            borrower = absService.getCustomerByName(borrowerName);
+            Account borrowersAccount = borrower.getAccount();
             currentAmountToTransfer = loanEntry.amountToLend;
             loansAccount = loanEntry.loan.getLoanAccount();
             absService.moveMoneyBetweenAccounts(lendersAccount, loansAccount, currentAmountToTransfer);
+            absService.moveMoneyBetweenAccounts(loansAccount, borrowersAccount, currentAmountToTransfer);
             loanEntry.loan.addNewLender(lender, currentAmountToTransfer);
             lender.addLoanAsLender(loanEntry.loan);
         }

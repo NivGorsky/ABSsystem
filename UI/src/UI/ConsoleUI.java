@@ -88,34 +88,40 @@ public class ConsoleUI {
             try {
                 switch (userChoice) {
                     case LoadXML: {
+                        System.out.println("1- Load XML file\n");
                         isFileLoaded = loadXML();
                         break;
                     }
                     case ShowLoansInfo: {
+                        System.out.println("2- Show information about all the loans in the system\n");
                         if (checkFileLoaded(isFileLoaded)) {
                             showLoansInfo();
                             break;
                         }
                     }
                     case ShowCustomersInfo: {
+                        System.out.println("3- Show information about all the customers in the system\n");
                         if (checkFileLoaded(isFileLoaded)) {
                             showCustomersInfo();
                             break;
                         }
                     }
                     case DepositMoney: {
+                        System.out.println("4- Deposit money in account\n");
                         if (checkFileLoaded(isFileLoaded)) {
                             depositMoney();
                             break;
                         }
                     }
                     case WithdrawMoney: {
+                        System.out.println("5- Withdraw money from account\n");
                         if (checkFileLoaded(isFileLoaded)) {
                             withdrawMoney();
                             break;
                         }
                     }
                     case AssignLoansToLender: {
+                        System.out.println("6- Invest money in loans\n");
                         if (checkFileLoaded(isFileLoaded))
                         {
                             assignLoansToLender();
@@ -123,6 +129,7 @@ public class ConsoleUI {
                         }
                     }
                     case MoveTimeline: {
+                        System.out.println("7- Move the timeline\n");
                         if (checkFileLoaded(isFileLoaded)) {
                             moveTimeline();
                             break;
@@ -231,7 +238,7 @@ public class ConsoleUI {
     {
         TimelineDTO systemTimeline = engine.moveTimeLine();
         System.out.println("Action succeeded!");
-        systemTimeline.toString();
+        System.out.println(systemTimeline.toString());
     }
 
     private boolean checkFileLoaded(boolean isFileLoaded) throws XMLFileException
