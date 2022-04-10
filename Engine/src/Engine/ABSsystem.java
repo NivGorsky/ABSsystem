@@ -244,9 +244,10 @@ public class ABSsystem implements MainSystem, SystemService
 
     private CustomerDTO createCustomerDTO(Customer c)
     {
-        CustomerDTO customer = new CustomerDTO(c.getName(), c.getAccount().getBalance());
+        CustomerDTO customerDTO = new CustomerDTO(c.getName(), c.getAccount().getBalance());
         ArrayList<Account.AccountMovement> customerMovements = c.getAccount().getMovements();
         ArrayList<AccountMovementDTO> customerDTOMovements = new ArrayList<>();
+        ArrayList<LoanDTO> customerLoansAsLender = new ArrayList<LoanDTO>();
 
         for (Account.AccountMovement m : customerMovements)
         {
@@ -255,10 +256,18 @@ public class ABSsystem implements MainSystem, SystemService
 
             customerDTOMovements.add(curr);
         }
+        customerDTO.setAccountMovements(customerDTOMovements);
 
-        customer.setAccountMovements(customerDTOMovements);
+        for (Loan loan:c.getLoansAsLender()){
+            LoanDTO newLoanDTO = createLoanDTO(loan);
+            customerLoansAsLender.add(newLoanDTO);
+        }
+        customerDTO.setLoansAsLener(customerLoansAsLender);
 
-        return customer;
+
+
+
+        return customerDTO;
     }
 
     private void takeDataFromDescriptor(AbsDescriptor descriptor) throws XMLFileException

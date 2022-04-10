@@ -40,4 +40,8 @@ public class Customer {
     {
         account.addToBalance(yaz, amount);
     }
+
+    public void addLoanAsLender(Loan loan){
+        this.loansAsLender.add(loan);
+    }
 }
