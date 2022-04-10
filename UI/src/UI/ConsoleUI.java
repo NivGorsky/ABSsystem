@@ -88,8 +88,7 @@ public class ConsoleUI {
             try {
                 switch (userChoice) {
                     case LoadXML: {
-                        loadXML();
-                        isFileLoaded = true;
+                        isFileLoaded = loadXML();
                         break;
                     }
                     case ShowLoansInfo: {
@@ -140,22 +139,28 @@ public class ConsoleUI {
         }
     }
 
-    public void loadXML()
+    public boolean loadXML()
     {
+        boolean isFileLoaded = false;
+
         System.out.println("Please enter a path to the XML file (the path will contain english letters only!)");
         String path = InputHandler.getPathToFile();
 
         try{
             engine.loadXML(path);
             System.out.println("File loaded successfully!\n");
+            isFileLoaded = true;
         }
 
         catch (JAXBException e) {
             e.printStackTrace();
          }
         catch (XMLFileException ex) {
-            System.out.println(ex.getMessage());
+            System.out.println(ex.getExceptionMsg());
+
         }
+
+        return isFileLoaded;
     }
 
     public void showLoansInfo() {

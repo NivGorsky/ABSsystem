@@ -44,13 +44,7 @@ public class XMLFileChecker {
     {
         for(AbsLoan l : loans.getAbsLoan())
         {
-            try {
-                XMLFileChecker.checkLoan(l, allCustomers);
-            }
-            catch (XMLFileException ex)
-            {
-                throw ex;
-            }
+            XMLFileChecker.checkLoan(l, allCustomers);
         }
     }
 
@@ -58,17 +52,17 @@ public class XMLFileChecker {
     {
         if(!LoanCategories.getCategories().contains(loan.absCategory))
         {
-            throw new XMLFileException("Loan number " + loan.id + ": The loan's category is illegal!");
+            throw new XMLFileException("Loan name: " + loan.getId() + ": The loan's category is illegal!");
         }
 
         if(!allCustomers.containsKey(loan.absOwner))
         {
-            throw new XMLFileException("Loan number " + loan.id + ": The loan's owner isn't a registered customer!");
+            throw new XMLFileException("Loan name: " + loan.getId() + ": The loan's owner isn't a registered customer!");
         }
 
         if((loan.absTotalYazTime%loan.absPaysEveryYaz) != 0)
         {
-            throw new XMLFileException("Loan number "+ loan.id + ": The payments rate does not divides with the total yaz of the loan");
+            throw new XMLFileException( "Loan name: " + loan.getId() + ": The payments rate does not divides with the total yaz of the loan");
         }
     }
 }

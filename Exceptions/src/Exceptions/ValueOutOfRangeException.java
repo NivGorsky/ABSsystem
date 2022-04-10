@@ -4,6 +4,7 @@ public class ValueOutOfRangeException extends Exception{
 
     private double maxValue;
     private double minValue;
+    private String msg = new String();
 
     public ValueOutOfRangeException(double minValue, double maxValue, String msg)
     {

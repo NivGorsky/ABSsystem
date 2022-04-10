@@ -207,6 +207,7 @@ public class ABSsystem implements MainSystem, SystemService
 
     private void takeDataFromDescriptor(AbsDescriptor descriptor) throws XMLFileException
     {
+        //resetSystem();
         AbsCategories categories = descriptor.getAbsCategories();
         AbsLoans loans = descriptor.getAbsLoans();
         AbsCustomers customers = descriptor.getAbsCustomers();
@@ -214,15 +215,15 @@ public class ABSsystem implements MainSystem, SystemService
         takeCategoriesData(categories);
         takeCustomersData(customers);
 
-        try {
-            takeLoansData(loans);
-        }
-        catch (XMLFileException ex)
-        {
-            name2customer = null;
-            LoanCategories.setCategories(null);
-            throw ex;
-        }
+
+//        try {
+//            takeLoansData(loans);
+//        }
+//        catch (XMLFileException ex) {
+//            resetSystem();
+//            throw ex;
+//        }
+
     }
 
     private void takeCategoriesData(AbsCategories categories)
@@ -282,5 +283,10 @@ public class ABSsystem implements MainSystem, SystemService
     public ArrayList<String> getSystemLoanCategories()
     {
         return LoanCategories.getCategories();
+    }
+
+    private void resetSystem()
+    {
+        systemTimeline.resetSystemYaz();
     }
 }

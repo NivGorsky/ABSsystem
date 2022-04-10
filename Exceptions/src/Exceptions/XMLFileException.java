@@ -2,7 +2,7 @@ package Exceptions;
 
 public class XMLFileException extends Exception{
 
-    private String ExceptionMsg;
+    private String ExceptionMsg = new String();
 
     public XMLFileException(String msg)
     {
