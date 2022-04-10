@@ -33,10 +33,10 @@ public class AccountMovementDTO {
         }
 
         return ("Account Movement:\n" +
-                "Executed on yaz:" + yaz + "\n" +
-                "Amount:" + amount + "\n" +
-                "Movement Kind:" + movement + "\n" +
-                "The balance before the movement:" + balanceBefore + "\n" +
-                "The balance after the movement" + balanceAfter + "\n");
+                "Executed on yaz: " + yaz + "\n" +
+                "Amount: " + amount + "\n" +
+                "Movement Kind: " + movement + "\n" +
+                "The balance before the movement: " + balanceBefore + "\n" +
+                "The balance after the movement: " + balanceAfter + "\n");
     }
 }

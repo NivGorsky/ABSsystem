@@ -17,8 +17,7 @@ public class ConsoleUI {
         MoveTimeline, Exit
     }
 
-    private MainSystem engine = new ABSsystem();
-    private MainMenu menu;
+    private final MainSystem engine = new ABSsystem();
 
     public void showMenu() {
         System.out.println("welcome to Alternative Bank System!");
@@ -69,9 +68,7 @@ public class ConsoleUI {
     public double chooseAmount(String action)
     {
         System.out.println("Please enter amount of money you would like to " + action + ":");
-        double amount =  InputHandler.getAmount();
-
-        return amount;
+        return  InputHandler.getAmount();
     }
 
     public void runMainMenu() //main menu
@@ -88,7 +85,11 @@ public class ConsoleUI {
             try {
                 switch (userChoice) {
                     case LoadXML: {
-                        isFileLoaded = loadXML();
+                        boolean currFile = loadXML();
+                        if(!isFileLoaded && currFile)
+                        {
+                            isFileLoaded = true;
+                        }
                         break;
                     }
                     case ShowLoansInfo: {
@@ -129,6 +130,7 @@ public class ConsoleUI {
                         }
                     }
                     case Exit: {
+                        System.out.println("Bye bye");
                         System.exit(1);
                     }
                 }
@@ -143,7 +145,7 @@ public class ConsoleUI {
     {
         boolean isFileLoaded = false;
 
-        System.out.println("Please enter a path to the XML file (the path will contain english letters only!)");
+        System.out.println("Please enter a path to the XML file (the path cannot contain hebrew letters)");
         String path = InputHandler.getPathToFile();
 
         try{
@@ -194,7 +196,7 @@ public class ConsoleUI {
         catch (Exception e){
             System.out.println(e.getMessage());
         }
-    };
+    }
 
     public void withdrawMoney()
     {
@@ -225,18 +227,18 @@ public class ConsoleUI {
         {
             System.out.println(e.getMessage());
         }
-    };
+    }
 
     public void moveTimeline()
     {
         TimelineDTO systemTimeline = engine.moveTimeLine();
         System.out.println("Action succeeded!");
-        systemTimeline.toString();
+        System.out.println(systemTimeline.toString());
     }
 
     private boolean checkFileLoaded(boolean isFileLoaded) throws XMLFileException
     {
-        if(isFileLoaded == false)
+        if(!isFileLoaded)
         {
             throw new XMLFileException("XML file not loaded!");
         }

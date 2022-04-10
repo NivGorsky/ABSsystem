@@ -8,11 +8,11 @@ import java.util.TreeMap;
 public class ExpiredPaymentsByYaz implements PaymentsDB
 {
     private final LoanPaymentsData.PaymentType dbPaymentsType;
-    private SortedMap<Integer, LoanPaymentsData.Payment> db;
+    private final SortedMap<Integer, LoanPaymentsData.Payment> db;
 
     public ExpiredPaymentsByYaz(){
         dbPaymentsType = LoanPaymentsData.PaymentType.EXPIRED;
-        db = new TreeMap<Integer, LoanPaymentsData.Payment>();
+        db = new TreeMap<>();
     }
 
     @Override

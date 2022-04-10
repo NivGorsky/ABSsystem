@@ -7,11 +7,11 @@ import java.util.TreeMap;
 
 public class PayedPaymentsByYaz implements PaymentsDB {
     private final LoanPaymentsData.PaymentType dbPaymentsType;
-    private SortedMap<Integer, LoanPaymentsData.Payment> db;
+    private final SortedMap<Integer, LoanPaymentsData.Payment> db;
 
     public PayedPaymentsByYaz(){
         dbPaymentsType = LoanPaymentsData.PaymentType.PAID;
-        db = new TreeMap<Integer, LoanPaymentsData.Payment>();
+        db = new TreeMap<>();
     }
 
     @Override

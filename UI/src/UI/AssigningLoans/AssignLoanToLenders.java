@@ -46,9 +46,11 @@ public class AssignLoanToLenders {
         System.out.println("Optional fields: ");
         System.out.println("Please choose categories you would like to invest in: ");
 
+        int i=1;
         for (String category : categoriesWillingToInvestIn)
         {
-            System.out.println(category);
+            System.out.println(i+ ". " +category);
+            i++;
         }
 
         System.out.println("How many categories would you like to choose? please choose a number between 0 to " +

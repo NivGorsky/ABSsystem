@@ -31,13 +31,13 @@ public abstract class LoanPlacing {
         //closed loans - loans that were exactly filled to their requested amount
         //open loans - loans that are still waiting for more lenders, have not passed the initial amount threshold
         LinkedList<LoanPlacingDBEntry> openLoansDB = createLoanPlacingDB(relevantLoans);
-        LinkedList<Loan> loansMadePaymentsTo = new LinkedList<Loan>();
+        LinkedList<Loan> loansMadePaymentsTo = new LinkedList<>();
         double amountLeftToInvest = dto.getAmountToInvest();
         int numberOfOpenLoans = openLoansDB.size();
         double amountToPutInEachLoan = amountLeftToInvest / numberOfOpenLoans;
 
-        LinkedList<LoanPlacingDBEntry> closedLoansDB = new LinkedList<LoanPlacingDBEntry>();
-        LinkedList<LoanPlacingDBEntry> loanEntriesToMakeActualPayments = new LinkedList<LoanPlacingDBEntry>();
+        LinkedList<LoanPlacingDBEntry> closedLoansDB = new LinkedList<>();
+        LinkedList<LoanPlacingDBEntry> loanEntriesToMakeActualPayments = new LinkedList<>();
 
         while(amountLeftToInvest > 0.001 && numberOfOpenLoans > 0){
             amountLeftToInvest = putMoneyInEachOpenLoan(openLoansDB, amountToPutInEachLoan, amountLeftToInvest);
@@ -58,7 +58,7 @@ public abstract class LoanPlacing {
     }
 
     private static LinkedList<Loan> getLoansMadePaymentsTo(LinkedList<LoanPlacingDBEntry> loanEntries){
-        LinkedList<Loan> actualLoans = new LinkedList<Loan>();
+        LinkedList<Loan> actualLoans = new LinkedList<>();
 
         for (LoanPlacingDBEntry entry:loanEntries){
             actualLoans.add(entry.loan);
@@ -134,7 +134,7 @@ public abstract class LoanPlacing {
     }
 
     private static LinkedList<Engine.Loan> getRelevantLoans(LoanPlacingDTO loanPlacingDTO, LinkedList<Engine.Loan> allLoansInSystem, SystemService absService){
-        LinkedList<Engine.Loan> relevantLoans = new LinkedList<Loan>();
+        LinkedList<Engine.Loan> relevantLoans = new LinkedList<>();
 
         for (Engine.Loan loan:allLoansInSystem) {
             if(isLoanRelevant(loanPlacingDTO, loan, absService)){
@@ -152,7 +152,6 @@ public abstract class LoanPlacing {
         Customer borrower =  absService.getCustomerByName(borrowerName);
         int maximumOpenLoansForLoanBorrower = borrower.getLoansAsBorrower().size();
 
-        // i check what turns the decision to no
         if(!loanDto.getCategoriesWillingToInvestIn().contains(loan.getCategory())){
             result = false;
         }

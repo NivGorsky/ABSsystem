@@ -15,12 +15,11 @@ import javax.xml.bind.JAXBException;
 
 public class ABSsystem implements MainSystem, SystemService
 {
-    private Timeline systemTimeline;
+    private final Timeline systemTimeline;
     private Map<String,Customer> name2customer;
     private Map<Loan.LoanStatus, Loan> status2loan;
     private LinkedList<Loan> loans;
     private Map<Integer, Loan> loanId2Loan;
-    private InputStream loadedXMLFile = null;
 
     public ABSsystem()
     {
@@ -37,17 +36,38 @@ public class ABSsystem implements MainSystem, SystemService
     @Override
     public ArrayList<String> getCustomersNames()
     {
-        return new ArrayList<String>(name2customer.keySet());
+        return new ArrayList<>(name2customer.keySet());
     }
 
     @Override
-    public void loadXML(String path) throws XMLFileException, JAXBException
+    public void loadXML(String path) throws XMLFileException
     {
-        loadedXMLFile = SchemaForLAXB.getDescriptorFromXML(path);
-        XMLFileChecker.isFileExists(path);
-        XMLFileChecker.isXMLFile(path);
-        takeDataFromDescriptor(SchemaForLAXB.descriptor);
+        try {
+            InputStream loadedXMLFile;
+            loadedXMLFile = SchemaForLAXB.getDescriptorFromXML(path);
+            XMLFileChecker.isFileExists(path);
+            XMLFileChecker.isXMLFile(path);
+            takeDataFromDescriptor(SchemaForLAXB.descriptor);
+        }
+        catch (XMLFileException ex)
+        {
+            throw ex;
+        }
+    }
+
+    private void resetSystem()
+    {
+        resetLoans();
         systemTimeline.resetSystemYaz();
+        name2customer = new TreeMap<>();
+        LoanCategories.categories = new ArrayList<>();
+    }
+
+    private void resetLoans()
+    {
+        loanId2Loan = new TreeMap<>();
+        loans = new LinkedList<>();
+        status2loan = new TreeMap<>();
     }
 
     @Override
@@ -85,8 +105,15 @@ public class ABSsystem implements MainSystem, SystemService
     @Override
     public void withdrawMoney(String customerName, double amount) throws ValueOutOfRangeException
     {
-        Customer chosenCustomer = name2customer.get(customerName);
-        chosenCustomer.withdrawMoney(systemTimeline.getCurrentYaz(), amount);
+        try {
+            Customer chosenCustomer = name2customer.get(customerName);
+            chosenCustomer.withdrawMoney(systemTimeline.getCurrentYaz(), amount);
+        }
+        catch (ValueOutOfRangeException ex)
+        {
+            throw ex;
+        }
+
     }
 
     @Override
@@ -140,7 +167,7 @@ public class ABSsystem implements MainSystem, SystemService
             {
                 int sum = 0;
 
-//                initLendersInfo(loanToInit, l);
+//               initLendersInfo(loanToInit, l);
                 for(LoanDTO.LenderDetailsDTO le : loanToInit.getLendersNamesAndAmounts())
                 {
                     sum += le.lendersInvestAmount;
@@ -177,8 +204,8 @@ public class ABSsystem implements MainSystem, SystemService
         CustomerDTO customerDTO = new CustomerDTO(c.getName(), c.getAccount().getBalance());
         ArrayList<Account.AccountMovement> customerMovements = c.getAccount().getMovements();
         ArrayList<AccountMovementDTO> customerDTOMovements = new ArrayList<>();
-        ArrayList<LoanDTO> customerLoansAsLender = new ArrayList<LoanDTO>();
-        ArrayList<LoanDTO> customerLoansAsBorrower = new ArrayList<LoanDTO>();
+        ArrayList<LoanDTO> customerLoansAsLender = new ArrayList<>();
+        ArrayList<LoanDTO> customerLoansAsBorrower = new ArrayList<>();
 
         for (Account.AccountMovement m : customerMovements)
         {
@@ -207,22 +234,21 @@ public class ABSsystem implements MainSystem, SystemService
 
     private void takeDataFromDescriptor(AbsDescriptor descriptor) throws XMLFileException
     {
-        AbsCategories categories = descriptor.getAbsCategories();
-        AbsLoans loans = descriptor.getAbsLoans();
-        AbsCustomers customers = descriptor.getAbsCustomers();
+       AbsCategories categories = descriptor.getAbsCategories();
+       AbsLoans loans = descriptor.getAbsLoans();
+       AbsCustomers customers = descriptor.getAbsCustomers();
 
-        takeCategoriesData(categories);
-        takeCustomersData(customers);
+       try {
+           XMLFileChecker.isFileLogicallyOK(loans, customers, categories);
+       }
+       catch (XMLFileException ex) {
+           throw ex;
+       }
 
-        try {
-            takeLoansData(loans);
-        }
-        catch (XMLFileException ex)
-        {
-            name2customer = null;
-            LoanCategories.setCategories(null);
-            throw ex;
-        }
+       resetSystem();
+       takeCategoriesData(categories);
+       takeCustomersData(customers);
+       takeLoansData(loans);
     }
 
     private void takeCategoriesData(AbsCategories categories)
@@ -243,26 +269,18 @@ public class ABSsystem implements MainSystem, SystemService
         }
     }
 
-    private void takeLoansData(AbsLoans loans) throws XMLFileException
+    private void takeLoansData(AbsLoans loans)
     {
-        try
-        {
-            XMLFileChecker.checkAllLoans(loans, name2customer);
             for(AbsLoan l : loans.getAbsLoan())
             {
                 Loan newLoan =  JAXBConvertor.convertLoan(l, systemTimeline.getCurrentYaz());
                 this.status2loan.put(newLoan.getStatus(), newLoan);
                 this.loanId2Loan.put(newLoan.getLoanId(), newLoan);
-                this.loans.add(newLoan); //TODO: delete some loan fields from system
+                this.loans.add(newLoan);
 
                 Customer customer =  name2customer.get(l.getAbsOwner());
                 customer.getLoansAsBorrower().add(newLoan);
             }
-        }
-        catch (XMLFileException ex)
-        {
-            throw ex;
-        }
     }
 
     @Override

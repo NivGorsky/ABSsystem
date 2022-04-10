@@ -2,7 +2,6 @@ package UI;
 
 import Engine.XML_Handler.XMLFileChecker;
 import Exceptions.ValueOutOfRangeException;
-import Exceptions.XMLFileException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -12,15 +11,23 @@ public class InputHandler {
 
     public static int getOptionFromMenu()
     {
-        int input;
-        input = Integer.parseInt(sc.nextLine());
+        int input = 0;
+        boolean inputOK=false;
 
-        try {
-            checkOptionFromMenu(input);
-        }
-        catch (ValueOutOfRangeException ex) {
-            System.out.println(ex.getMessage());
-            getOptionFromMenu();
+        while(!inputOK)
+        {
+            try {
+                input = Integer.parseInt(sc.nextLine());
+                checkOptionFromMenu(input);
+                inputOK = true;
+            }
+            catch (ValueOutOfRangeException ex) {
+                System.out.println(ex.getMessage());
+            }
+            catch(NumberFormatException ex)
+            {
+                System.out.println("This is not a number! please enter a number between 1 to " + ConsoleUI.MainMenu.values().length);
+            }
         }
 
         return input;
@@ -31,7 +38,7 @@ public class InputHandler {
         int numberOfOptions  = ConsoleUI.MainMenu.values().length;
         if((choice > numberOfOptions) || (choice <=0))
         {
-            throw new ValueOutOfRangeException(1, 8);
+            throw new ValueOutOfRangeException(1, numberOfOptions);
         }
     }
 
@@ -63,9 +70,6 @@ public class InputHandler {
     public static double getAmount()
     {
         double amount;
-
-//        Scanner sc = new Scanner(System.in);
-//        amount = sc.nextDouble();
         amount = Double.parseDouble(sc.nextLine());
 
         return amount;
@@ -88,7 +92,7 @@ public class InputHandler {
     }
 
     public static ArrayList<String> chooseCategories(int numberOfCategoriesToChoose, ArrayList<String> supportedCategories){
-        ArrayList<String> categories = new ArrayList<String>();
+        ArrayList<String> categories = new ArrayList<>();
 
         for (int i=1;i<=numberOfCategoriesToChoose; ++i){
             System.out.println("Category " + i + ":");

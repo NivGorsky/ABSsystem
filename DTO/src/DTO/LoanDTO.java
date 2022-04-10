@@ -48,7 +48,7 @@ public class LoanDTO {
             lenderName = lender;
             lendersInvestAmount = amount;
         }
-    };
+    }
 
     private final int loanId;
     private final String loanName;
@@ -59,7 +59,7 @@ public class LoanDTO {
     private final double totalInterest;
     private final int yazPerPayment;
     private final String category;
-    private Loan.LoanStatus status;
+    private final Loan.LoanStatus status;
     private final double debt;
     private final double paidInterest;
     private final double paidLoan;
@@ -67,7 +67,7 @@ public class LoanDTO {
     private final SortedMap<Integer, PaymentDTO> paidPayments;
 
     //pending info
-    private ArrayList<LenderDetailsDTO> lendersNameAndAmount;
+    private final ArrayList<LenderDetailsDTO> lendersNameAndAmount;
     private double totalMoneyRaised;
 
     //active info
@@ -133,7 +133,7 @@ public class LoanDTO {
     public int getNextPaymentYaz() {
         return nextPaymentYaz;
     }
-    public SortedMap<Integer, PaymentDTO> getUnpaidPayments() { return unpaidPayments; };
+    public SortedMap<Integer, PaymentDTO> getUnpaidPayments() { return unpaidPayments; }
     public SortedMap<Integer, PaymentDTO> getPaidPayments() { return paidPayments; }
     public double getDebt() { return debt; }
     public int getFinishYaz() { return finishYaz; }
@@ -189,7 +189,7 @@ public class LoanDTO {
             PaymentDTO payment = new PaymentDTO(p.getScheduledYaz(), p.getLoanPartOfThePayment(),
                     p.getInterestPartOfThePayment(), p.getActualPaymentYaz(), p.getPaymentType().toString());
 
-            unpaidPayments.put(payment.actualPaymentYaz, payment);
+            unpaidPayments.put(payment.originalYazToPay, payment);
         }
     }
 
@@ -207,7 +207,7 @@ public class LoanDTO {
     @Override
     public String toString() {
 
-        String toReturn = new String();
+        String toReturn = "";
         toReturn += LoanBasicInfoToString();
 
         switch(status)
@@ -273,7 +273,7 @@ public class LoanDTO {
                 "Total time to repay the loan: " + maxYazToPay +"\n" +
                 "Payment will be made every " + yazPerPayment + " yaz\n" +
                 "Interest per payment: " + interestPerPayment + "%\n" +
-                "Total loan amount (including interest): " +
+                "Total loan amount to pay (including interest): " +
                 findLoanAndInterestTotalAmount() + "\n" +
                 "The loan is in status: " + status + "\n";
 
@@ -282,7 +282,7 @@ public class LoanDTO {
 
     private String lendersNameAndAmountToString()
     {
-        String toReturn = "";
+        String toReturn;
         toReturn = "Registered lenders for loan:\n";
         for(LenderDetailsDTO ld : lendersNameAndAmount)
         {
@@ -301,7 +301,7 @@ public class LoanDTO {
 
         for (PaymentDTO p : unpaidPayments.values())
         {
-            if(p.paymentType == "EXPIRED")
+            if(p.paymentType.equals( "EXPIRED"))
             {
                 toReturn += i +". " + p.toString() + "\n";
                 i++;

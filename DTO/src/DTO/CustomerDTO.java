@@ -46,13 +46,14 @@ public class CustomerDTO
         String toReturn = new String();
         toReturn = "Customer name:" + customerName + "\n";
 
-        int i = 1;
+        toReturn += "Account balance: " + balance + "\n";
 
         if(accountMovements.size() > 0)
         {
             toReturn += "\n" + customerName + "'s account movements:\n";
         }
 
+        int i = 1;
         for (AccountMovementDTO m : accountMovements)
         {
             toReturn += (i + ". " + m.toString() + "\n");

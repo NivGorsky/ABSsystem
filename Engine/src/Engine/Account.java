@@ -3,11 +3,15 @@ package Engine;
 import java.util.ArrayList;
 
 public class Account {
+    
+//    public enum MovementKind {
+//        WITHDRAW, DEPOSIT, LOAN_PAYMENT
+//    }
+    public class AccountMovement {
 
-    public class AccountMovement{
         private final int yaz;
         private final double amount;
-        private final char movementKind;   // +/-
+        private final char movementKind;   // +/-/p for loan payment
         private final double balanceBefore;
         private final double balanceAfter;
 

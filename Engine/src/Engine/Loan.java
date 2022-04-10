@@ -16,7 +16,7 @@ public class Loan
         public double lendersAmount;
         public double lendersPartOfLoanInPercent;
 
-    };
+    }
 
     //loan's general data
     private final String loanName;
@@ -27,7 +27,7 @@ public class Loan
     private final int interestPerPaymentSetByBorrowerInPercents;
     private final double totalInterestForLoan;
     private LoanStatus status;
-    private Account account;
+    private final Account account;
 
     //payments data
     private LoanPaymentsData paymentsData;
@@ -43,7 +43,7 @@ public class Loan
     private int finishYaz;
 
     //loan's lenders' data
-    private LinkedList<LenderDetails> lendersBelongToLoan;
+    private final LinkedList<LenderDetails> lendersBelongToLoan;
     private double loanPercentageTakenByLenders;
     private double loanAmountFinancedByLenders;
 
@@ -133,21 +133,11 @@ public class Loan
         switch (newStatus) {
             case ACTIVE:
                 updateLoanToActive(currentYaz);
-
                 break;
 
             case PENDING:
-
-                break;
-
             case IN_RISK:
-
-                break;
-
             case FINISHED:
-
-                break;
-
             case NEW:
                 break;
         }
@@ -169,7 +159,7 @@ public class Loan
 
         for(LenderDetails lender : this.lendersBelongToLoan)
         {
-            if(newLender.getName() == lender.lender.getName())
+            if(newLender.getName().equals( lender.lender.getName()))
             {
                 lender.lendersAmount += lendersPartOfLoanAmount;
                 lender.lendersPartOfLoanInPercent = (lendersPartOfLoanAmount/initialAmount)*100;
@@ -186,10 +176,10 @@ public class Loan
     }
 
 
-    public boolean isLoanReadyToBeActive(){
+    public boolean isLoanReadyToBeActive()
+    {
         boolean result = false;
-
-        if (this.loanAmountFinancedByLenders == this.initialAmount && this.loanPercentageTakenByLenders == 100){
+        if (loanAmountFinancedByLenders == initialAmount && loanPercentageTakenByLenders == 100){
             result = true;
         }
 
@@ -221,7 +211,7 @@ public class Loan
         LoanPaymentsData.Payment earliestUnpaidPayment = paymentsData.getEarliestUnpaidPayment();
 
         if(earliestUnpaidPayment == null && earliestExpiredPayment == null){
-            throw new DataBaseAccessException(paymentsData, "There was a problem while trying to get earliest payment - there are on unpaid or expired payments - loan shold be finished");
+            throw new DataBaseAccessException(paymentsData, "There was a problem while trying to get earliest payment - there are on unpaid or expired payments - loan should be finished");
         }
 
         else if(earliestUnpaidPayment == null){
@@ -249,6 +239,7 @@ public class Loan
     private void updateLoanToActive(int yaz){
         this.paymentsData.addYazToAllPayments(yaz);
     }
+
 }
 
 

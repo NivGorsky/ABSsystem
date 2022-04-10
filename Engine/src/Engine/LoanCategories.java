@@ -5,7 +5,8 @@ public class LoanCategories {
 
     static ArrayList<String> categories = new ArrayList<>();
 
-    public static void addCategory(java.lang.String category) {
+    public static void addCategory(java.lang.String category)
+    {
         categories.add(category);
     }
 

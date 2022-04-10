@@ -1,0 +1,11 @@
+1
+C:\Users\ofekc\Desktop\java\ex1 Files\ex1-big.xml
+2
+6
+7
+10000
+1
+Happy Event
+-1
+-1
+3
