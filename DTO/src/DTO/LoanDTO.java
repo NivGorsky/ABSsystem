@@ -8,18 +8,20 @@ import java.util.TreeMap;
 
 public class LoanDTO {
 
-    public class PaymentDTO{
-
+    public class PaymentDTO
+    {
         private final int originalYazToPay;
         private final int actualPaymentYaz;
         private final double loanPayment;
         private final double interestPayment;
+        private final String paymentType;
 
-        public PaymentDTO(int originalYaz, double loanPayment, double interestPayment, int actualYaz) {
+        public PaymentDTO(int originalYaz, double loanPayment, double interestPayment, int actualYaz, String type) {
             this.originalYazToPay = originalYaz;
             this.loanPayment = loanPayment;
             this.interestPayment = interestPayment;
             this.actualPaymentYaz = actualYaz;
+            this.paymentType = type;
         }
 
         public int getOriginalYazToPay() { return originalYazToPay; }
@@ -185,7 +187,7 @@ public class LoanDTO {
         for(LoanPaymentsData.Payment p : payments.getPayments().values())
         {
             PaymentDTO payment = new PaymentDTO(p.getScheduledYaz(), p.getLoanPartOfThePayment(),
-                    p.getInterestPartOfThePayment(), p.getActualPaymentYaz());
+                    p.getInterestPartOfThePayment(), p.getActualPaymentYaz(), p.getPaymentType().toString());
 
             unpaidPayments.put(payment.actualPaymentYaz, payment);
         }
@@ -196,7 +198,7 @@ public class LoanDTO {
         for(LoanPaymentsData.Payment p : payments.getPayments().values())
         {
             PaymentDTO payment = new PaymentDTO(p.getScheduledYaz(), p.getLoanPartOfThePayment(),
-                    p.getInterestPartOfThePayment(), p.getActualPaymentYaz());
+                    p.getInterestPartOfThePayment(), p.getActualPaymentYaz(), p.getPaymentType().toString());
 
             paidPayments.put(payment.actualPaymentYaz, payment);
         }
@@ -215,7 +217,7 @@ public class LoanDTO {
                toReturn += lendersNameAndAmountToString();
                 double amountMissing = initialAmount -  totalMoneyRaised;
                 toReturn += ("The amount raised so far is: " + totalMoneyRaised +
-                        "\n Loan needs " + amountMissing + " more to become active\n");
+                        "\nLoan needs " + amountMissing + " more to become active\n");
                 break;
             }
             case ACTIVE:
@@ -299,13 +301,17 @@ public class LoanDTO {
 
         for (PaymentDTO p : unpaidPayments.values())
         {
-            if(p.actualPaymentYaz != p.originalYazToPay)
+            if(p.paymentType == "EXPIRED")
             {
-                toReturn += i +". " + p.toString();
+                toReturn += i +". " + p.toString() + "\n";
                 i++;
             }
         }
-        toReturn+= "In total " + i + " payments delayed, with total sum of " + debt + "!\n";
+
+        if(i>1)
+        {
+            toReturn+= "In total " + i + " payments delayed, with total sum of " + debt + "!\n";
+        }
         return toReturn;
     }
 
@@ -316,7 +322,7 @@ public class LoanDTO {
 
         for (PaymentDTO p : paidPayments.values())
         {
-            toReturn += i +". " + p.toString();
+            toReturn += i +". " + p.toString() + "\n";
             i++;
         }
 

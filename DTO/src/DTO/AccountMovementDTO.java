@@ -4,7 +4,7 @@ public class AccountMovementDTO {
 
     private final int yaz;
     private final double amount;
-    private final char movementKind;   // +/-
+    private final char movementKind;   // +/-/p for payment
     private final double balanceBefore;
     private final double balanceAfter;
 
@@ -24,8 +24,12 @@ public class AccountMovementDTO {
         if(movementKind == '+') {
             movement = "deposit";
         }
-        else {
+        else if(movementKind == '-') {
             movement = "withdraw";
+        }
+        else
+        {
+            movement = "loan payment";
         }
 
         return ("Account Movement:\n" +
@@ -33,6 +37,6 @@ public class AccountMovementDTO {
                 "Amount:" + amount + "\n" +
                 "Movement Kind:" + movement + "\n" +
                 "The balance before the movement:" + balanceBefore + "\n" +
-                "The balance after the movement" + balanceAfter);
+                "The balance after the movement" + balanceAfter + "\n");
     }
 }

@@ -16,7 +16,8 @@ public class Account {
             this.amount = amount;
             this.movementKind = movementKind;
             this.balanceBefore = balance;
-            if(movementKind == '+'){
+            if(movementKind == '+')
+            {
                 this.balanceAfter = balance + amount;
             }
 
@@ -52,6 +53,11 @@ public class Account {
     public void substructFromBalance(int yaz, double amount)
     {
         movements.add(new AccountMovement(yaz, amount, '-'));
+        balance -= amount;
+    }
+    public void substructLoanPayment(int yaz, double amount)
+    {
+        movements.add(new AccountMovement(yaz, amount, 'p'));
         balance -= amount;
     }
 

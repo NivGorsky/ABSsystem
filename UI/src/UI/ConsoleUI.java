@@ -3,14 +3,12 @@ package UI;
 import Engine.MainSystem;
 import Engine.ABSsystem;
 import DTO.*;
-import Exceptions.ValueOutOfRangeException;
 import Exceptions.XMLFileException;
 import UI.AssigningLoans.AssignLoanToLenders;
-import com.sun.xml.internal.ws.api.pipe.Engine;
+
 import javax.xml.bind.JAXBException;
 import java.lang.System;
 import java.util.ArrayList;
-import java.util.TreeMap;
 
 
 public class ConsoleUI {
@@ -37,10 +35,10 @@ public class ConsoleUI {
 
     public String chooseCustomer()
     {
-        int userChoice, i = 0;
+        int userChoice, i = 1;
         ArrayList<String> customersNames;
 
-        customersNames = (ArrayList<String>)engine.getCustomersNames();
+        customersNames = engine.getCustomersNames();
         System.out.println("Please choose a customer:");
 
         for (String name : customersNames) {
@@ -49,14 +47,14 @@ public class ConsoleUI {
         }
 
         userChoice = InputHandler.getCustomer(customersNames.size());
-        return customersNames.get(userChoice);
+        return customersNames.get(userChoice-1);
     }
 
     public CustomerDTO chooseCustomerWithBalance()
     {
         ArrayList<CustomerDTO> customers = engine.showCustomersInfo();
         System.out.println("Please choose a customer:");
-        int userChoice, i=0;
+        int userChoice, i=1;
 
         for(CustomerDTO c : customers)
         {
@@ -65,7 +63,7 @@ public class ConsoleUI {
         }
 
         userChoice = InputHandler.getCustomer(customers.size());
-        return customers.get(userChoice);
+        return customers.get(userChoice -1);
     }
 
     public double chooseAmount(String action)
@@ -149,7 +147,7 @@ public class ConsoleUI {
 
         try{
             engine.loadXML(path);
-            System.out.println("File loaded successfully!\n\n");
+            System.out.println("File loaded successfully!\n");
         }
 
         catch (JAXBException e) {
@@ -169,7 +167,6 @@ public class ConsoleUI {
             System.out.println(l.toString());
         }
     }
-
 
     public void showCustomersInfo()
     {
@@ -211,10 +208,11 @@ public class ConsoleUI {
 
     public void assignLoansToLender(){
         //get the data from user and create dto, then send it to Engine
-        try{
+        try
+        {
             CustomerDTO chosenCustomer = chooseCustomerWithBalance();
             AssignLoanToLenders assignLoanToLendersForm = new AssignLoanToLenders(chosenCustomer.getCustomerName(), this.engine.getSystemLoanCategories());
-            assignLoanToLendersForm.getAssigningParamatersFromUser();
+            assignLoanToLendersForm.getAssigningParametersFromUser();
             engine.assignLoansToLender(assignLoanToLendersForm.getDTO());
         }
 
@@ -228,7 +226,7 @@ public class ConsoleUI {
     {
         TimelineDTO systemTimeline = engine.moveTimeLine();
         System.out.println("Action succeeded!");
-        System.out.println("The previous yaz: " + (systemTimeline.getCurrentYaz() -1) + "The current yaz: " + systemTimeline.getCurrentYaz());
+        systemTimeline.toString();
     }
 
     private boolean checkFileLoaded(boolean isFileLoaded) throws XMLFileException

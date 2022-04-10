@@ -8,7 +8,8 @@ public abstract class MoveTimeLine {
 
     private static int currentYaz;
 
-    public static void moveTimeLineInOneYaz(SystemService absSystem, Timeline timeLine){
+    public static void moveTimeLineInOneYaz(SystemService absSystem, Timeline timeLine)
+    {
         moveYaz(absSystem);
         currentYaz = timeLine.getCurrentYaz();
         Map<String , Customer> allCustomers = absSystem.getAllCustomers();

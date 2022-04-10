@@ -75,7 +75,7 @@ public class LoanPaymentsData {
 
     private void initPaymentDataBases()
     {
-        paymentsDataBases.put(PaymentType.UNPAID, new UnpayedPaymentsByYaz());
+        paymentsDataBases.put(PaymentType.UNPAID, new UnpaidPaymentsByYaz());
         paymentsDataBases.put(PaymentType.PAID, new PayedPaymentsByYaz());
         paymentsDataBases.put(PaymentType.EXPIRED, new ExpiredPaymentsByYaz());
     }

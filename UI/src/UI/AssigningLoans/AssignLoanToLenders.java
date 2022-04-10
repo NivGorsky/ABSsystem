@@ -28,38 +28,44 @@ public class AssignLoanToLenders {
         maximumOpenLoansForBorrower = -1;
     }
 
-    public LoanPlacingDTO getDTO(){
+    public LoanPlacingDTO getDTO()
+    {
         return new LoanPlacingDTO(amountToInvest, categoriesWillingToInvestIn, minimumInterestPerYaz, minimumYazForReturn, maximumPercentOwnership, maximumOpenLoansForBorrower, customerName);
     }
 
-    public void getAssigningParamatersFromUser(){
+    public void getAssigningParametersFromUser(){
         System.out.println("Please choose parameters for loan assigning\n");
-        System.out.println("mandatory fields:\n");
-        System.out.println("Amount to invest:\n");
+        System.out.println("Mandatory fields:");
+        System.out.println("Please enter amount to invest:\n");
         amountToInvest = InputHandler.getAmount();
         chooseOptionalFields();
     }
 
-    private void chooseOptionalFields(){
+    private void chooseOptionalFields()
+    {
         System.out.println("Optional fields: ");
-        System.out.println("Categories: ");
+        System.out.println("Please choose categories you would like to invest in: ");
 
-        for (String category:categoriesWillingToInvestIn){
+        for (String category : categoriesWillingToInvestIn)
+        {
             System.out.println(category);
         }
 
-        System.out.println("How many categories would you like to choose?");
+        System.out.println("How many categories would you like to choose? please choose a number between 0 to " +
+                categoriesWillingToInvestIn.size());
+
         int numberOfCategories = InputHandler.getPositiveNumber();
         System.out.println("Please choose categories, seperated by Enter");
         categoriesWillingToInvestIn = InputHandler.chooseCategories(numberOfCategories, categoriesWillingToInvestIn); //init to all categories
 
         System.out.println("Please choose minimum interest per yaz, if you want to pass, enter -1");
         minimumInterestPerYaz = InputHandler.getMinInterestPerYaz();
-        if(minimumInterestPerYaz == -1){
+        if(minimumInterestPerYaz == -1)
+        {
             minimumInterestPerYaz = 0;
         }
 
-        System.out.println("Please choose minimum total yaz for a loan, if you want to pass enter -1"); //need to add the pass option
+        System.out.println("Please choose minimum total yaz for a loan, if you want to pass, enter -1"); //need to add the pass option
         minimumYazForReturn = InputHandler.getMinYazForReturn();
     }
 

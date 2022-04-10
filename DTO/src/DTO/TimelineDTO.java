@@ -11,4 +11,13 @@ public class TimelineDTO {
     public int getCurrentYaz() {
         return currentYaz;
     }
+
+    @Override
+    public String toString()
+    {
+        String toReturn = "";
+        toReturn = ("The previous yaz: " + (currentYaz -1) + "\nThe current yaz: " + currentYaz);
+
+        return toReturn;
+    }
 }

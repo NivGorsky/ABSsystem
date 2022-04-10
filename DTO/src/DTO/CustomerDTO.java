@@ -1,7 +1,6 @@
 package DTO;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 public class CustomerDTO
 {
@@ -30,19 +29,16 @@ public class CustomerDTO
     public void setAccountMovements(ArrayList<AccountMovementDTO> accountMovements) {
         this.accountMovements = accountMovements;
     }
-    public void setLoansAsLener(ArrayList<LoanDTO> loans){
+    public void setLoansAsLender(ArrayList<LoanDTO> loans){
         this.loansAsLender = loans;
     }
 
+    public void setLoansAsBorrower(ArrayList<LoanDTO> loans){
+        this.loansAsBorrower = loans;
+    }
 
-//    public void setLoansOfCustomer(LinkedList<Engine.Loan> allLoansInSystem){
-//        for (Engine.Loan loan:allLoansInSystem){
-//            if(loan.getBorrowerName().equals(this.customerName)){
-//
-//            }
-//
-//        }
-//    }
+
+
 
     @Override
     public String toString()
@@ -51,23 +47,36 @@ public class CustomerDTO
         toReturn = "Customer name:" + customerName + "\n";
 
         int i = 1;
+
+        if(accountMovements.size() > 0)
+        {
+            toReturn += "\n" + customerName + "'s account movements:\n";
+        }
+
         for (AccountMovementDTO m : accountMovements)
         {
             toReturn += (i + ". " + m.toString() + "\n");
+            i++;
         }
 
-        toReturn += "\n" + "Loans as borrower:\n";
-
-        for (LoanDTO l : loansAsBorrower)
+        if(loansAsBorrower.size() > 0)
         {
-            toReturn+=toStringCustomerLoans(l);
+            toReturn += "\n" + "Loans as borrower:\n";
+
+            for (LoanDTO l : loansAsBorrower)
+            {
+                toReturn += toStringCustomerLoans(l) +"\n\n";
+            }
         }
 
-        toReturn += "\n" + "Loans as lender:\n";
-
-        for (LoanDTO l : loansAsLender)
+        if(loansAsLender.size() > 0)
         {
-            toReturn+=toStringCustomerLoans(l);
+            toReturn += "\n" + "Loans as lender:\n";
+
+            for (LoanDTO l : loansAsLender)
+            {
+                toReturn += toStringCustomerLoans(l) + "\n\n";
+            }
         }
 
         return toReturn;

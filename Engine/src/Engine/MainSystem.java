@@ -14,7 +14,7 @@ public interface MainSystem {
     public void withdrawMoney(String customerName, double amount) throws Exception;
     public void assignLoansToLender(LoanPlacingDTO dto) throws Exception;
     public TimelineDTO moveTimeLine();
-    public Object getCustomersNames();
+    public ArrayList<String> getCustomersNames();
     public int getCurrYaz();
     public ArrayList<String> getSystemLoanCategories();
 

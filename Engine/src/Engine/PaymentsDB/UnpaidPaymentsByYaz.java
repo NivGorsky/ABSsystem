@@ -3,11 +3,11 @@ import Engine.LoanPaymentsData;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-public class UnpayedPaymentsByYaz implements PaymentsDB {
+public class UnpaidPaymentsByYaz implements PaymentsDB {
     private final LoanPaymentsData.PaymentType dbPaymentsType;
     private SortedMap<Integer, LoanPaymentsData.Payment> db;
 
-    public UnpayedPaymentsByYaz(){
+    public UnpaidPaymentsByYaz(){
         dbPaymentsType = LoanPaymentsData.PaymentType.UNPAID;
         db = new TreeMap<Integer, LoanPaymentsData.Payment>();
     }

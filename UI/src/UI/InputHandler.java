@@ -38,14 +38,13 @@ public class InputHandler {
     public static int getCustomer(int numOfCustomers)
     {
         int userChoice;
-//        Scanner sc = new Scanner(System.in);
-//        userChoice = sc.nextInt();
         userChoice = Integer.parseInt(sc.nextLine());
 
     try {
         checkCustomer(userChoice, numOfCustomers);
     }
-    catch (ValueOutOfRangeException ex) {
+    catch (ValueOutOfRangeException ex)
+    {
         System.out.println(ex.getMessage());
         getCustomer(numOfCustomers);
     }
