@@ -2,19 +2,24 @@ package UI;
 
 import Exceptions.ValueOutOfRangeException;
 
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class InputHandler {
+
+    private final Scanner sc;
+
+    public InputHandler(){
+        sc = new Scanner(System.in);
+    }
 
     public static int getOptionFromMenu()
     {
         int input;
         String line;
         Scanner sc = new Scanner(System.in);
-        //input  = sc.nextInt();
-        line = sc.nextLine();
-        input = Integer.parseInt(line);
+        input  = sc.nextInt();
 
         try {
             checkOptionFromMenu(input);
