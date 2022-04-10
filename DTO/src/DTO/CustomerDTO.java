@@ -38,7 +38,7 @@ public class CustomerDTO
         int i = 1;
         for (AccountMovementDTO m : accountMovements)
         {
-            toReturn += (i + ". " + accountMovements.toString() + "\n");
+            toReturn += (i + ". " + m.toString() + "\n");
         }
 
         toReturn += "\n" + "Loans as borrower:\n";

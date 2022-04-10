@@ -114,6 +114,7 @@ public class InputHandler {
             String category = sc.nextLine();
 
             while(!isCategorySupported(category, supportedCategories)){
+                System.out.println("Category " + i + ":");
                 category = sc.nextLine();
             }
             categories.add(category);
