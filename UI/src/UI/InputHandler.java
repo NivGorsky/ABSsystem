@@ -8,18 +8,15 @@ import java.util.Scanner;
 
 public class InputHandler {
 
-    private final Scanner sc;
-
-    public InputHandler(){
-        sc = new Scanner(System.in);
-    }
+    private static Scanner sc = new Scanner(System.in);
 
     public static int getOptionFromMenu()
     {
         int input;
         String line;
-        Scanner sc = new Scanner(System.in);
-        input  = sc.nextInt();
+//        Scanner sc = new Scanner(System.in);
+        input = Integer.parseInt(sc.nextLine());
+//        input  = sc.nextInt();
 
         try {
             checkOptionFromMenu(input);
@@ -44,8 +41,9 @@ public class InputHandler {
     public static int getCustomer(int numOfCustomers)
     {
         int userChoice;
-        Scanner sc = new Scanner(System.in);
-        userChoice = sc.nextInt();
+//        Scanner sc = new Scanner(System.in);
+//        userChoice = sc.nextInt();
+        userChoice = Integer.parseInt(sc.nextLine());
 
     try {
         checkCustomer(userChoice, numOfCustomers);
@@ -70,15 +68,16 @@ public class InputHandler {
     {
         double amount;
 
-        Scanner sc = new Scanner(System.in);
-        amount = sc.nextDouble();
+//        Scanner sc = new Scanner(System.in);
+//        amount = sc.nextDouble();
+        amount = Double.parseDouble(sc.nextLine());
 
         return amount;
     }
 
     public static String getPathToFile()
     {
-        Scanner sc = new Scanner(System.in);
+//        Scanner sc = new Scanner(System.in);
         String path = sc.nextLine();
 
         try {
@@ -100,23 +99,24 @@ public class InputHandler {
             throw new Exception("Non path received, please try again");
         }
 
-        /*else if(path.matches("\"([a-zA-Z]:)?(\\\\\\\\[a-zA-Z0-9_.-]+)+\\\\\\\\?\"\n"));
-        {
-            throw new Exception("The path contains non-English characters! \nplease try again");
-        }*/
+//        else if(path.matches("\\W"));
+//        {
+//            throw new Exception("The path contains non-English characters! \nplease try again");
+//        }
     }
 
     public static ArrayList<String> chooseCategories(int numberOfCategoriesToChoose, ArrayList<String> supportedCategories){
-        Scanner sc = new Scanner(System.in);
+//        Scanner sc = new Scanner(System.in);
         ArrayList<String> categories = new ArrayList<String>();
 
         for (int i=1;i<=numberOfCategoriesToChoose; ++i){
             System.out.println("Category " + i + ":");
             String category = sc.nextLine();
+
             while(!isCategorySupported(category, supportedCategories)){
-                category = sc.toString();
+                category = sc.nextLine();
             }
-            categories.add(sc.toString());
+            categories.add(category);
         }
 
         return categories;
@@ -124,8 +124,9 @@ public class InputHandler {
 
     public static int getPositiveNumber()
     {
-        Scanner sc = new Scanner(System.in);
-        int res = sc.nextInt();
+//        Scanner sc = new Scanner(System.in);
+//        int res = sc.nextInt();
+        int res = Integer.parseInt(sc.nextLine());
 
         while(res <= 0){
             res = sc.nextInt();
@@ -146,11 +147,13 @@ public class InputHandler {
     }
 
     public static double getMinInterestPerYaz(){
-        Scanner sc = new Scanner(System.in);
-        double minInterest = sc.nextDouble();
+//        Scanner sc = new Scanner(System.in);
+//        double minInterest = sc.nextDouble();
+        double minInterest = Double.parseDouble(sc.nextLine());
 
         while(!isMinInterestSupported(minInterest)){
-            minInterest = sc.nextDouble();
+//            minInterest = sc.nextDouble();
+            minInterest = Double.parseDouble(sc.nextLine());
         }
 
         return minInterest;
@@ -161,21 +164,16 @@ public class InputHandler {
     }
 
     public static int getMinYazForReturn(){
-        Scanner sc = new Scanner(System.in);
+//        Scanner sc = new Scanner(System.in);
 
-        int res = sc.nextInt();
+//        int res = sc.nextInt();
+        int res = Integer.parseInt(sc.nextLine());
 
         while(res < 0 && res != -1){
             System.out.println("Please choose a valid value");
-            res = sc.nextInt();
+            res = Integer.parseInt(sc.nextLine());
         }
 
         return res;
     }
-
-
-
-
-
-
 }
