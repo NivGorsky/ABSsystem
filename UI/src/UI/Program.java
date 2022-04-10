@@ -10,12 +10,12 @@ public class Program {
             File f = new File("ABSsystem_Ex01_Tests.log");
             InputStream inputStream = new FileInputStream(f);
             System.setIn(inputStream);
-            ConsoleUI systemUI = new ConsoleUI();
         }
         catch (Exception e){
             System.out.println(e.getMessage());
         }
 
+        ConsoleUI systemUI = new ConsoleUI();
         systemUI.runMainMenu();
     }
 }

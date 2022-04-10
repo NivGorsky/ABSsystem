@@ -1,6 +1,7 @@
 package DTO;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class CustomerDTO
 {
@@ -25,9 +26,23 @@ public class CustomerDTO
     public ArrayList<LoanDTO> getLoansAsLender() { return loansAsLender; }
     public double getBalance() { return balance; }
 
+    //setters
     public void setAccountMovements(ArrayList<AccountMovementDTO> accountMovements) {
         this.accountMovements = accountMovements;
     }
+    public void setLoansAsLener(ArrayList<LoanDTO> loans){
+        this.loansAsLender = loans;
+    }
+
+
+//    public void setLoansOfCustomer(LinkedList<Engine.Loan> allLoansInSystem){
+//        for (Engine.Loan loan:allLoansInSystem){
+//            if(loan.getBorrowerName().equals(this.customerName)){
+//
+//            }
+//
+//        }
+//    }
 
     @Override
     public String toString()
@@ -38,7 +53,7 @@ public class CustomerDTO
         int i = 1;
         for (AccountMovementDTO m : accountMovements)
         {
-            toReturn += (i + ". " + accountMovements.toString() + "\n");
+            toReturn += (i + ". " + m.toString() + "\n");
         }
 
         toReturn += "\n" + "Loans as borrower:\n";

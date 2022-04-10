@@ -32,7 +32,7 @@ public class ConsoleUI {
                 "5- Withdraw money from account\n" +
                 "6- Invest money in loans\n" +
                 "7- Move the timeline\n" +
-                "8- Exit");
+                "8- Exit\n\n");
     }
 
     public String chooseCustomer()

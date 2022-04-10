@@ -64,7 +64,6 @@ public class LoanDTO {
     private final SortedMap<Integer, PaymentDTO> unpaidPayments;
     private final SortedMap<Integer, PaymentDTO> paidPayments;
 
-
     //pending info
     private ArrayList<LenderDetailsDTO> lendersNameAndAmount;
     private double totalMoneyRaised;
