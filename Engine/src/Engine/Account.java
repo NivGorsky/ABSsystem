@@ -4,9 +4,6 @@ import java.util.ArrayList;
 
 public class Account {
     
-//    public enum MovementKind {
-//        WITHDRAW, DEPOSIT, LOAN_PAYMENT
-//    }
     public class AccountMovement {
 
         private final int yaz;
