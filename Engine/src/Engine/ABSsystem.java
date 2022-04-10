@@ -5,21 +5,16 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
-
 import Exceptions.*;
 import Engine.LoanPlacing.LoanPlacing;
 import Engine.TimeLineMoving.MoveTimeLine;
 import DTO.*;
 import Engine.XML_Handler.*;
-import Exceptions.SystemRestrictionsException;
 import Exceptions.XMLFileException;
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 
 public class ABSsystem implements MainSystem, SystemService
 {
-    //need to change data structures
     private Timeline systemTimeline;
     private Map<String,Customer> name2customer;
     private Map<Loan.LoanStatus, Loan> status2loan;
@@ -47,26 +42,20 @@ public class ABSsystem implements MainSystem, SystemService
         return new ArrayList<String>(name2customer.keySet());
     }
 
-
     @Override
     public void loadXML(String path) throws XMLFileException, JAXBException
     {
-        try
-        {
-            loadedXMLFile = SchemaForLAXB.getDescriptorFromXML(path);
-            takeDataFromDescriptor(SchemaForLAXB.descriptor);
-            systemTimeline.resetSystemYaz();
-        }
-        catch (Exception ex)
-        {
-           throw ex;
-        }
+        loadedXMLFile = SchemaForLAXB.getDescriptorFromXML(path);
+        XMLFileChecker.isFileExists(path);
+        XMLFileChecker.isXMLFile(path);
+        takeDataFromDescriptor(SchemaForLAXB.descriptor);
+        systemTimeline.resetSystemYaz();
     }
 
     @Override
-    public ArrayList<LoanDTO> showLoansInfo() {
+    public ArrayList<LoanDTO> showLoansInfo()
+    {
         ArrayList<LoanDTO> loansInfo = new ArrayList<>();
-
         for (Loan l : loans) {
             LoanDTO curr = createLoanDTO(l);
             loansInfo.add(curr);
@@ -75,25 +64,14 @@ public class ABSsystem implements MainSystem, SystemService
         return loansInfo;
     }
 
-
-
     @Override
     public ArrayList<CustomerDTO> showCustomersInfo()
     {
         ArrayList<CustomerDTO> customersInfo = new ArrayList<>();
-
-        try
+        for(Customer c : name2customer.values())
         {
-            for(Customer c : name2customer.values())
-            {
-                CustomerDTO curr = createCustomerDTO(c);
-                customersInfo.add(curr);
-            }
-        }
-        catch (RuntimeException ex)
-        {
-            System.out.println(ex.getMessage());
-            System.exit(1);
+            CustomerDTO curr = createCustomerDTO(c);
+            customersInfo.add(curr);
         }
 
         return customersInfo;
@@ -115,16 +93,10 @@ public class ABSsystem implements MainSystem, SystemService
     }
 
     @Override
-    public void withdrawMoney(String customerName, double amount) throws Exception {
+    public void withdrawMoney(String customerName, double amount) throws ValueOutOfRangeException
+    {
         Customer chosenCustomer = name2customer.get(customerName);
-        try {
-            chosenCustomer.withdrawMoney(systemTimeline.getCurrentYaz(), amount);
-        }
-
-        catch (RuntimeException e1){ //user exceptions will be catched in UI
-            System.out.println(e1.getMessage());
-            System.exit(1);
-        }
+        chosenCustomer.withdrawMoney(systemTimeline.getCurrentYaz(), amount);
     }
 
     @Override
@@ -161,8 +133,9 @@ public class ABSsystem implements MainSystem, SystemService
 
     private LoanDTO createLoanDTO(Loan l)
     {
-        LoanDTO loan = new LoanDTO(l.getLoanId(), l.getBorrowerName(), l.getInitialAmount(), l.getMaxYazToPay(),
-                 l.getInterestPerPaymentSetByBorrowerInPercents(), l.getTotalInterestForLoan(), l.getPaymentRateInYaz(), l.getStatus(), l.getCategory());
+        LoanDTO loan = new LoanDTO(l.getLoanId(), l.getLoanName(),  l.getBorrowerName(), l.getInitialAmount(),
+                l.getMaxYazToPay(), l.getInterestPerPaymentSetByBorrowerInPercents(), l.getTotalInterestForLoan(),
+                l.getPaymentRateInYaz(), l.getStatus(), l.getCategory(), l.getInterestPaid(), l.getAmountPaid(), l.getDebt());
 
         for(Loan.LenderDetails ld : l.getLendersDetails())
         {
@@ -189,17 +162,8 @@ public class ABSsystem implements MainSystem, SystemService
     @Override
     public void moveMoneyBetweenAccounts(Account accountToSubtract, Account accountToAdd, double amount)
     {
-        try
-        {
-            accountToSubtract.substructFromBalance(this.getCurrYaz(), amount);
-            accountToAdd.addToBalance(this.getCurrYaz(), amount);
-        }
-
-        catch (RuntimeException e1)
-        { //user exceptions will be catched in UI
-            System.out.println(e1.getMessage());
-            System.exit(1);
-        }
+        accountToSubtract.substructFromBalance(this.getCurrYaz(), amount);
+        accountToAdd.addToBalance(this.getCurrYaz(), amount);
     }
 
     private void initStatusInfo(LoanDTO loanToInit, Loan l)
@@ -257,7 +221,6 @@ public class ABSsystem implements MainSystem, SystemService
         }
 
         customer.setAccountMovements(customerDTOMovements);
-
         return customer;
     }
 
@@ -283,8 +246,9 @@ public class ABSsystem implements MainSystem, SystemService
 
     private void takeCategoriesData(AbsCategories categories)
     {
-        for(String category : categories.getAbsCategory())
+        for(String c : categories.getAbsCategory())
         {
+            String category =  c.trim();
             LoanCategories.addCategory(category);
         }
     }
@@ -293,7 +257,7 @@ public class ABSsystem implements MainSystem, SystemService
     {
         for(AbsCustomer c : customers.getAbsCustomer())
         {
-            Customer customer = new Customer(c.getName(), c.getAbsBalance());
+            Customer customer = JAXBConvertor.convertCustomer(c);
             name2customer.put(customer.getName(), customer);
         }
     }
@@ -309,6 +273,8 @@ public class ABSsystem implements MainSystem, SystemService
                 this.status2loan.put(newLoan.getStatus(), newLoan);
                 this.loanId2Loan.put(newLoan.getLoanId(), newLoan);
                 this.loans.add(newLoan); //TODO: delete some loan fields from system
+
+                name2customer.get(l.getAbsOwner()).getLoansAsBorrower().add(newLoan);
             }
         }
         catch (XMLFileException ex)
@@ -318,7 +284,7 @@ public class ABSsystem implements MainSystem, SystemService
     }
 
     @Override
-    public Customer getCustomerByName(String name){return name2customer.get(name);}
+    public Customer getCustomerByName(String name) { return name2customer.get(name); }
 
     @Override
     public Map<String, Customer> getAllCustomers(){
@@ -335,5 +301,4 @@ public class ABSsystem implements MainSystem, SystemService
     {
         return LoanCategories.getCategories();
     }
-
 }

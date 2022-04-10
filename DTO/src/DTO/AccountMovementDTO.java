@@ -18,8 +18,8 @@ public class AccountMovementDTO {
     }
 
     @Override
-    public String toString() {
-
+    public String toString()
+    {
         String movement;
         if(movementKind == '+') {
             movement = "deposit";
@@ -28,11 +28,11 @@ public class AccountMovementDTO {
             movement = "withdraw";
         }
 
-        return "Account Movement:\n" +
+        return ("Account Movement:\n" +
                 "Executed on yaz:" + yaz + "\n" +
                 "Amount:" + amount + "\n" +
                 "Movement Kind:" + movement + "\n" +
                 "The balance before the movement:" + balanceBefore + "\n" +
-                "The balance after the movement" + balanceAfter;
+                "The balance after the movement" + balanceAfter);
     }
 }

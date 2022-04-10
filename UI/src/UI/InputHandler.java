@@ -1,8 +1,8 @@
 package UI;
 
+import Engine.XML_Handler.XMLFileChecker;
 import Exceptions.ValueOutOfRangeException;
-
-import java.io.FileInputStream;
+import Exceptions.XMLFileException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -17,7 +17,6 @@ public class InputHandler {
     public static int getOptionFromMenu()
     {
         int input;
-        String line;
         Scanner sc = new Scanner(System.in);
         input  = sc.nextInt();
 
@@ -82,7 +81,7 @@ public class InputHandler {
         String path = sc.nextLine();
 
         try {
-            checkPath(path);
+            XMLFileChecker.checkPath(path);
         }
 
         catch(Exception ex) {
@@ -91,19 +90,6 @@ public class InputHandler {
         }
 
         return path;
-    }
-
-    private static void checkPath(String path) throws Exception
-    {
-        if(path == null)
-        {
-            throw new Exception("Non path received, please try again");
-        }
-
-        /*else if(path.matches("\"([a-zA-Z]:)?(\\\\\\\\[a-zA-Z0-9_.-]+)+\\\\\\\\?\"\n"));
-        {
-            throw new Exception("The path contains non-English characters! \nplease try again");
-        }*/
     }
 
     public static ArrayList<String> chooseCategories(int numberOfCategoriesToChoose, ArrayList<String> supportedCategories){
@@ -135,8 +121,10 @@ public class InputHandler {
     }
 
     private static boolean isCategorySupported(String category,ArrayList<String> categories){
-        for (String supportedCategory:categories) {
-            if(category.equals(supportedCategory)) {
+        for (String supportedCategory:categories)
+        {
+            if(category.equals(supportedCategory))
+            {
                 return true;
             }
         }
@@ -172,10 +160,4 @@ public class InputHandler {
 
         return res;
     }
-
-
-
-
-
-
 }

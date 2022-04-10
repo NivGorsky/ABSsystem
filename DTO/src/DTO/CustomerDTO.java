@@ -80,7 +80,7 @@ public class CustomerDTO
             }
             case IN_RISK:
             {
-                toReturn+= ("There are " + l.getUnpaidPayments().size() + "unpayed payments in total amount of "
+                toReturn+= ("There are " + l.getUnpaidPayments().size() + "unpaid payments in total amount of "
                         + l.getDebt() + "\n");
                 break;
             }

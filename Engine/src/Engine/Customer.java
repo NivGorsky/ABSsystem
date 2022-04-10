@@ -1,7 +1,6 @@
 package Engine;
 
 import Exceptions.ValueOutOfRangeException;
-
 import java.util.ArrayList;
 
 public class Customer {
@@ -24,7 +23,7 @@ public class Customer {
     public ArrayList<Loan> getLoansAsLender() { return loansAsLender; }
     public Account getAccount() { return account; }
 
-    public void withdrawMoney(int yaz, double amount) throws Exception //TODO - exception class
+    public void withdrawMoney(int yaz, double amount) throws ValueOutOfRangeException
     {
         if(account.getBalance() < amount)
         {

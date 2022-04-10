@@ -6,7 +6,6 @@ import Engine.Loan;
 import Engine.SystemService;
 import Exceptions.DataBaseAccessException;
 import Exceptions.SystemRestrictionsException;
-
 import java.util.LinkedList;
 
 
@@ -28,7 +27,7 @@ public abstract class LoanPlacing {
         double amountLeftToInvest = dto.getAmountToInvest();
         int numberOfOpenLoans = openLoansDB.size();
         double amountToPutInEachLoan = amountLeftToInvest / numberOfOpenLoans;
-//        LinkedList<LoanPlacingDBEntry> loansPassedAmountThreshold = new LinkedList<LoanPlacingDBEntry>();
+//       LinkedList<LoanPlacingDBEntry> loansPassedAmountThreshold = new LinkedList<LoanPlacingDBEntry>();
         LinkedList<LoanPlacingDBEntry> closedLoans = new LinkedList<LoanPlacingDBEntry>();
 
         while(amountLeftToInvest > 0 && numberOfOpenLoans > 0){

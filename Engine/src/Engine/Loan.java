@@ -84,6 +84,7 @@ public class Loan
 
     //getters
     public int getLoanId() { return loanId; }
+    public  String getLoanName() { return loanName; }
     public String getBorrowerName() {
         return borrowerName;
     }
@@ -111,12 +112,8 @@ public class Loan
     public double getInterestPaid() {
         return interestPaid;
     }
-    public double getAmountPaid() {
-        return amountPaid;
-    }
-    public LoanStatus getStatus() {
-        return status;
-    }
+    public double getAmountPaid() { return amountPaid; }
+    public LoanStatus getStatus() { return status; }
     public int getActivationYaz() {
         return activationYaz;
     }

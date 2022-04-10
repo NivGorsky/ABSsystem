@@ -8,7 +8,6 @@ public class TimelineDTO {
     {
         currentYaz = systemYaz;
     }
-
     public int getCurrentYaz() {
         return currentYaz;
     }

@@ -3,6 +3,7 @@ package UI;
 import Engine.MainSystem;
 import Engine.ABSsystem;
 import DTO.*;
+import Exceptions.ValueOutOfRangeException;
 import Exceptions.XMLFileException;
 import UI.AssigningLoans.AssignLoanToLenders;
 import com.sun.xml.internal.ws.api.pipe.Engine;
@@ -67,7 +68,8 @@ public class ConsoleUI {
         return customers.get(userChoice);
     }
 
-    public double chooseAmount(String action) {
+    public double chooseAmount(String action)
+    {
         System.out.println("Please enter amount of money you would like to " + action + ":");
         double amount =  InputHandler.getAmount();
 
@@ -137,7 +139,6 @@ public class ConsoleUI {
             catch (XMLFileException ex) {
                 System.out.println(ex.getExceptionMsg());
             }
-
         }
     }
 
@@ -154,7 +155,7 @@ public class ConsoleUI {
         catch (JAXBException e) {
             e.printStackTrace();
          }
-        catch (Exception ex) {
+        catch (XMLFileException ex) {
             System.out.println(ex.getMessage());
         }
     }
@@ -217,7 +218,8 @@ public class ConsoleUI {
             engine.assignLoansToLender(assignLoanToLendersForm.getDTO());
         }
 
-        catch (Exception e){
+        catch (Exception e)
+        {
             System.out.println(e.getMessage());
         }
     };

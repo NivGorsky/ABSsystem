@@ -110,7 +110,6 @@ public class LoanPaymentsData {
     {
         LoanPaymentsData.Payment payment = null;
 
-
         for (PaymentsDB singleDataBase: paymentsDataBases.values())
         {
             try {

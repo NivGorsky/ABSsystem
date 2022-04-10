@@ -1,16 +1,17 @@
 package Engine.XML_Handler;
+
 import Engine.Customer;
 import Engine.LoanCategories;
 import Exceptions.XMLFileException;
-
 import java.io.File;
 import java.io.InputStream;
 import java.util.Map;
 
 public class XMLFileChecker {
 
-    public static void isFileExists(File file) throws XMLFileException
+    public static void isFileExists(String fileName) throws XMLFileException
     {
+        File file = new File(fileName);
         if(!file.isFile())
         {
             throw new XMLFileException("The file specified in the path could not be found");
@@ -19,9 +20,23 @@ public class XMLFileChecker {
 
     public static void isXMLFile(String fileName) throws XMLFileException
     {
-        if(!fileName.endsWith(".XML"))
+        if(!fileName.endsWith(".xml") && !fileName.endsWith(".XML"))
         {
             throw new XMLFileException("The file is not an XML file!");
+        }
+    }
+
+
+    public static void checkPath(String path) throws XMLFileException
+    {
+        if(path == null)
+        {
+            throw new XMLFileException("Non path received, please try again");
+        }
+
+        else if(path.matches("\\\\p*Hebrew"))
+        {
+            throw new XMLFileException("The path contains non-English characters! \nplease try again");
         }
     }
 
