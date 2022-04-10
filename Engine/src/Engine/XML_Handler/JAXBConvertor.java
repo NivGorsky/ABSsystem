@@ -17,8 +17,8 @@ public class JAXBConvertor {
         Loan loan = new Loan(generatedLoan.id.trim(), generatedLoan.absOwner.trim(), generatedLoan.absCapital, generatedLoan.absTotalYazTime,
                 generatedLoan.absPaysEveryYaz, generatedLoan.absIntristPerPayment, generatedLoan.absCategory.trim(), currentYaz);
 
-        LoanPaymentsData loanPayments = new LoanPaymentsData(loan);
-        loanPayments.createAllLoanPayments();
+        LoanPaymentsData loanPayments = loan.getPaymentsData();
+        loanPayments.createAllLoanPayments(loan.getMaxYazToPay(), loan.getPaymentRateInYaz(), loan.getInitialAmount(), loan.getInterestPerPaymentSetByBorrowerInPercents(), loan.getBorrowerName());
 
         return loan;
     }

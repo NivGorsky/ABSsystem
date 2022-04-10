@@ -27,7 +27,7 @@ public abstract class MoveTimeLine {
             allRelevantLoansForCurrentBorrower = getActiveAndExpiredLoansContainsPaymentsForCurrentYaz(allLoansAsBorrower, absSystem); //active loans that contain payment for curreny yaz
             Collections.sort(allRelevantLoansForCurrentBorrower, new ForwardingYazLoanComparator());
             IterateThroughSortedLoansAndMakePayments(allRelevantLoansForCurrentBorrower, currentCustomer, absSystem);
-            allLoansAsBorrower.clear();
+//            allLoansAsBorrower.clear();
             allRelevantLoansForCurrentBorrower.clear();
         }
     }
@@ -209,8 +209,8 @@ public abstract class MoveTimeLine {
         }
 
 
-        int paymentYaz = payment.getScheduledYaz();
-        loan.pollPaymentForSpecificYaz(paymentYaz);
+//        int paymentYaz = payment.getScheduledYaz();
+//        loan.pollPaymentForSpecificYaz(paymentYaz);
         loan.addNewPayment(payment);
     }
 

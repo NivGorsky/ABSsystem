@@ -11,7 +11,6 @@ import Engine.TimeLineMoving.MoveTimeLine;
 import DTO.*;
 import Engine.XML_Handler.*;
 import Exceptions.XMLFileException;
-import javax.xml.bind.JAXBException;
 
 public class ABSsystem implements MainSystem, SystemService
 {
@@ -144,6 +143,11 @@ public class ABSsystem implements MainSystem, SystemService
             loan.addToLendersNameAndAmount(ld.lender.getName(), ld.lendersAmount);
         }
 
+        //test
+        if(loan.getCustomerName() == "Avrum"){
+
+        }
+
         loan.setUnpaidPayments(l.getPaymentsData().getPaymentsDataBases().get(LoanPaymentsData.PaymentType.UNPAID));
         loan.setPaidPayments(l.getPaymentsData().getPaymentsDataBases().get(LoanPaymentsData.PaymentType.PAID));
 
@@ -249,6 +253,7 @@ public class ABSsystem implements MainSystem, SystemService
        takeCategoriesData(categories);
        takeCustomersData(customers);
        takeLoansData(loans);
+
     }
 
     private void takeCategoriesData(AbsCategories categories)

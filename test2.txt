@@ -1,5 +1,5 @@
 1
-C:\Users\ofekc\Desktop\java\ex1 Files\ex1-big.xml
+/Users/nivos/Downloads/ex1-big.xml
 2
 6
 7
@@ -9,3 +9,25 @@ Happy Event
 -1
 -1
 3
+7
+3
+7
+3
+7
+3
+7
+3
+7
+3
+7
+3
+7
+3
+7
+3
+7
+3
+7
+3
+8
+

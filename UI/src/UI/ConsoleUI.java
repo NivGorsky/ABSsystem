@@ -84,39 +84,46 @@ public class ConsoleUI {
             userChoice = MainMenu.values()[input-1];
             try {
                 switch (userChoice) {
-                    case LoadXML: {
+                    case LoadXML:
+                    {
                         boolean currFile = loadXML();
                         if(!isFileLoaded && currFile)
                         {
                             isFileLoaded = true;
                         }
+                        isFileLoaded = loadXML();
                         break;
                     }
-                    case ShowLoansInfo: {
+                    case ShowLoansInfo:
+                    {
                         if (checkFileLoaded(isFileLoaded)) {
                             showLoansInfo();
                             break;
                         }
                     }
-                    case ShowCustomersInfo: {
+                    case ShowCustomersInfo:
+                    {
                         if (checkFileLoaded(isFileLoaded)) {
                             showCustomersInfo();
                             break;
                         }
                     }
-                    case DepositMoney: {
+                    case DepositMoney:
+                    {
                         if (checkFileLoaded(isFileLoaded)) {
                             depositMoney();
                             break;
                         }
                     }
-                    case WithdrawMoney: {
+                    case WithdrawMoney:
+                    {
                         if (checkFileLoaded(isFileLoaded)) {
                             withdrawMoney();
                             break;
                         }
                     }
                     case AssignLoansToLender: {
+
                         if (checkFileLoaded(isFileLoaded))
                         {
                             assignLoansToLender();
@@ -124,6 +131,7 @@ public class ConsoleUI {
                         }
                     }
                     case MoveTimeline: {
+
                         if (checkFileLoaded(isFileLoaded)) {
                             moveTimeline();
                             break;
@@ -145,6 +153,7 @@ public class ConsoleUI {
     {
         boolean isFileLoaded = false;
 
+        System.out.println("1- Load XML file\n");
         System.out.println("Please enter a path to the XML file (the path cannot contain hebrew letters)");
         String path = InputHandler.getPathToFile();
 
@@ -169,6 +178,8 @@ public class ConsoleUI {
 
         ArrayList<LoanDTO> loans = engine.showLoansInfo();
 
+        System.out.println("2- Show information about all the loans in the system\n");
+
         for (LoanDTO l : loans)
         {
             System.out.println(l.toString());
@@ -179,6 +190,8 @@ public class ConsoleUI {
     {
         ArrayList<CustomerDTO> customers = engine.showCustomersInfo();
 
+        System.out.println("3- Show information about all the customers in the system\n");
+
         for(CustomerDTO c : customers)
         {
             System.out.println(c.toString());
@@ -187,6 +200,7 @@ public class ConsoleUI {
 
     public void depositMoney()
     {
+        System.out.println("4- Deposit money in account\n");
         try {
             String customerName = chooseCustomer();
             double amount = chooseAmount("deposit");
@@ -201,6 +215,8 @@ public class ConsoleUI {
     public void withdrawMoney()
     {
         String customerName = chooseCustomer();
+
+        System.out.println("5- Withdraw money from account\n");
         double amount = chooseAmount("withdraw");
 
         try {
@@ -217,6 +233,7 @@ public class ConsoleUI {
         //get the data from user and create dto, then send it to Engine
         try
         {
+            System.out.println("6- Invest money in loans\n");
             CustomerDTO chosenCustomer = chooseCustomerWithBalance();
             AssignLoanToLenders assignLoanToLendersForm = new AssignLoanToLenders(chosenCustomer.getCustomerName(), this.engine.getSystemLoanCategories());
             assignLoanToLendersForm.getAssigningParametersFromUser();
@@ -231,6 +248,7 @@ public class ConsoleUI {
 
     public void moveTimeline()
     {
+        System.out.println("7- Move the timeline\n");
         TimelineDTO systemTimeline = engine.moveTimeLine();
         System.out.println("Action succeeded!");
         System.out.println(systemTimeline.toString());
