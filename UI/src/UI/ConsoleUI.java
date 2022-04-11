@@ -91,7 +91,6 @@ public class ConsoleUI {
                         {
                             isFileLoaded = true;
                         }
-                        isFileLoaded = loadXML();
                         break;
                     }
                     case ShowLoansInfo:
