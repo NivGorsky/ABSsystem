@@ -2,7 +2,7 @@
   <artifact type="jar" name="ABSsystem-Ex01:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/ABSsystem_Ex01_jar</output-path>
     <root id="archive" name="ABSsystem-Ex01.jar">
-      <element id="module-output" name="ABSsystem-Ex01" />
+      <element id="module-output" name="ABSsystem" />
     </root>
   </artifact>
 </component>
