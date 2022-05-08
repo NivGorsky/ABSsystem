@@ -4,7 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="76.0" prefWidth="591.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="generalScenes.headerPaneController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="76.0" prefWidth="591.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="generalScenes.HeaderPaneController">
    <children>
       <Label fx:id="viewByLable" alignment="CENTER" contentDisplay="CENTER" layoutX="14.0" layoutY="6.0" prefHeight="65.0" prefWidth="87.0" text="View By CB" textAlignment="CENTER" wrapText="true" AnchorPane.leftAnchor="14.0" />
       <Label fx:id="filePathLabel" layoutX="111.0" layoutY="24.0" prefHeight="30.0" prefWidth="350.0" text="File Path" />
