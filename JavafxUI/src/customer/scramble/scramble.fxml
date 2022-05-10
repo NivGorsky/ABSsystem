@@ -59,7 +59,7 @@
                            <children>
                               <RadioButton fx:id="minInterestRatioButton" mnemonicParsing="false" onAction="#minInterestRadioButtonClicked" text="Min interest per yaz (Optional)" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                               <TextField fx:id="minInterestTextField" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                              <TextField fx:id="maxPercenteageOwnershipTextField" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                              <TextField fx:id="maxPercentageOwnershipTextField" GridPane.columnIndex="3" GridPane.rowIndex="5" />
                               <TextField fx:id="minYazTextField" GridPane.columnIndex="3" GridPane.rowIndex="3" />
                               <TextField fx:id="maxOpenLoansTextField" GridPane.columnIndex="3" GridPane.rowIndex="4" />
                               <RadioButton fx:id="minYazRadioButton" mnemonicParsing="false" onAction="#minYazRadioButtonClicked" text="Min yaz for loan (Optional)" GridPane.columnIndex="1" GridPane.rowIndex="3" />
