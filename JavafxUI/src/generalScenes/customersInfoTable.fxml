@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="202.0" prefWidth="684.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="generalScenes.LoansTableSceneController">
+  <content>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="682.0">
+         <children>
+            <TableView fx:id="loansTable" layoutX="-1.0" layoutY="-5.0" prefHeight="209.0" prefWidth="684.0" AnchorPane.bottomAnchor="-4.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="-5.0">
+              <columns>
+                  <TableColumn fx:id="loanName" prefWidth="83.66668701171875" text="Name" />
+                  <TableColumn fx:id="totalYaz" prefWidth="417.33331298828125" text="Loans As Lender">
+                     <columns>
+                        <TableColumn fx:id="category" prefWidth="71.66668701171875" text="New Loans" />
+                        <TableColumn fx:id="totalInterest" prefWidth="91.0" text="Pending Loans" />
+                        <TableColumn fx:id="PaymentRate" prefWidth="81.6666259765625" text="Active Loans" />
+                        <TableColumn fx:id="status" prefWidth="83.66668701171875" text="Loans In Risk" />
+                        <TableColumn fx:id="initialAmount" prefWidth="97.0" text="Finshed Loans" />
+                     </columns></TableColumn>
+                  <TableColumn fx:id="totalYaz1" prefWidth="121.0" text="Loans As Loaner">
+                     <columns>
+                        <TableColumn fx:id="category1" prefWidth="102.33331298828125" text="New Loans" />
+                        <TableColumn fx:id="totalInterest1" prefWidth="89.0" text="Pending Loans" />
+                        <TableColumn fx:id="PaymentRate1" prefWidth="100.3333740234375" text="Active Loans" />
+                        <TableColumn fx:id="status1" prefWidth="100.3333740234375" text="Loans In Risk" />
+                        <TableColumn fx:id="initialAmount1" prefWidth="92.66668701171875" text="Finshed Loans" />
+                     </columns>
+                  </TableColumn>
+              </columns>
+            </TableView>
+         </children></AnchorPane>
+  </content>
+</ScrollPane>
