@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<ScrollPane prefHeight="569.0" prefWidth="767.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+   <content>
+      <BorderPane prefHeight="567.0" prefWidth="764.0">
+         <top>
+            <Label prefHeight="84.0" prefWidth="214.0" text="Label" BorderPane.alignment="CENTER" />
+         </top>
+         <center>
+            <GridPane prefHeight="484.0" prefWidth="764.0" BorderPane.alignment="CENTER">
+              <columnConstraints>
+                  <ColumnConstraints hgrow="NEVER" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="661.0" minWidth="10.0" prefWidth="428.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="719.0" minWidth="10.0" prefWidth="308.0" />
+                  <ColumnConstraints hgrow="NEVER" maxWidth="169.0" minWidth="10.0" prefWidth="18.0" />
+              </columnConstraints>
+              <rowConstraints>
+                  <RowConstraints maxHeight="152.0" minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />
+                <RowConstraints maxHeight="152.0" minHeight="0.0" prefHeight="29.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="152.0" minHeight="10.0" prefHeight="42.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="445.0" minHeight="10.0" prefHeight="285.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="445.0" minHeight="10.0" prefHeight="173.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="10.0" minHeight="5.0" prefHeight="10.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <VBox prefHeight="343.0" prefWidth="513.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                     <children>
+                        <GridPane prefHeight="410.0" prefWidth="422.0">
+                          <columnConstraints>
+                              <ColumnConstraints hgrow="NEVER" maxWidth="3.0" minWidth="3.0" prefWidth="3.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="269.0" minWidth="10.0" prefWidth="240.0" />
+                              <ColumnConstraints hgrow="NEVER" maxWidth="149.0" minWidth="0.0" prefWidth="13.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="266.0" minWidth="10.0" prefWidth="85.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="230.0" minWidth="10.0" prefWidth="88.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                              <RowConstraints maxHeight="4.0" minHeight="0.0" prefHeight="0.0" vgrow="NEVER" />
+                              <RowConstraints maxHeight="199.0" minHeight="10.0" prefHeight="81.0" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="199.0" minHeight="10.0" prefHeight="89.0" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="249.0" minHeight="7.0" prefHeight="85.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="139.0" minHeight="3.0" prefHeight="84.0" vgrow="NEVER" />
+                            <RowConstraints maxHeight="231.0" minHeight="10.0" prefHeight="76.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <RadioButton mnemonicParsing="false" text="Min interest per yaz (Optional)" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <TextField GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                              <TextField GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                              <TextField GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                              <TextField GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                              <RadioButton mnemonicParsing="false" text="Min yaz for loan (Optional)" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <RadioButton mnemonicParsing="false" text="Max open loans for borrower  (Optional)" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                              <RadioButton mnemonicParsing="false" text="Max percentage Ownership (Optional)" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                              <RadioButton mnemonicParsing="false" text="Amount (Mandatory)" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <TextField GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                           </children>
+                        </GridPane>
+                     </children>
+                  </VBox>
+                  <GridPane prefHeight="147.0" prefWidth="510.0">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="164.0" minWidth="10.0" prefWidth="27.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="273.0" minWidth="10.0" prefWidth="272.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="493.0" minWidth="10.0" prefWidth="194.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="408.0" minWidth="0.0" prefWidth="21.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints maxHeight="144.0" minHeight="0.0" prefHeight="12.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="147.0" minHeight="3.0" prefHeight="35.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="147.0" minHeight="0.0" prefHeight="125.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="147.0" minHeight="0.0" prefHeight="19.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <BorderPane prefHeight="45.0" prefWidth="411.0" GridPane.columnIndex="2" />
+                     </children>
+                  </GridPane>
+                  <GridPane GridPane.columnIndex="2" GridPane.rowIndex="3">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="56.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="135.0" minHeight="10.0" prefHeight="135.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <RadioButton mnemonicParsing="false" text="Choose loan categories (Optional)" GridPane.columnSpan="2" />
+                        <TableView prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.rowSpan="2">
+                          <columns>
+                            <TableColumn prefWidth="307.0" text="C1" />
+                          </columns>
+                        </TableView>
+                     </children>
+                  </GridPane>
+                  <Button mnemonicParsing="false" prefHeight="60.0" prefWidth="728.0" text="Find loans" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" GridPane.rowSpan="2" />
+               </children>
+            </GridPane>
+         </center>
+      </BorderPane>
+   </content>
+</ScrollPane>
