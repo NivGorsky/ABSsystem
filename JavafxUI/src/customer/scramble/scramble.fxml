@@ -14,18 +14,19 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<ScrollPane prefHeight="569.0" prefWidth="767.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="customer.scramble.scrambleController">
+<ScrollPane prefHeight="591.0" prefWidth="888.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="customer.scramble.ScrambleController">
    <content>
-      <BorderPane prefHeight="567.0" prefWidth="764.0">
+      <BorderPane prefHeight="572.0" prefWidth="882.0">
          <top>
             <Label prefHeight="84.0" prefWidth="214.0" text="Label" BorderPane.alignment="CENTER" />
          </top>
          <center>
-            <GridPane prefHeight="484.0" prefWidth="764.0" BorderPane.alignment="CENTER">
+            <GridPane prefHeight="469.0" prefWidth="915.0" BorderPane.alignment="CENTER">
               <columnConstraints>
                   <ColumnConstraints hgrow="NEVER" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="661.0" minWidth="10.0" prefWidth="428.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="719.0" minWidth="10.0" prefWidth="308.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="719.0" minWidth="10.0" prefWidth="424.0" />
+                  <ColumnConstraints hgrow="NEVER" maxWidth="719.0" minWidth="10.0" prefWidth="48.0" />
                   <ColumnConstraints hgrow="NEVER" maxWidth="169.0" minWidth="10.0" prefWidth="18.0" />
               </columnConstraints>
               <rowConstraints>
@@ -108,8 +109,8 @@
                         </TableView>
                      </children>
                   </GridPane>
-                  <Button fx:id="findLoansButton" mnemonicParsing="false" onAction="#findLoansButtonClicked" prefHeight="60.0" prefWidth="728.0" text="Find loans" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" GridPane.rowSpan="2" />
-                  <ProgressBar fx:id="findLoansProgressionBar" prefHeight="20.0" prefWidth="729.0" progress="0.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" />
+                  <Button fx:id="findLoansButton" mnemonicParsing="false" onAction="#findLoansButtonClicked" prefHeight="60.0" prefWidth="863.0" text="Find loans" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" GridPane.rowSpan="2" />
+                  <ProgressBar fx:id="findLoansProgressionBar" prefHeight="20.0" prefWidth="868.0" progress="0.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" />
                </children>
             </GridPane>
          </center>
