@@ -98,7 +98,7 @@
             </GridPane>
             <Pane GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.rowSpan="2">
                <children>
-                  <fx:include fx:id="accountTransactionsComponent" source="accountTransactions/accountTransactions.fxml" />
+                  <fx:include fx:id="accountTransactions" source="accountTransactions/accountTransactions.fxml" />
                </children>
             </Pane>
          </children>

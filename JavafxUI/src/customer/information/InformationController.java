@@ -4,16 +4,16 @@ import customer.information.accountTransactions.accountTransactionsController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 
-import java.awt.*;
 
 public class InformationController {
 
     private CustomerController parentController;
 
-    @FXML private ScrollPane accountTransactionsComponent;
-    @FXML private accountTransactionsController accountTransactionsComponentController;
+    @FXML private ScrollPane accountTransactions;
+    @FXML private accountTransactionsController accountTransactionsController;
 
     @FXML
     private Button chargeButton;
@@ -36,8 +36,8 @@ public class InformationController {
 
     @FXML
     public void initialize(){
-        if (accountTransactionsComponentController != null){
-            accountTransactionsComponentController.setParentController(this);
+        if (accountTransactionsController != null){
+            accountTransactionsController.setParentController(this);
         }
     }
 

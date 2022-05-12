@@ -3,26 +3,26 @@ import customer.information.InformationController;
 import customer.payment.PaymentController;
 import customer.scramble.ScrambleController;
 import javafx.fxml.FXML;
+import javafx.scene.control.ScrollPane;
 
-import java.awt.*;
 
 public class CustomerController {
-    @FXML private ScrollPane informationComponent;
-    @FXML private InformationController informationComponentController;
+    @FXML private ScrollPane information;
+    @FXML private InformationController informationController;
 
-    @FXML private ScrollPane scrambleComponent;
-    @FXML private ScrambleController scrambleComponentController;
+    @FXML private ScrollPane scramble;
+    @FXML private ScrambleController scrambleController;
 
-    @FXML private ScrollPane paymentComponent;
-    @FXML private PaymentController paymentComponentController;
+    @FXML private ScrollPane payment;
+    @FXML private PaymentController paymentController;
 
     @FXML
     public void initialize(){
 
-        if (areControllersInitialized(informationComponentController, scrambleComponentController, paymentComponentController)){
-            informationComponentController.setParentController(this);
-            scrambleComponentController.setParentController(this);
-            paymentComponentController.setParentController(this);
+        if (areControllersInitialized(informationController, scrambleController, paymentController)){
+            informationController.setParentController(this);
+            scrambleController.setParentController(this);
+            paymentController.setParentController(this);
         }
     }
 

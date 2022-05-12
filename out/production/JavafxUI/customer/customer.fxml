@@ -4,21 +4,21 @@
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 
-<fx:root maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="641.0" prefWidth="917.0" type="ScrollPane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="customer.CustomerSceneController">
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="641.0" prefWidth="917.0" type="ScrollPane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="customer.CustomerController">
    <content>
       <TabPane prefHeight="624.0" prefWidth="907.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
           <Tab fx:id="informationTab" text="Information">
                <content>
-                  <fx:include fx:id="informationComponent" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="information/app.fxml" />
+                  <fx:include fx:id="information" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="information/Information.fxml" />
                </content></Tab>
           <Tab text="Scramble">
                <content>
-                  <fx:include fx:id="scrambleComponent" source="scramble/scramble.fxml" />
+                  <fx:include fx:id="scramble" source="scramble/Scramble.fxml" />
                </content></Tab>
             <Tab text="Payment">
                <content>
-                  <fx:include fx:id="paymentComponent" source="payment/payment.fxml" />
+                  <fx:include fx:id="payment" source="payment/Payment.fxml" />
                </content></Tab>
         </tabs>
       </TabPane>
