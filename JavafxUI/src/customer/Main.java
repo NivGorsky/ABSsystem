@@ -21,7 +21,7 @@ public class Main extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader();
         URL url = getClass().getResource("/customer/Customer.fxml");
         fxmlLoader.setLocation(url);
-        Parent root = fxmlLoader.load(url.openStream());
+        Parent root = fxmlLoader.load();
 
         Scene scene = new Scene(root, 500, 550);
         primaryStage.setScene(scene);
