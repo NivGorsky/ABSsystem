@@ -306,4 +306,12 @@ public class ABSsystem implements MainSystem, SystemService
     {
         return LoanCategories.getCategories();
     }
+
+    //new methods for javafx
+    @Override
+    public CustomerDTO getCustomerDTO(String customerName){
+        Customer c = name2customer.get(customerName);
+
+        return createCustomerDTO(c);
+    }
 }

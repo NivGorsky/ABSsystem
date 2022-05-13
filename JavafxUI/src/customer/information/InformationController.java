@@ -1,8 +1,14 @@
 package customer.information;
+import com.sun.javafx.collections.ObservableListWrapper;
 import customer.CustomerController;
 import customer.information.accountTransactions.accountTransactionsController;
 import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableArray;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -12,14 +18,17 @@ import Engine.MainSystem;
 import Engine.ABSsystem;
 import DTO.*;
 
+
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class InformationController {
 
     private CustomerController parentController;
     private MainSystem model;
-    private ListProperty<AccountMovementDTO> accountMovements;
+    private SimpleListProperty<AccountMovementDTO> accountMovements;
+    private SimpleStringProperty customerName;
 
     @FXML private ScrollPane accountTransactions;
     @FXML private accountTransactionsController accountTransactionsController;
@@ -38,11 +47,14 @@ public class InformationController {
         String customerName = parentController.getCustomerNameProperty().getValue();
         double amount = Double.parseDouble(amountTextField.getText());
 
+        //make the actual deposit
         model.depositMoney(customerName, amount);
 
-
-
-
+        //update the movements table
+        CustomerDTO customerDTO = model.getCustomerDTO(customerName);
+        List<AccountMovementDTO> movementsFromEngine = customerDTO.getAccountMovements();
+        ObservableListWrapper<AccountMovementDTO> observableMovements = new ObservableListWrapper<>(movementsFromEngine);
+        this.accountMovements.setValue(observableMovements);
     }
 
     @FXML
@@ -55,17 +67,20 @@ public class InformationController {
         if (accountTransactionsController != null){
             accountTransactionsController.setParentController(this);
         }
+        
+        //update customer name
+        updateAccountMovements();
     }
 
-    public InformationController (){
-
+    public InformationController () {
+        accountMovements = new SimpleListProperty<>();
     }
 
-    public void setParentController(CustomerController parentController){
-        this.parentController = parentController;
-    }
-    public void setModel(MainSystem model){
-        this.model = model;
+    private void updateAccountMovements(){
+        CustomerDTO customerDTO = model.getCustomerDTO(customerName.get());
+        List<AccountMovementDTO> movementsFromEngine = customerDTO.getAccountMovements();
+        ObservableListWrapper<AccountMovementDTO> observableMovements = new ObservableListWrapper<>(movementsFromEngine);
+        this.accountMovements.setValue(observableMovements);
     }
 
 }

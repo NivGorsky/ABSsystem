@@ -19,5 +19,5 @@ public interface MainSystem {
     public ArrayList<String> getSystemLoanCategories();
 
     //new methods for javafx
-    public ArrayList<AccountMovementDTO> showCustomerMovements(String customerName);
+    public CustomerDTO getCustomerDTO(String customerName);
 }
