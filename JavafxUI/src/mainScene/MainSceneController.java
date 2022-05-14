@@ -4,14 +4,17 @@ import Engine.MainSystem;
 import adminScene.AdminSceneController;
 import header.HeaderPaneController;
 import javafx.fxml.FXML;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+
+
 
 public class MainSceneController {
 
     @FXML private GridPane headerPane;
     @FXML private HeaderPaneController headerPaneController;
-    @FXML private GridPane adminScene;
+    @FXML private ScrollPane adminScene;
     @FXML private AdminSceneController adminSceneController;
 
     private MainSystem model;
