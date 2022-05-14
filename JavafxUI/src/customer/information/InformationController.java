@@ -27,19 +27,10 @@ import java.util.List;
 public class InformationController {
 
     private CustomerController parentController;
+    private StringProperty customerNameProperty;
     private MainSystem model;
-    private SimpleListProperty<AccountMovementDTO> accountMovements; //need to check where this field will be, understand first how the table view works
 
     public InformationController () {
-        accountMovements = new SimpleListProperty<>();
-    }
-
-    private void updateAccountMovements(){
-        parentController.updateCustomerDTO();
-        CustomerDTO customerDTO = parentController.getCustomerDTO();
-        List<AccountMovementDTO> movementsFromEngine = customerDTO.getAccountMovements();
-        ObservableListWrapper<AccountMovementDTO> observableMovements = new ObservableListWrapper<>(movementsFromEngine);
-        this.accountMovements.setValue(observableMovements); //need to check how to implement this in a table view
     }
 
     public void setParentController(CustomerController parentController) {
@@ -58,13 +49,13 @@ public class InformationController {
 
     @FXML
     void chargeButtonClicked(ActionEvent event) {
-        String customerName = parentController.getCustomerNameProperty().getValue();
+        String customerName = customerNameProperty.getValue();
         double amount = Double.parseDouble(amountTextField.getText());
 
         try {
             //make the actual deposit
             model.depositMoney(customerName, amount);
-            updateAccountMovements();
+            accountTransactionsController.updateAccountMovements();
         }
 
         catch (Exception e){
@@ -74,26 +65,32 @@ public class InformationController {
 
     @FXML
     void withdrawButtonClicked(ActionEvent event) {
-        String customerName = parentController.getCustomerNameProperty().getValue();
-        double amount = Double.parseDouble(amountTextField.getText());
-
-        //make the actual withdraw
         try {
+            String customerName = customerNameProperty.getValue();
+            double amount = Double.parseDouble(amountTextField.getText());
+
             model.withdrawMoney(customerName, amount);
-            updateAccountMovements();
+            accountTransactionsController.updateAccountMovements();
         }
 
         catch (Exception e){
             //present an error window to the user
         }
+
+        //make the actual withdraw
     }
 
     @FXML
     public void initialize(){
-        if (accountTransactionsController != null){
-            accountTransactionsController.setParentController(this);
+        try {
+            if (accountTransactionsController != null) {
+                accountTransactionsController.setParentController(this);
+                accountTransactionsController.updateAccountMovements();
+            }
         }
 
-        updateAccountMovements();
+        catch (Exception e){
+            System.out.println("Failed to init information controller");
+        }
     }
 }

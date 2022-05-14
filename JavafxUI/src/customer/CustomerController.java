@@ -14,8 +14,6 @@ import javafx.scene.control.ScrollPane;
 
 public class CustomerController {
 
-    private StringProperty customerNameProperty;
-    private CustomerDTO customerDTO;
     private MainSystem model;
 
     private boolean areControllersInitialized(InformationController customerController, ScrambleController scrambleController, PaymentController paymentController){
@@ -26,18 +24,6 @@ public class CustomerController {
     public void setModel(MainSystem model){
         this.model = model;
         this.informationController.setModel(model);
-    }
-
-    public void updateCustomerDTO(){
-        customerDTO = model.getCustomerDTO(customerNameProperty.getValue());
-    }
-
-    public StringProperty getCustomerNameProperty(){
-        return customerNameProperty;
-    }
-
-    public CustomerDTO getCustomerDTO(){
-        return customerDTO;
     }
 
     @FXML private ScrollPane information;

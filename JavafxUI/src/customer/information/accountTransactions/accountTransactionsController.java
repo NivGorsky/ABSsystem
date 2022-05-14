@@ -1,15 +1,83 @@
 package customer.information.accountTransactions;
 
 
+import DTO.*;
+
+import Engine.ABSsystem;
+import Engine.MainSystem;
+import com.sun.javafx.collections.ObservableListWrapper;
 import customer.information.InformationController;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+
+import java.util.List;
 
 public class accountTransactionsController {
 
     private InformationController parentController;
+    private MainSystem model;
+    private StringProperty customerNameProperty;
+    private ObservableList<AccountMovementDTO> accountMovements;
 
     public void setParentController(InformationController parentController){
         this.parentController = parentController;
     }
+
+    public void setModel(MainSystem model){
+        this.model = model;
+    }
+
+    public void updateAccountMovements(){
+        CustomerDTO customerDTO = model.getCustomerDTO(customerNameProperty.getValue());
+            List<AccountMovementDTO> movementsFromEngine = customerDTO.getAccountMovements();
+            ObservableListWrapper<AccountMovementDTO> observableMovements = new ObservableListWrapper<>(movementsFromEngine);
+            accountMovements.clear();
+            accountMovements = observableMovements;
+    }
+
+    public accountTransactionsController(){
+        this.accountMovements = FXCollections.observableArrayList();
+    }
+
+
+//    private final int yaz;
+//    private final double amount;
+//    private final char movementKind;   // +/-/p for payment
+//    private final double balanceBefore;
+//    private final double balanceAfter;
+
+
+    private void createTableViewColumns(){
+//        TableColumn<AccountMovementDTO, Integer> yazCol = new TableColumn<>("Yaz");
+//        yazCol.setCellValueFactory(new PropertyValueFactory<>("yaz"));
+//
+//        TableColumn<AccountMovementDTO, Integer> yazCol = new TableColumn<>("Yaz");
+//        yazCol.setCellValueFactory(new PropertyValueFactory<>("yaz"));
+        accountTransactionsTableView.getColumns();
+
+
+    }
+
+    @FXML
+    public void initialize(){
+        try {
+
+
+        }
+
+        catch (Exception e){
+            System.out.println("Failed to init account transactions controller");
+        }
+    }
+
+
+    @FXML private TableView<AccountMovementDTO> accountTransactionsTableView;
 
 
 }
