@@ -35,10 +35,11 @@ public class accountTransactionsController {
 
     public void updateAccountMovements(){
         CustomerDTO customerDTO = model.getCustomerDTO(customerNameProperty.getValue());
-            List<AccountMovementDTO> movementsFromEngine = customerDTO.getAccountMovements();
-            ObservableListWrapper<AccountMovementDTO> observableMovements = new ObservableListWrapper<>(movementsFromEngine);
-            accountMovements.clear();
-            accountMovements = observableMovements;
+        List<AccountMovementDTO> movementsFromEngine = customerDTO.getAccountMovements();
+        ObservableListWrapper<AccountMovementDTO> observableMovements = new ObservableListWrapper<>(movementsFromEngine);
+        accountMovements.clear();
+        accountMovements = observableMovements;
+        accountTransactionsTableView.setItems(accountMovements); //should be as listening to property
     }
 
     public accountTransactionsController(){
@@ -54,21 +55,33 @@ public class accountTransactionsController {
 
 
     private void createTableViewColumns(){
-//        TableColumn<AccountMovementDTO, Integer> yazCol = new TableColumn<>("Yaz");
-//        yazCol.setCellValueFactory(new PropertyValueFactory<>("yaz"));
-//
-//        TableColumn<AccountMovementDTO, Integer> yazCol = new TableColumn<>("Yaz");
-//        yazCol.setCellValueFactory(new PropertyValueFactory<>("yaz"));
-        accountTransactionsTableView.getColumns();
+        TableColumn<AccountMovementDTO, Integer> yazCol = new TableColumn<>("Yaz");
+        yazCol.setCellValueFactory(new PropertyValueFactory<>("yaz"));
+        accountTransactionsTableView.getColumns().add(yazCol);
 
+        TableColumn<AccountMovementDTO, Integer> amountCol = new TableColumn<>("Amount");
+        amountCol.setCellValueFactory(new PropertyValueFactory<>("amount"));
+        accountTransactionsTableView.getColumns().add(amountCol);
 
+        TableColumn<AccountMovementDTO, Integer> movementKindCol = new TableColumn<>("Movement Kind");
+        movementKindCol.setCellValueFactory(new PropertyValueFactory<>("movementKind"));
+        accountTransactionsTableView.getColumns().add(movementKindCol);
+
+        TableColumn<AccountMovementDTO, Integer> balanceBeforeCol = new TableColumn<>("Balance Before");
+        balanceBeforeCol.setCellValueFactory(new PropertyValueFactory<>("balanceBefore"));
+        accountTransactionsTableView.getColumns().add(balanceBeforeCol);
+
+        TableColumn<AccountMovementDTO, Integer> balanceAfterCol = new TableColumn<>("Balance After");
+        movementKindCol.setCellValueFactory(new PropertyValueFactory<>("balanceAfter"));
+        accountTransactionsTableView.getColumns().add(balanceAfterCol);
     }
 
     @FXML
     public void initialize(){
         try {
-
-
+            createTableViewColumns();
+            updateAccountMovements();
+//            customerNameProperty = parentController.getCustomerNameProperty();
         }
 
         catch (Exception e){
@@ -76,8 +89,5 @@ public class accountTransactionsController {
         }
     }
 
-
     @FXML private TableView<AccountMovementDTO> accountTransactionsTableView;
-
-
 }

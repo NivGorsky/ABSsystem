@@ -8,12 +8,12 @@
 <ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="423.0" prefWidth="362.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="customer.information.accountTransactions.accountTransactionsController">
   <content>
       <TableView fx:id="accountTransactionsTableView" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="419.0" prefWidth="360.0">
-        <columns>
-          <TableColumn prefWidth="89.0" text="Date" />
-          <TableColumn text="Amount" />
-            <TableColumn minWidth="4.0" prefWidth="58.0" text="In/Out" />
-            <TableColumn prefWidth="144.0" text="Description" />
-        </columns>
+<!--        <columns>-->
+<!--          <TableColumn prefWidth="89.0" text="Date" />-->
+<!--          <TableColumn text="Amount" />-->
+<!--            <TableColumn minWidth="4.0" prefWidth="58.0" text="In/Out" />-->
+<!--            <TableColumn prefWidth="144.0" text="Description" />-->
+<!--        </columns>-->
          <opaqueInsets>
             <Insets />
          </opaqueInsets>

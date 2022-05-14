@@ -36,7 +36,7 @@ public class InformationController {
     public void setParentController(CustomerController parentController) {
         this.parentController = parentController;
     }
-
+    public StringProperty getCustomerNameProperty(){return this.customerNameProperty;}
     public void setModel(MainSystem  model){
         this.model = model;
     }
