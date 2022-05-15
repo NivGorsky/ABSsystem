@@ -33,6 +33,8 @@ public class accountTransactionsController {
         this.model = model;
     }
 
+    public StringProperty getCustomerNameProperty(){return this.customerNameProperty;}
+
     public void updateAccountMovements(){
         CustomerDTO customerDTO = model.getCustomerDTO(customerNameProperty.getValue());
         List<AccountMovementDTO> movementsFromEngine = customerDTO.getAccountMovements();
@@ -45,14 +47,6 @@ public class accountTransactionsController {
     public accountTransactionsController(){
         this.accountMovements = FXCollections.observableArrayList();
     }
-
-
-//    private final int yaz;
-//    private final double amount;
-//    private final char movementKind;   // +/-/p for payment
-//    private final double balanceBefore;
-//    private final double balanceAfter;
-
 
     private void createTableViewColumns(){
         TableColumn<AccountMovementDTO, Integer> yazCol = new TableColumn<>("Yaz");
@@ -81,7 +75,6 @@ public class accountTransactionsController {
         try {
             createTableViewColumns();
             updateAccountMovements();
-//            customerNameProperty = parentController.getCustomerNameProperty();
         }
 
         catch (Exception e){
