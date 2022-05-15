@@ -8,4 +8,5 @@ public interface SystemService {
     public void moveMoneyBetweenAccounts(Account accountToSubtract, Account accountToAdd, double amount);
     public Map<String, Customer> getAllCustomers();
     public Timeline getTimeLine();
+    public void addNotificationToCustomer(Customer customer, Notification notification);
 }

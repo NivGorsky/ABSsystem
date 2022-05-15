@@ -1,10 +1,8 @@
 package Engine;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
+
 import Exceptions.*;
 import Engine.LoanPlacing.LoanPlacing;
 import Engine.TimeLineMoving.MoveTimeLine;
@@ -19,6 +17,7 @@ public class ABSsystem implements MainSystem, SystemService
     private Map<Loan.LoanStatus, Loan> status2loan;
     private LinkedList<Loan> loans;
     private Map<Integer, Loan> loanId2Loan;
+    private Map<Customer, List<Notification>> customer2Notifications;
 
     public ABSsystem()
     {
@@ -288,6 +287,12 @@ public class ABSsystem implements MainSystem, SystemService
             }
     }
 
+    public void addNotificationToCustomer(Customer customer, Notification notification){
+        List<Notification> customerNotifications = customer2Notifications.get(customer);
+        customerNotifications.add(notification);
+        customer2Notifications.put(customer, customerNotifications);
+    }
+
     @Override
     public Customer getCustomerByName(String name) { return name2customer.get(name); }
 
@@ -313,5 +318,20 @@ public class ABSsystem implements MainSystem, SystemService
         Customer c = name2customer.get(customerName);
 
         return createCustomerDTO(c);
+    }
+
+    @Override
+    public NotificationsDTO getNotificationsDTOS(String customerName){
+        Customer customer = name2customer.get(customerName);
+        List<Notification> customerNotifications = customer2Notifications.get(customer);
+        NotificationsDTO newNotificationsDTO = new NotificationsDTO();
+
+        for (Notification n : customerNotifications)
+        {
+           NotificationsDTO.NotificationDTO singleNotificationDTO = newNotificationsDTO.new NotificationDTO(n.yaz, n.loanName, n.amount, n.details);
+           newNotificationsDTO.notifications.add(singleNotificationDTO);
+        }
+
+        return newNotificationsDTO;
     }
 }
