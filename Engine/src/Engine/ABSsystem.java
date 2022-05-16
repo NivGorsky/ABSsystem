@@ -42,8 +42,7 @@ public class ABSsystem implements MainSystem, SystemService
     public void loadXML(String path) throws XMLFileException
     {
         try {
-            InputStream loadedXMLFile;
-            loadedXMLFile = SchemaForLAXB.getDescriptorFromXML(path);
+            InputStream loadedXMLFile = SchemaForLAXB.getDescriptorFromXML(path);
             XMLFileChecker.isFileExists(path);
             XMLFileChecker.isXMLFile(path);
             takeDataFromDescriptor(SchemaForLAXB.descriptor);
@@ -134,7 +133,7 @@ public class ABSsystem implements MainSystem, SystemService
 
     private LoanDTO createLoanDTO(Loan l)
     {
-        LoanDTO loan = new LoanDTO(l.getLoanId(), l.getLoanName(),  l.getBorrowerName(), l.getInitialAmount(),
+        LoanDTO loan = new LoanDTO(l.getLoanName(),  l.getBorrowerName(), l.getInitialAmount(),
                 l.getMaxYazToPay(), l.getInterestPerPaymentSetByBorrowerInPercents(), l.getTotalInterestForLoan(),
                 l.getPaymentRateInYaz(), l.getStatus(), l.getCategory(), l.getInterestPaid(), l.getAmountPaid(), l.getDebt());
 
@@ -143,10 +142,6 @@ public class ABSsystem implements MainSystem, SystemService
             loan.addToLendersNameAndAmount(ld.lender.getName(), ld.lendersAmount);
         }
 
-        //test
-        if(loan.getCustomerName() == "Avrum"){
-
-        }
 
         loan.setUnpaidPayments(l.getPaymentsData().getPaymentsDataBases().get(LoanPaymentsData.PaymentType.UNPAID));
         loan.setPaidPayments(l.getPaymentsData().getPaymentsDataBases().get(LoanPaymentsData.PaymentType.PAID));

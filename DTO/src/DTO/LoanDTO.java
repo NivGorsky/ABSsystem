@@ -2,6 +2,8 @@ package DTO;
 
 import Engine.Loan;
 import Engine.LoanPaymentsData;
+import javafx.beans.property.SimpleStringProperty;
+
 import java.util.ArrayList;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -50,7 +52,6 @@ public class LoanDTO {
         }
     }
 
-    private final int loanId;
     private final String loanName;
     private final String customerName;
     private final double initialAmount;
@@ -78,10 +79,9 @@ public class LoanDTO {
     private int finishYaz;
 
 
-    public LoanDTO(int id, String loanName, String custName, double initialAmount, int totalYaz, double interestPerPayment, double totalInterest, int yazPerPayment,
+    public LoanDTO(String loanName, String custName, double initialAmount, int totalYaz, double interestPerPayment, double totalInterest, int yazPerPayment,
                    Loan.LoanStatus status, String category, double paidInterest, double paidLoan, double debt)
     {
-        this.loanId = id;
         this.loanName = loanName;
         this.customerName = custName;
         this.initialAmount = initialAmount;
@@ -101,9 +101,6 @@ public class LoanDTO {
     }
 
     //getters
-    public int getLoanId() {
-        return loanId;
-    }
     public String getCustomerName() {
         return customerName;
     }

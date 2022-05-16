@@ -2,7 +2,7 @@ package mainScene;
 
 import Engine.MainSystem;
 import adminScene.AdminSceneController;
-import header.HeaderPaneController;
+import header.HeaderController;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
@@ -12,20 +12,19 @@ import javafx.stage.Stage;
 
 public class MainSceneController {
 
-    @FXML private GridPane headerPane;
-    @FXML private HeaderPaneController headerPaneController;
+    @FXML private GridPane header;
+    @FXML private HeaderController headerController;
     @FXML private ScrollPane adminScene;
     @FXML private AdminSceneController adminSceneController;
 
     private MainSystem model;
     private Stage primaryStage;
 
-
     @FXML public void initialize()
     {
-        if(headerPaneController != null && adminSceneController != null)
+        if(headerController != null && adminSceneController != null)
         {
-            headerPaneController.setParentController(this);
+            headerController.setParentController(this);
             adminSceneController.setParentController(this);
         }
     }
@@ -38,9 +37,12 @@ public class MainSceneController {
     {
         this.model = model;
     }
-
     public Stage getPrimaryStage() { return primaryStage; }
-    public HeaderPaneController getHeaderPaneController() { return headerPaneController; }
-    public AdminSceneController getAdminPaneController() { return adminSceneController; }
     public MainSystem getModel() { return model; }
+
+    public void setFileInfo(String path)
+    {
+        headerController.setSelectedFilePathProperty(path);
+        headerController.setIsFileSelectedProperty(true);
+    }
 }
