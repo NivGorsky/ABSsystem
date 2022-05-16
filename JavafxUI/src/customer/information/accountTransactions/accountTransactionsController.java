@@ -76,7 +76,7 @@ public class accountTransactionsController {
     public void initialize(){
         try {
             createTableViewColumns();
-            updateAccountMovements();
+            //updateAccountMovements();
         }
 
         catch (Exception e){

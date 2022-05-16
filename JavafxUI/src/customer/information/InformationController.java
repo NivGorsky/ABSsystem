@@ -85,7 +85,7 @@ public class InformationController {
         try {
             if (accountTransactionsController != null) {
                 accountTransactionsController.setParentController(this);
-                accountTransactionsController.updateAccountMovements();
+                //accountTransactionsController.updateAccountMovements();
             }
         }
 
