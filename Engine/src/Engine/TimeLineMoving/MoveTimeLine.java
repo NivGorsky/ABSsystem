@@ -101,16 +101,28 @@ public abstract class MoveTimeLine {
         }
     }
 
+    private static void createNewNotificationForBorrower(Loan loan, Customer borrower, SystemService absSystem){
+        Notification newNotification = new Notification();
+        LoanPaymentsData.Payment payment = loan.peekPaymentForSpecificYaz(currentYaz);
+        newNotification.amount = Double.toString(payment.getBothPartsOfAmountToPay());
+        newNotification.loanName = loan.getLoanName();
+        newNotification.yaz = Integer.toString(currentYaz);
+
+        absSystem.addNotificationToCustomer(borrower, newNotification);
+    }
+
     private static void IterateThroughSortedLoansAndMakePayments(LinkedList<Loan> allRelevantLoans, Customer borrower, SystemService absSystem){
 
         for (Loan loan:allRelevantLoans){
             switch (loan.getStatus()){
                 case IN_RISK:
-                    makePaymentsForLoanThatIsInRisk(loan, borrower, absSystem);
+//                    makePaymentsForLoanThatIsInRisk(loan, borrower, absSystem);
+                    createNewNotificationForBorrower(loan, borrower, absSystem);
 
                     break;
                 case ACTIVE:
-                    makePaymentsForLoanThatIsActive(loan, borrower, absSystem);
+//                    makePaymentsForLoanThatIsActive(loan, borrower, absSystem);
+                    createNewNotificationForBorrower(loan, borrower, absSystem);
 
                     break;
 
@@ -142,7 +154,6 @@ public abstract class MoveTimeLine {
                 changePaymentStatus(loan, currentPayment, LoanPaymentsData.PaymentType.PAID);
                 splitLoanMoneyToLenders(loan, absSystem);
             }
-
         }
 
         if(!loan.isTherePaymentsOfSpecificType(LoanPaymentsData.PaymentType.EXPIRED)){

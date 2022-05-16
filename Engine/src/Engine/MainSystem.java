@@ -18,4 +18,7 @@ public interface MainSystem {
     public int getCurrYaz();
     public ArrayList<String> getSystemLoanCategories();
 
+    //new methods for javafx
+    public CustomerDTO getCustomerDTO(String customerName);
+    public NotificationsDTO getNotificationsDTO(String customerName);
 }

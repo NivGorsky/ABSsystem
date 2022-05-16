@@ -241,7 +241,6 @@ public class Loan
     private void updateLoanToActive(int yaz){
         this.paymentsData.addYazToAllPayments(yaz);
     }
-
 }
 
 
