@@ -321,7 +321,7 @@ public class ABSsystem implements MainSystem, SystemService
     }
 
     @Override
-    public NotificationsDTO getNotificationsDTOS(String customerName){
+    public NotificationsDTO getNotificationsDTO(String customerName){
         Customer customer = name2customer.get(customerName);
         List<Notification> customerNotifications = customer2Notifications.get(customer);
         NotificationsDTO newNotificationsDTO = new NotificationsDTO();

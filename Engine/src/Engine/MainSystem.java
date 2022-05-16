@@ -20,5 +20,5 @@ public interface MainSystem {
 
     //new methods for javafx
     public CustomerDTO getCustomerDTO(String customerName);
-    public NotificationsDTO getNotificationsDTOS(String customerName);
+    public NotificationsDTO getNotificationsDTO(String customerName);
 }

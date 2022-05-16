@@ -20,6 +20,8 @@ import java.util.List;
 
 public class accountTransactionsController {
 
+    //TODO: create the link between this controller's customer name property to the customer controller customer name property.
+
     private InformationController parentController;
     private MainSystem model;
     private StringProperty customerNameProperty;
