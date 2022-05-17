@@ -36,6 +36,7 @@ public class MainSceneController {
     public void setModel(MainSystem model)
     {
         this.model = model;
+        headerController.setModel(model);
     }
     public Stage getPrimaryStage() { return primaryStage; }
     public MainSystem getModel() { return model; }

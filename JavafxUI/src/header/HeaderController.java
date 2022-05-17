@@ -1,15 +1,20 @@
 package header;
 
+import DTO.CustomerDTO;
+import Engine.MainSystem;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import mainScene.MainSceneController;
+
+import java.util.ArrayList;
 
 public class HeaderController {
 
@@ -22,8 +27,9 @@ public class HeaderController {
     private SimpleBooleanProperty isFileSelected;
     private SimpleStringProperty selectedFilePath;
     private SimpleIntegerProperty currentYAZ;
+    private MainSystem model;
 
-    ObservableList<String> options =  FXCollections.observableArrayList("Admin" , "Customer");
+    ObservableList<String> options =  FXCollections.observableArrayList("Admin");
 
     public HeaderController()
     {
@@ -40,6 +46,10 @@ public class HeaderController {
        currentYazLabel.textProperty().bind(Bindings.concat("Current YAZ: ", currentYAZ));
        viewByCB.disableProperty().bind(isFileSelected.not());
        currentYazLabel.disableProperty().bind(isFileSelected.not());
+       isFileSelected.addListener(((observable, oldValue, newValue) -> {
+           ArrayList<String> customerNames = model.getCustomersNames();
+           options.addAll(FXCollections.observableArrayList(customerNames));
+           viewByCB.setItems(options);;}));
     }
 
     public void setParentController(MainSceneController parentController)
@@ -49,5 +59,10 @@ public class HeaderController {
     public void setSelectedFilePathProperty(String path) { selectedFilePath.set(path); }
     public void setCurrentYAZProperty(int newCurrentYaz) { currentYAZ.set(newCurrentYaz); }
     public void setIsFileSelectedProperty(Boolean isSelected) { isFileSelected.set(isSelected);}
-
+    public void setModel(MainSystem model){this.model = model;}
+    public void getCustomersNamesFromModelToComboBox(){
+        ArrayList<String> customerNames = model.getCustomersNames();
+        options.addAll(FXCollections.observableArrayList(customerNames));
+        viewByCB.setItems(options);
+    }
 }
