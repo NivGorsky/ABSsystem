@@ -45,6 +45,9 @@ public class HeaderController {
        filePathLabel.textProperty().bind(Bindings.concat("File Path: ", selectedFilePath));
        currentYazLabel.textProperty().bind(Bindings.concat("Current YAZ: ", currentYAZ));
        viewByCB.disableProperty().bind(isFileSelected.not());
+       viewByCB.itemsProperty().addListener((observable, oldValue, newValue) ->{
+           parentController.switchBody(viewByCB.getValue());
+       });
        currentYazLabel.disableProperty().bind(isFileSelected.not());
        isFileSelected.addListener(((observable, oldValue, newValue) -> {
            ArrayList<String> customerNames = model.getCustomersNames();
@@ -60,9 +63,4 @@ public class HeaderController {
     public void setCurrentYAZProperty(int newCurrentYaz) { currentYAZ.set(newCurrentYaz); }
     public void setIsFileSelectedProperty(Boolean isSelected) { isFileSelected.set(isSelected);}
     public void setModel(MainSystem model){this.model = model;}
-    public void getCustomersNamesFromModelToComboBox(){
-        ArrayList<String> customerNames = model.getCustomersNames();
-        options.addAll(FXCollections.observableArrayList(customerNames));
-        viewByCB.setItems(options);
-    }
 }
