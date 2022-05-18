@@ -55,8 +55,8 @@
                               <Insets left="5.0" top="5.0" />
                            </GridPane.margin>
                         </Label>
-                        <fx:include prefHeight="170.0" prefWidth="1000.0" source="../loansTable/loansTableComponent.fxml" GridPane.rowIndex="2" />
-                        <fx:include prefHeight="170.0" prefWidth="1000.0" source="../customersInfoTable/customersInfoTable.fxml" GridPane.rowIndex="4" />
+                        <fx:include prefHeight="170.0" fx:id="loansTableComponent" prefWidth="1000.0" source="../loansTable/loansTableComponent.fxml" GridPane.rowIndex="2" />
+                        <fx:include prefHeight="170.0" fx:id="customersInfoTable" prefWidth="1000.0" source="../customersInfoTable/customersInfoTable.fxml" GridPane.rowIndex="4" />
                      </children>
                   </GridPane>
                </center>
