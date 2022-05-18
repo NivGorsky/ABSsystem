@@ -134,7 +134,7 @@ public class ABSsystem implements MainSystem, SystemService
     {
         LoanDTO loan = new LoanDTO(l.getLoanName(),  l.getBorrowerName(), l.getInitialAmount(),
                 l.getMaxYazToPay(), l.getInterestPerPaymentSetByBorrowerInPercents(), l.getTotalInterestForLoan(),
-                l.getPaymentRateInYaz(), l.getStatus(), l.getCategory(), l.getInterestPaid(), l.getAmountPaid(), l.getDebt());
+                l.getPaymentRateInYaz(), l.getStatus().toString(), l.getCategory(), l.getInterestPaid(), l.getAmountPaid(), l.getDebt());
 
         for(Loan.LenderDetails ld : l.getLendersDetails())
         {

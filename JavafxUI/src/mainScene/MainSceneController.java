@@ -14,6 +14,7 @@ public class MainSceneController {
 
     @FXML private GridPane header;
     @FXML private HeaderController headerController;
+
     @FXML private ScrollPane adminScene;
     @FXML private AdminSceneController adminSceneController;
 

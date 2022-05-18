@@ -17,12 +17,17 @@ public class AdminSceneController {
 
     @FXML private Button increaseYazButton;
     @FXML private Button loadFileButton;
+
     @FXML private ScrollPane loansTableComponent;
     @FXML private LoansTableComponentController loansTableComponentController;
+
     @FXML private TableView<Customer> customersInfoTableView;
     @FXML private CustomersInfoTableController customersInfoTableController;
 
     private MainSceneController parentController;
+
+    public AdminSceneController() {
+    }
 
     @FXML public void initialize()
     {
@@ -55,9 +60,8 @@ public class AdminSceneController {
         }
 
         parentController.setFileInfo(selectedFile.getPath());
-
-        //loansTableController.loadLoansData();
-      //  loadCustomersInfo();
+        loansTableComponentController.loadLoansData();
+        //customersInfoTableController.loadCustomersData();
 
 
     }

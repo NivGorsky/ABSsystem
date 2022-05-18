@@ -17,6 +17,7 @@
                     <fx:include fx:id="adminScene" source="/adminScene/adminScene.fxml" />
                 </center>
             </BorderPane>
-         </children></AnchorPane>
+         </children>
+    </AnchorPane>
   </content>
 </ScrollPane>

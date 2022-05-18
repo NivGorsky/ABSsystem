@@ -34,7 +34,7 @@ public class ABS_App extends Application
         mainController.setModel(engine);
 
         primaryStage.setTitle("ABS System");
-        Scene scene = new Scene(root, 700, 600);
+        Scene scene = new Scene(root, 1000, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
     }

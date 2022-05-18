@@ -2,9 +2,14 @@ package loansTable;
 
 import DTO.LoanDTO;
 import adminScene.AdminSceneController;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+
+import java.util.ArrayList;
 
 public class LoansTableComponentController {
 
@@ -20,26 +25,25 @@ public class LoansTableComponentController {
 
     private AdminSceneController parentController;
 
-    @FXML public void initialize()
-    {
-//        loanNameCol.setCellValueFactory(new PropertyValueFactory<>("loanName"));
-//        loanerNameCol.setCellValueFactory(new PropertyValueFactory<>("customerName"));
-//        categoryCol.setCellValueFactory(new PropertyValueFactory<>("category"));
-//        initialAmountCol.setCellValueFactory(new PropertyValueFactory<>("initialAmount"));
-//        totalYazCol.setCellValueFactory(new PropertyValueFactory<>("maxYazToPay"));
-//        totalInterestCol.setCellValueFactory(new PropertyValueFactory<>("totalInterest"));
-//        PaymentRateCol.setCellValueFactory(new PropertyValueFactory<>("yazPerPayment"));
-//        statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
-    }
-
-    public void setParentController(AdminSceneController adminSceneController)
-    {
+    public void setParentController(AdminSceneController adminSceneController) {
         parentController = adminSceneController;
     }
 
-//    public void loadLoansData()
-//    {
-//        ObservableList<LoanDTO> loans =
-//        loansTable.setItems(loans);
-//    }
+    public void loadLoansData()
+    {
+        loanNameCol.setCellValueFactory(cellData -> cellData.getValue().getLoanNameProperty());
+        loanerNameCol.setCellValueFactory(cellData -> cellData.getValue().getCustomerNameProperty());
+        categoryCol.setCellValueFactory(cellData -> cellData.getValue().getCategoryProperty());
+        initialAmountCol.setCellValueFactory(cellData -> cellData.getValue().getInitialAmountProperty().asObject());
+        totalYazCol.setCellValueFactory(cellData -> cellData.getValue().getMaxYazToPayProperty().asObject());
+        totalInterestCol.setCellValueFactory(cellData -> cellData.getValue().getTotalInterestProperty().asObject());
+        PaymentRateCol.setCellValueFactory(cellData -> cellData.getValue().getYazPerPaymentProperty().asObject());
+        statusCol.setCellValueFactory(cellData -> cellData.getValue().getStatusProperty());
+
+        ArrayList<LoanDTO> loans = parentController.getModel().showLoansInfo();
+        ObservableList<LoanDTO> loansForTable = FXCollections.observableArrayList();
+        loansForTable.addAll(loans);
+
+        loansTable.setItems(loansForTable);
+    }
 }
