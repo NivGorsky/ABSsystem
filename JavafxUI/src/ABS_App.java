@@ -2,9 +2,11 @@ import Engine.ABSsystem;
 import Engine.MainSystem;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import mainScene.MainSceneController;
 
@@ -32,6 +34,7 @@ public class ABS_App extends Application
         MainSystem engine = new ABSsystem();
         mainController.setPrimaryStage(primaryStage);
         mainController.setModel(engine);
+        mainController.setRoot(root);
         mainController.setMainStage(primaryStage);
 
         primaryStage.setTitle("ABS System");

@@ -14,7 +14,9 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import mainScene.MainSceneController;
 
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.EventListener;
 
 public class HeaderController {
 
@@ -45,8 +47,8 @@ public class HeaderController {
        filePathLabel.textProperty().bind(Bindings.concat("File Path: ", selectedFilePath));
        currentYazLabel.textProperty().bind(Bindings.concat("Current YAZ: ", currentYAZ));
        viewByCB.disableProperty().bind(isFileSelected.not());
-       viewByCB.itemsProperty().addListener((observable, oldValue, newValue) ->{
-           parentController.switchBody(viewByCB.getValue());
+       viewByCB.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+           parentController.switchBody(viewByCB.getSelectionModel().getSelectedItem());
        });
        currentYazLabel.disableProperty().bind(isFileSelected.not());
        isFileSelected.addListener(((observable, oldValue, newValue) -> {

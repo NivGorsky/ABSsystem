@@ -6,9 +6,13 @@ import customer.CustomerController;
 import header.HeaderController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -23,6 +27,8 @@ public class MainSceneController {
     @FXML private AdminSceneController adminSceneController;
     @FXML private ScrollPane customerPane;
     @FXML private CustomerController customerPaneController;
+    @FXML private BorderPane borderPane;
+    @FXML private ScrollPane root;
 
     private MainSystem model;
     private Stage primaryStage;
@@ -47,6 +53,9 @@ public class MainSceneController {
         this.model = model;
         headerController.setModel(model);
     }
+    public void setRoot(ScrollPane root){
+        this.root = root;
+    }
     public Stage getPrimaryStage() { return primaryStage; }
     public MainSystem getModel() { return model; }
     public void setFileInfo(String path)
@@ -68,20 +77,18 @@ public class MainSceneController {
 
         }
     }
-    public void switchBody(String selectedItemInComboBox){
+    public void switchBody(String selectedItemInComboBox) {
         Scene scene;
 
-        switch(selectedItemInComboBox){
+        switch (selectedItemInComboBox) {
             case "Admin":
-                scene = new Scene(adminScene, 700, 600);
+                borderPane.setCenter(adminScene);
                 break;
 
             default:
-                scene = new Scene(customerPane, 700, 600);
+                borderPane.setCenter(customerPane);
         }
 
-        primaryStage.setScene(scene);
-        primaryStage.show();
     }
 
 }
