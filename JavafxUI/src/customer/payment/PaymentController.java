@@ -70,7 +70,7 @@ public class PaymentController {
     public void initialize(){
         notificationsBoard.getPanes().clear();
         wireNotificationsListeners();
-        updateNotifications(); //need to check if it's okay since the model isnt yet placed
+        //updateNotifications(); //need to check if it's okay since the model isnt yet placed
     }
 
     private void wireNotificationsListeners(){

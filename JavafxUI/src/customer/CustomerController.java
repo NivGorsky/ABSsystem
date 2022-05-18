@@ -10,11 +10,13 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
+import mainScene.MainSceneController;
 
 
 public class CustomerController {
 
     private MainSystem model;
+    private MainSceneController parentController;
 
     private boolean areControllersInitialized(InformationController customerController, ScrambleController scrambleController, PaymentController paymentController){
 
@@ -24,6 +26,10 @@ public class CustomerController {
     public void setModel(MainSystem model){
         this.model = model;
         this.informationController.setModel(model);
+    }
+
+    public void setParent(MainSceneController parent){
+        parentController = parent;
     }
 
     @FXML private ScrollPane information;
@@ -40,9 +46,5 @@ public class CustomerController {
             scrambleController.setParentController(this);
             paymentController.setParentController(this);
         }
-
     }
-
-
-
 }
