@@ -1,5 +1,7 @@
 package customer.scramble;
 
+import Engine.ABSsystem;
+import Engine.MainSystem;
 import customer.CustomerController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,11 +14,15 @@ import javafx.scene.control.TextField;
 public class ScrambleController {
 
     private CustomerController parentController;
+    private MainSystem model;
 
     public void setParentController(CustomerController parentController){
         this.parentController = parentController;
     }
 
+    public void setModel(MainSystem model){
+        this.model = model;
+    }
     @FXML
     private RadioButton minInterestRatioButton;
 

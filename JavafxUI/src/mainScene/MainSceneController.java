@@ -10,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
@@ -26,7 +27,7 @@ public class MainSceneController {
 
     @FXML private ScrollPane adminScene;
     @FXML private AdminSceneController adminSceneController;
-    @FXML private ScrollPane customerPane;
+    @FXML private TabPane customerPane;
     @FXML private CustomerController customerPaneController;
     @FXML private BorderPane borderPane;
     @FXML private ScrollPane root;
@@ -41,6 +42,7 @@ public class MainSceneController {
             headerController.setParentController(this);
             adminSceneController.setParentController(this);
             loadCustomer();
+            customerPaneController.getCustomerNameProperty().bind(headerController.getChosenCustomerNameProperty());
         }
     }
 
@@ -53,6 +55,7 @@ public class MainSceneController {
     {
         this.model = model;
         headerController.setModel(model);
+        customerPaneController.setModel(model);
     }
     public void setRoot(ScrollPane root){
         this.root = root;
@@ -79,8 +82,6 @@ public class MainSceneController {
         }
     }
     public void switchBody(String selectedItemInComboBox) {
-        Scene scene;
-
         switch (selectedItemInComboBox) {
             case "Admin":
                 borderPane.setCenter(adminScene);

@@ -31,6 +31,7 @@ public class InformationController {
     private MainSystem model;
 
     public InformationController () {
+        customerNameProperty = new SimpleStringProperty();
     }
 
     public void setParentController(CustomerController parentController) {
@@ -39,6 +40,7 @@ public class InformationController {
     public StringProperty getCustomerNameProperty(){return this.customerNameProperty;}
     public void setModel(MainSystem  model){
         this.model = model;
+        accountTransactionsController.setModel(model);
     }
 
     @FXML private ScrollPane accountTransactions;
@@ -66,11 +68,14 @@ public class InformationController {
     @FXML
     void withdrawButtonClicked(ActionEvent event) {
         try {
-            String customerName = customerNameProperty.getValue();
-            double amount = Double.parseDouble(amountTextField.getText());
+            //need to check regex of only numbers
+            if (!amountTextField.getText().isEmpty()){
+                String customerName = customerNameProperty.getValue();
+                double amount = Double.parseDouble(amountTextField.getText());
 
-            model.withdrawMoney(customerName, amount);
-            accountTransactionsController.updateAccountMovements();
+                model.withdrawMoney(customerName, amount);
+                accountTransactionsController.updateAccountMovements();
+            }
         }
 
         catch (Exception e){
@@ -85,6 +90,7 @@ public class InformationController {
         try {
             if (accountTransactionsController != null) {
                 accountTransactionsController.setParentController(this);
+                accountTransactionsController.getCustomerNameProperty().bind(this.customerNameProperty);
                 //accountTransactionsController.updateAccountMovements();
             }
         }

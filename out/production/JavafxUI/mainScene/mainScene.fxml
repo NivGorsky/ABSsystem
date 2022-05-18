@@ -14,7 +14,7 @@
                     <fx:include fx:id="header" source="/header/header.fxml" />
                 </top>
                 <center>
-                    <fx:include fx:id="adminScene" source="/adminScene/adminScene.fxml" />
+                    <fx:include fx:id="adminScene" source="/adminScene/adminScene.fxml" AnchorPane.bottomAnchor="15" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="11.0" AnchorPane.topAnchor="1.0"/>
                 </center>
             </BorderPane>
          </children>

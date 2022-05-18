@@ -17,15 +17,26 @@ public class CustomerController {
 
     private MainSystem model;
     private MainSceneController parentController;
+    private StringProperty customerNameProperty;
+
+    public CustomerController(){
+        customerNameProperty = new SimpleStringProperty();
+    }
 
     private boolean areControllersInitialized(InformationController customerController, ScrambleController scrambleController, PaymentController paymentController){
 
         return customerController != null && scrambleController != null && paymentController != null;
     }
 
+    public StringProperty getCustomerNameProperty(){
+        return customerNameProperty;
+    }
+
     public void setModel(MainSystem model){
         this.model = model;
-        this.informationController.setModel(model);
+        informationController.setModel(model);
+        scrambleController.setModel(model);
+        paymentController.setModel(model);
     }
 
     public void setParent(MainSceneController parent){
@@ -45,6 +56,7 @@ public class CustomerController {
             informationController.setParentController(this);
             scrambleController.setParentController(this);
             paymentController.setParentController(this);
+            informationController.getCustomerNameProperty().bind(this.customerNameProperty);
         }
     }
 }

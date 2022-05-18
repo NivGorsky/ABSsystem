@@ -17,6 +17,26 @@ public class AccountMovementDTO {
         this.balanceAfter = balanceAfter;
     }
 
+    public char getMovementKind() {
+        return movementKind;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public double getBalanceAfter() {
+        return balanceAfter;
+    }
+
+    public double getBalanceBefore() {
+        return balanceBefore;
+    }
+
+    public int getYaz() {
+        return yaz;
+    }
+
     @Override
     public String toString()
     {

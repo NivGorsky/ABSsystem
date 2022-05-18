@@ -3,9 +3,7 @@ package header;
 import DTO.CustomerDTO;
 import Engine.MainSystem;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
@@ -38,6 +36,10 @@ public class HeaderController {
         isFileSelected = new SimpleBooleanProperty(false);
         selectedFilePath = new SimpleStringProperty("File not loaded");
         currentYAZ = new SimpleIntegerProperty(1);
+    }
+
+    public ReadOnlyObjectProperty<String> getChosenCustomerNameProperty(){
+        return viewByCB.getSelectionModel().selectedItemProperty();
     }
 
     @FXML public void initialize()
