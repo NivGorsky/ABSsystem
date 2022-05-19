@@ -30,6 +30,7 @@ public class MainSceneController {
     @FXML private TabPane customerPane;
     @FXML private CustomerController customerPaneController;
     @FXML private BorderPane borderPane;
+    @FXML private AnchorPane centerAnchorPane;
     @FXML private ScrollPane root;
 
     private MainSystem model;
@@ -85,11 +86,13 @@ public class MainSceneController {
     public void switchBody(String selectedItemInComboBox) {
         switch (selectedItemInComboBox) {
             case "Admin":
-                borderPane.setCenter(adminScene);
+                centerAnchorPane.getChildren().clear();
+                centerAnchorPane.getChildren().add(adminScene);
                 break;
 
             default:
-                borderPane.setCenter(customerPane);
+                centerAnchorPane.getChildren().clear();
+                centerAnchorPane.getChildren().add(customerPane);
         }
 
     }

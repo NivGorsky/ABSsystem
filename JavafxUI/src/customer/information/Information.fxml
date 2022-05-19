@@ -11,18 +11,18 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<ScrollPane prefHeight="650.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="customer.information.InformationController">
+<ScrollPane prefHeight="676.0" prefWidth="1123.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="customer.information.InformationController">
    <content>
-      <GridPane prefHeight="573.0" prefWidth="879.0">
+      <GridPane prefHeight="660.0" prefWidth="1101.0">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="483.0" minWidth="10.0" prefWidth="472.8303527832031" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="228.37277221679688" minWidth="0.0" prefWidth="33.64398193359375" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="476.35870361328125" minWidth="10.0" prefWidth="361.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="708.0" minWidth="10.0" prefWidth="696.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="238.0" minWidth="0.0" prefWidth="18.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="476.35870361328125" minWidth="10.0" prefWidth="350.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="381.7828063964844" minWidth="5.85089111328125" prefWidth="17.0" />
         </columnConstraints>
         <rowConstraints>
-            <RowConstraints maxHeight="337.2636032104492" minHeight="10.0" prefHeight="43.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="350.0" minHeight="10.0" prefHeight="346.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="337.2636032104492" minHeight="10.0" prefHeight="83.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="350.0" minHeight="10.0" prefHeight="299.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="486.0" minHeight="10.0" prefHeight="184.0" vgrow="SOMETIMES" />
           <RowConstraints maxHeight="486.0" minHeight="10.0" prefHeight="178.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="135.23394775390625" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
@@ -100,14 +100,14 @@
                   <fx:include fx:id="accountTransactions" source="accountTransactions/accountTransactions.fxml" />
                </children>
             </Pane>
-            <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+            <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="200.0" GridPane.rowIndex="1">
                <children>
-                  <fx:include fx:id="borrowerLoansTableComponent" source="../../loansTable/loansTableComponent.fxml" />
+                  <fx:include fx:id="borrowerLoansTableComponent" source="../../loansTable/loansTableComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
             </AnchorPane>
-            <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2" GridPane.rowSpan="2">
+            <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2" GridPane.rowSpan="2">
                <children>
-                  <fx:include fx:id="lenderLoansTableComponent" source="../../loansTable/loansTableComponent.fxml" />
+                  <fx:include fx:id="lenderLoansTableComponent" source="../../loansTable/loansTableComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
             </AnchorPane>
          </children>
