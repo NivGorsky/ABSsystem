@@ -40,8 +40,10 @@ public class InformationController implements ParentController {
     @FXML private Button chargeButton;
     @FXML private TextField amountTextField;
     @FXML private Button withdrawButton;
-    @FXML private ScrollPane loanerLoansTableComponent;
-    @FXML private LoansTableComponentController loanerLoansTableComponentController;
+    @FXML private ScrollPane borrowerLoansTableComponent;
+    @FXML private LoansTableComponentController borrowerLoansTableComponentController;
+    @FXML private ScrollPane lenderLoansTableComponent;
+    @FXML private LoansTableComponentController lenderLoansTableComponentController;
 
 
     @FXML
@@ -87,7 +89,11 @@ public class InformationController implements ParentController {
                 accountTransactionsController.setParentController(this);
                 accountTransactionsController.getCustomerNameProperty().bind(this.customerNameProperty);
                 //accountTransactionsController.updateAccountMovements();
-                loanerLoansTableComponentController.setParentController(this);
+                borrowerLoansTableComponentController.setParentController(this);
+                customerNameProperty.addListener((observable, oldValue, newValue) -> {
+                    borrowerLoansTableComponentController.loadSpecificCustomerLoansAsBorrower(newValue);
+                    lenderLoansTableComponentController.loadSpecificCustomerLoansAsLender(newValue);
+                });
             }
         }
 

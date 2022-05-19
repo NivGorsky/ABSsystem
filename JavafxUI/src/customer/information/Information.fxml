@@ -102,12 +102,12 @@
             </Pane>
             <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
                <children>
-                  <fx:include source="../../loansTable/loansTableComponent.fxml" />
+                  <fx:include fx:id="borrowerLoansTableComponent" source="../../loansTable/loansTableComponent.fxml" />
                </children>
             </AnchorPane>
             <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2" GridPane.rowSpan="2">
                <children>
-                  <fx:include source="../../loansTable/loansTableComponent.fxml" />
+                  <fx:include fx:id="lenderLoansTableComponent" source="../../loansTable/loansTableComponent.fxml" />
                </children>
             </AnchorPane>
          </children>

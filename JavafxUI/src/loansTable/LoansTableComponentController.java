@@ -32,6 +32,30 @@ public class LoansTableComponentController {
 
     public void loadLoansData()
     {
+        createTableLoanColumns();
+        ArrayList<LoanDTO> loans = parentController.getModel().showLoansInfo();
+        putLoansInTable(loans);
+    }
+
+    public void loadSpecificCustomerLoansAsLender(String customerName){
+        createTableLoanColumns();
+        ArrayList<LoanDTO> loans = parentController.getModel().getLoansByCustomerNameAsLender(customerName);
+        putLoansInTable(loans);
+    }
+
+    public void loadSpecificCustomerLoansAsBorrower(String customerName){
+        createTableLoanColumns();
+        ArrayList<LoanDTO> loans = parentController.getModel().getLoansByCustomerNameAsBorrower(customerName);
+        putLoansInTable(loans);
+    }
+
+    private void putLoansInTable( ArrayList<LoanDTO> loans){
+        ObservableList<LoanDTO> loansForTable = FXCollections.observableArrayList();
+        loansForTable.addAll(loans);
+        loansTable.setItems(loansForTable);
+    }
+
+    public void createTableLoanColumns(){
         loanNameCol.setCellValueFactory(cellData -> cellData.getValue().getLoanNameProperty());
         loanerNameCol.setCellValueFactory(cellData -> cellData.getValue().getCustomerNameProperty());
         categoryCol.setCellValueFactory(cellData -> cellData.getValue().getCategoryProperty());
@@ -40,11 +64,5 @@ public class LoansTableComponentController {
         totalInterestCol.setCellValueFactory(cellData -> cellData.getValue().getTotalInterestProperty().asObject());
         PaymentRateCol.setCellValueFactory(cellData -> cellData.getValue().getYazPerPaymentProperty().asObject());
         statusCol.setCellValueFactory(cellData -> cellData.getValue().getStatusProperty());
-
-        ArrayList<LoanDTO> loans = parentController.getModel().showLoansInfo();
-        ObservableList<LoanDTO> loansForTable = FXCollections.observableArrayList();
-        loansForTable.addAll(loans);
-
-        loansTable.setItems(loansForTable);
     }
 }

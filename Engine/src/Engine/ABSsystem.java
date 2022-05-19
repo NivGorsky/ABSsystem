@@ -329,4 +329,47 @@ public class ABSsystem implements MainSystem, SystemService
 
         return newNotificationsDTO;
     }
+
+    @Override
+    public ArrayList<LoanDTO> getLoansByCustomerNameAsBorrower(String customerName){
+        ArrayList<LoanDTO> loansByCustomerAsBorrower= new ArrayList<>();
+        for (Loan l : loans) {
+            if(l.getBorrowerName().equals(customerName)){
+                LoanDTO curr = createLoanDTO(l);
+                loansByCustomerAsBorrower.add(curr);
+            }
+        }
+
+        return loansByCustomerAsBorrower;
+    }
+
+    @Override
+    public ArrayList<LoanDTO> getLoansByCustomerNameAsLender(String customerName){
+        ArrayList<LoanDTO> loansByCustomerAsBorrower= new ArrayList<>();
+
+        for (Loan l : loans) {
+            if(isCustomerIsLenderInLoan(l,customerName)){
+                LoanDTO curr = createLoanDTO(l);
+                loansByCustomerAsBorrower.add(curr);
+            }
+        }
+
+        return loansByCustomerAsBorrower;
+    }
+
+    private boolean isCustomerIsLenderInLoan(Loan loan, String customerName){
+        boolean result = false;
+        LinkedList<Loan.LenderDetails> lendersDetails = loan.getLendersDetails();
+
+        for (Loan.LenderDetails lenderDetails:lendersDetails){
+            if (lenderDetails.lender.getName().equals(customerName)){
+                result = true;
+                break;
+            }
+        }
+
+        return result;
+    }
+
+
 }
