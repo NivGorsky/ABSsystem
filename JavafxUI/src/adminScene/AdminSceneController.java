@@ -34,6 +34,7 @@ public class AdminSceneController {
         if(loansTableComponentController != null)
         {
             loansTableComponentController.setParentController(this);
+            customersInfoTableController.setParentController(this);
         }
     }
 
@@ -61,7 +62,7 @@ public class AdminSceneController {
 
         parentController.setFileInfo(selectedFile.getPath());
         loansTableComponentController.loadLoansData();
-        //customersInfoTableController.loadCustomersData();
+        customersInfoTableController.loadCustomersInfo();
 
 
     }

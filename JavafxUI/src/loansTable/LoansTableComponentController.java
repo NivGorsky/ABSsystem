@@ -5,10 +5,15 @@ import adminScene.AdminSceneController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.text.TextFlow;
+import org.controlsfx.control.table.TableRowExpanderColumn;
 
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 public class LoansTableComponentController {
@@ -23,14 +28,16 @@ public class LoansTableComponentController {
     @FXML private TableColumn<LoanDTO, Integer> PaymentRateCol;
     @FXML private TableColumn<LoanDTO, String> statusCol;
 
+
+    private ArrayList<LoanDTO> loans;
+
     private AdminSceneController parentController;
 
     public void setParentController(AdminSceneController adminSceneController) {
         parentController = adminSceneController;
     }
 
-    public void loadLoansData()
-    {
+    public void loadLoansData() {
         loanNameCol.setCellValueFactory(cellData -> cellData.getValue().getLoanNameProperty());
         loanerNameCol.setCellValueFactory(cellData -> cellData.getValue().getCustomerNameProperty());
         categoryCol.setCellValueFactory(cellData -> cellData.getValue().getCategoryProperty());
@@ -40,10 +47,26 @@ public class LoansTableComponentController {
         PaymentRateCol.setCellValueFactory(cellData -> cellData.getValue().getYazPerPaymentProperty().asObject());
         statusCol.setCellValueFactory(cellData -> cellData.getValue().getStatusProperty());
 
-        ArrayList<LoanDTO> loans = parentController.getModel().showLoansInfo();
+        this.loans = parentController.getModel().showLoansInfo();
         ObservableList<LoanDTO> loansForTable = FXCollections.observableArrayList();
         loansForTable.addAll(loans);
 
         loansTable.setItems(loansForTable);
     }
+
+    @FXML
+    public void clickItem(MouseEvent event)
+    {
+        if (event.getClickCount() == 2) //Checking double click
+        {
+           LoanDTO loan = loansTable.getSelectionModel().getSelectedItem();
+
+
+
+        }
+
+
+    }
+
+
 }
