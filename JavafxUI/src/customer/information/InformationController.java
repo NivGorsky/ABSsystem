@@ -1,30 +1,19 @@
 package customer.information;
-import Engine.SystemService;
-import com.sun.javafx.collections.ObservableListWrapper;
 import customer.CustomerController;
 import customer.information.accountTransactions.accountTransactionsController;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableArray;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import Engine.MainSystem;
-import Engine.ABSsystem;
-import DTO.*;
+import loansTable.LoansTableComponentController;
+import mutualInterfaces.ParentController;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
-
-public class InformationController {
+public class InformationController implements ParentController {
 
     private CustomerController parentController;
     private StringProperty customerNameProperty;
@@ -33,7 +22,6 @@ public class InformationController {
     public InformationController () {
         customerNameProperty = new SimpleStringProperty();
     }
-
     public void setParentController(CustomerController parentController) {
         this.parentController = parentController;
     }
@@ -43,11 +31,18 @@ public class InformationController {
         accountTransactionsController.setModel(model);
     }
 
+    @Override
+    public MainSystem getModel(){return model;}
+
+
     @FXML private ScrollPane accountTransactions;
     @FXML private accountTransactionsController accountTransactionsController;
     @FXML private Button chargeButton;
     @FXML private TextField amountTextField;
     @FXML private Button withdrawButton;
+    @FXML private ScrollPane loanerLoansTableComponent;
+    @FXML private LoansTableComponentController loanerLoansTableComponentController;
+
 
     @FXML
     void chargeButtonClicked(ActionEvent event) {
@@ -92,6 +87,7 @@ public class InformationController {
                 accountTransactionsController.setParentController(this);
                 accountTransactionsController.getCustomerNameProperty().bind(this.customerNameProperty);
                 //accountTransactionsController.updateAccountMovements();
+                loanerLoansTableComponentController.setParentController(this);
             }
         }
 

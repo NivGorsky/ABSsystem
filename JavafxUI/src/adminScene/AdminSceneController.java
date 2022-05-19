@@ -10,10 +10,11 @@ import javafx.scene.control.TableView;
 import javafx.stage.FileChooser;
 import loansTable.LoansTableComponentController;
 import mainScene.MainSceneController;
+import mutualInterfaces.ParentController;
 
 import java.io.File;
 
-public class AdminSceneController {
+public class AdminSceneController implements ParentController {
 
     @FXML private Button increaseYazButton;
     @FXML private Button loadFileButton;

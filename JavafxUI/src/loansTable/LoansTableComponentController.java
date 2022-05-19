@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import mutualInterfaces.ParentController;
 
 import java.util.ArrayList;
 
@@ -23,9 +24,9 @@ public class LoansTableComponentController {
     @FXML private TableColumn<LoanDTO, Integer> PaymentRateCol;
     @FXML private TableColumn<LoanDTO, String> statusCol;
 
-    private AdminSceneController parentController;
+    private ParentController parentController;
 
-    public void setParentController(AdminSceneController adminSceneController) {
+    public void setParentController(ParentController adminSceneController) {
         parentController = adminSceneController;
     }
 
