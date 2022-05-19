@@ -83,7 +83,9 @@ public class accountTransactionsController {
     public void initialize(){
         try {
             createTableViewColumns();
-            //updateAccountMovements();
+            customerNameProperty.addListener((observable, oldValue, newValue) -> {
+                updateAccountMovements();
+            });
         }
 
         catch (Exception e){
