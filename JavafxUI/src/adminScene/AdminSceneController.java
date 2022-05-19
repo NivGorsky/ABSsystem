@@ -39,7 +39,11 @@ public class AdminSceneController {
 
 
     @FXML public void increaseYazButtonClicked()
-    {}
+    {
+        parentController.getModel().moveTimeLine();
+        int yaz = parentController.getModel().getCurrYaz();
+        parentController.getHeaderController().setCurrentYAZProperty(yaz);
+    }
 
     @FXML public void loadFileButtonClicked()
     {

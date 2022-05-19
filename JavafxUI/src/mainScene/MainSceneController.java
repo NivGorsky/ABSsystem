@@ -46,6 +46,7 @@ public class MainSceneController {
         }
     }
 
+    public HeaderController getHeaderController(){return headerController;}
     public void setMainStage(Stage stage){this.primaryStage = stage;}
     public void setPrimaryStage(Stage primaryStage)
     {
