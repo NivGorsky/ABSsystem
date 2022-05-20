@@ -6,12 +6,14 @@ import Engine.Timeline;
 import customer.CustomerController;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import loansTable.LoansTableComponentController;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -29,8 +31,11 @@ public class PaymentController {
     private StringProperty customerNameProperty;
     private final ListProperty<NotificationsDTO.NotificationDTO> notifications;
 
-    @FXML
-    private Accordion notificationsBoard;
+    @FXML ScrollPane borrowerLoansTableComponent;
+    @FXML LoansTableComponentController borrowerLoansTableComponentController;
+    @FXML private Accordion notificationsBoard;
+
+
 
     @FXML
     private Button payToLenderButton;
@@ -59,10 +64,13 @@ public class PaymentController {
 
     }
 
-    public PaymentController(){
-        notifications = new SimpleListProperty<NotificationsDTO.NotificationDTO>();
-    }
 
+    public PaymentController(){
+
+        notifications = new SimpleListProperty<NotificationsDTO.NotificationDTO>();
+        customerNameProperty = new SimpleStringProperty();
+    }
+    public StringProperty getCustomerNameProperty(){return this.customerNameProperty;}
     public void setParentController(CustomerController parentController){
         this.parentController = parentController;
     }
@@ -109,5 +117,11 @@ public class PaymentController {
     public void updateNotifications(){
         NotificationsDTO notificationsDTO = model.getNotificationsDTO(customerNameProperty.getValue());
         notifications.addAll(notificationsDTO.notifications);
+    }
+
+    public void onShow(){
+        updateNotifications();
+        borrowerLoansTableComponentController.clearTable();
+        borrowerLoansTableComponentController.loadSpecificCustomerLoansAsBorrower(customerNameProperty.getValue());
     }
 }

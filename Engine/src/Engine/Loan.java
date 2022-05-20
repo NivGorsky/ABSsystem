@@ -174,7 +174,8 @@ public class Loan
         newLenderDetails.lendersAmount = lendersPartOfLoanAmount;
         newLenderDetails.lendersPartOfLoanInPercent = (lendersPartOfLoanAmount / this.initialAmount) * 100;
         this.lendersBelongToLoan.add(newLenderDetails);
-        this.loanPercentageTakenByLenders += newLenderDetails.lendersPartOfLoanInPercent;this.loanAmountFinancedByLenders += newLenderDetails.lendersAmount;
+        this.loanPercentageTakenByLenders += newLenderDetails.lendersPartOfLoanInPercent;
+        this.loanAmountFinancedByLenders += newLenderDetails.lendersAmount;
     }
 
 

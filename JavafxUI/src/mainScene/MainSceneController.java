@@ -86,10 +86,12 @@ public class MainSceneController {
     public void switchBody(String selectedItemInComboBox) {
         switch (selectedItemInComboBox) {
             case "Admin":
+                adminSceneController.onShow();
                 centerAnchorPane.getChildren().clear();
                 centerAnchorPane.getChildren().add(adminScene);
                 break;
 
+                //customer
             default:
                 centerAnchorPane.getChildren().clear();
                 centerAnchorPane.getChildren().add(customerPane);

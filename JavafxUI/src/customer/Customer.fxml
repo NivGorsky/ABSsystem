@@ -10,12 +10,12 @@
             <fx:include fx:id="information" source="information/Information.fxml" />
          </content>
       </Tab>
-   <Tab text="Scramble">
+   <Tab fx:id="scrambleTab" text="Scramble">
         <content>
            <fx:include fx:id="scramble" source="scramble/Scramble.fxml" />
         </content>
       </Tab>
-     <Tab text="Payment">
+     <Tab fx:id="paymentTab" text="Payment">
         <content>
            <fx:include fx:id="payment" source="payment/Payment.fxml" />
         </content>

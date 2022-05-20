@@ -76,4 +76,11 @@ public class AdminSceneController implements ParentController {
         this.parentController = parentController;
     }
     public MainSystem getModel() { return parentController.getModel(); }
+    public void onShow(){
+        //need to add methods for on show for the customer information
+
+        //reloading the loans data
+        loansTableComponentController.clearTable();
+        loansTableComponentController.loadLoansData();
+    }
 }

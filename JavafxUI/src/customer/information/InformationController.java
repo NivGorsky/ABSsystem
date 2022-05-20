@@ -101,4 +101,12 @@ public class InformationController implements ParentController {
             System.out.println("Failed to init information controller");
         }
     }
+
+    public void onShow(){
+        borrowerLoansTableComponentController.clearTable();
+        borrowerLoansTableComponentController.loadSpecificCustomerLoansAsBorrower(customerNameProperty.getValue());
+        lenderLoansTableComponentController.clearTable();
+        lenderLoansTableComponentController.loadSpecificCustomerLoansAsLender(customerNameProperty.getValue());
+        accountTransactionsController.updateAccountMovements();
+    }
 }

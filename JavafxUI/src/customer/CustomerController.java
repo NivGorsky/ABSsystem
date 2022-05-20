@@ -10,6 +10,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tab;
 import mainScene.MainSceneController;
 
 
@@ -45,18 +46,43 @@ public class CustomerController {
 
     @FXML private ScrollPane information;
     @FXML private InformationController informationController;
+    @FXML private Tab informationTab;
+
     @FXML private ScrollPane scramble;
     @FXML private ScrambleController scrambleController;
+    @FXML private Tab scrambleTab;
+
     @FXML private ScrollPane payment;
     @FXML private PaymentController paymentController;
+    @FXML private Tab paymentTab;
     @FXML
     public void initialize(){
 
         if (areControllersInitialized(informationController, scrambleController, paymentController)){
+
+            //init information
             informationController.setParentController(this);
-            scrambleController.setParentController(this);
-            paymentController.setParentController(this);
             informationController.getCustomerNameProperty().bind(this.customerNameProperty);
+            informationTab.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                informationController.onShow();
+            });
+
+            //init scramble
+            scrambleController.setParentController(this);
+
+            //init payment
+            paymentController.setParentController(this);
+            paymentController.getCustomerNameProperty().bind(customerNameProperty);
+            paymentTab.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                paymentController.onShow();
+            });
+
+
+
         }
     }
+
+
+
+
 }

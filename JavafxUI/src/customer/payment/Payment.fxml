@@ -13,13 +13,13 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<ScrollPane prefHeight="569.0" prefWidth="870.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="customer.payment.PaymentController">
+<ScrollPane prefHeight="626.0" prefWidth="1123.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="customer.payment.PaymentController">
    <content>
-      <GridPane prefHeight="567.0" prefWidth="867.0">
+      <GridPane prefHeight="617.0" prefWidth="1097.0">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="483.0" minWidth="10.0" prefWidth="472.8303527832031" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="228.37277221679688" minWidth="0.0" prefWidth="33.64398193359375" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="476.35870361328125" minWidth="10.0" prefWidth="386.42034912109375" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="747.0" minWidth="10.0" prefWidth="425.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="534.0" minWidth="0.0" prefWidth="475.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="476.35870361328125" minWidth="10.0" prefWidth="176.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="381.7828063964844" minWidth="5.85089111328125" prefWidth="12.57965087890625" />
         </columnConstraints>
         <rowConstraints>
@@ -28,7 +28,6 @@
             <RowConstraints maxHeight="135.23394775390625" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label prefHeight="17.0" prefWidth="94.0" text="loans component" />
             <BorderPane prefHeight="187.0" prefWidth="436.0" GridPane.columnIndex="2" GridPane.rowSpan="2">
                <top>
                   <Label prefHeight="66.0" prefWidth="67.0" text="notificatinos" BorderPane.alignment="CENTER" />
@@ -87,6 +86,8 @@
                   </TableView>
                </children>
             </GridPane>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" />
+            <fx:include fx:id="borrowerLoansTableComponent" source="../../loansTable/loansTableComponent.fxml" />
          </children>
       </GridPane>
    </content>

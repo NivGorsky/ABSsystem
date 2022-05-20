@@ -65,4 +65,7 @@ public class LoansTableComponentController {
         PaymentRateCol.setCellValueFactory(cellData -> cellData.getValue().getYazPerPaymentProperty().asObject());
         statusCol.setCellValueFactory(cellData -> cellData.getValue().getStatusProperty());
     }
+    public void clearTable(){
+        loansTable.getItems().clear();
+    }
 }
