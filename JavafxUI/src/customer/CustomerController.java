@@ -94,4 +94,9 @@ public class CustomerController {
     public TabPane getTabPane() {
         return tabPane;
     }
+
+    public void chooseTab(int tabIndex){
+        tabPane.getSelectionModel().select(1);
+        tabPane.getSelectionModel().select(0);
+    }
 }
