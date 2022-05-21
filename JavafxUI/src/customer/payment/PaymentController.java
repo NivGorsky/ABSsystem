@@ -14,13 +14,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import loansTable.LoansTableComponentController;
+import mutualInterfaces.ParentController;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
-public class PaymentController {
+public class PaymentController implements ParentController {
 
     //TODO: decided which properties this controller should hold
     //TODO: Maybe create a new component for notification
@@ -64,6 +65,10 @@ public class PaymentController {
 
     }
 
+    @Override
+    public MainSystem getModel(){
+        return model;
+    }
 
     public PaymentController(){
 
@@ -76,6 +81,7 @@ public class PaymentController {
     }
     public void setModel(MainSystem model){this.model = model;}
     public void initialize(){
+        borrowerLoansTableComponentController.setParentController(this);
         notificationsBoard.getPanes().clear();
         wireNotificationsListeners();
         //updateNotifications(); //need to check if it's okay since the model isnt yet placed
@@ -115,7 +121,8 @@ public class PaymentController {
     }
 
     public void updateNotifications(){
-        NotificationsDTO notificationsDTO = model.getNotificationsDTO(customerNameProperty.getValue());
+        NotificationsDTO notificationsDTO = new NotificationsDTO();
+        notificationsDTO = model.getNotificationsDTO(customerNameProperty.getValue());
         notifications.addAll(notificationsDTO.notifications);
     }
 

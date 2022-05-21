@@ -19,13 +19,14 @@ public class ABSsystem implements MainSystem, SystemService
     private Map<Integer, Loan> loanId2Loan;
     private Map<Customer, List<Notification>> customer2Notifications;
 
-    public ABSsystem()
-    {
+    public ABSsystem() {
+
         systemTimeline = new Timeline();
         name2customer = new TreeMap<>();
         loanId2Loan = new TreeMap<>();
         loans = new LinkedList<>();
         status2loan = new TreeMap<>();
+        customer2Notifications = new TreeMap<Customer, List<Notification>>();
     }
 
     @Override
@@ -283,7 +284,7 @@ public class ABSsystem implements MainSystem, SystemService
     }
 
     public void addNotificationToCustomer(Customer customer, Notification notification){
-        List<Notification> customerNotifications = customer2Notifications.get(customer);
+        List<Notification> customerNotifications = customer2Notifications.getOrDefault(customer, new ArrayList<Notification>());
         customerNotifications.add(notification);
         customer2Notifications.put(customer, customerNotifications);
     }
@@ -318,7 +319,8 @@ public class ABSsystem implements MainSystem, SystemService
     @Override
     public NotificationsDTO getNotificationsDTO(String customerName){
         Customer customer = name2customer.get(customerName);
-        List<Notification> customerNotifications = customer2Notifications.get(customer);
+
+        List<Notification> customerNotifications = customer2Notifications.getOrDefault(customer, new ArrayList<Notification>());
         NotificationsDTO newNotificationsDTO = new NotificationsDTO();
 
         for (Notification n : customerNotifications)

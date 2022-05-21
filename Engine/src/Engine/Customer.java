@@ -3,7 +3,7 @@ package Engine;
 import Exceptions.ValueOutOfRangeException;
 import java.util.ArrayList;
 
-public class Customer {
+public class Customer implements Comparable{
 
     private final String name;
     private ArrayList<Loan> loansAsBorrower;
@@ -35,6 +35,14 @@ public class Customer {
         }
     }
 
+    public boolean equals(Object o){
+        return (o instanceof Customer && ((Customer)o).getName().equals(this.getName()));
+    }
+
+    public int hashCode(){
+        return this.getName().hashCode();
+    }
+
     public void depositMoney(int yaz, double amount)
     {
         account.addToBalance(yaz, amount);
@@ -42,5 +50,16 @@ public class Customer {
 
     public void addLoanAsLender(Loan loan){
         this.loansAsLender.add(loan);
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if (!(o instanceof Customer)){
+            return -1;
+        }
+
+        else{
+            return this.getName().compareTo(((Customer) o).getName());
+        }
     }
 }

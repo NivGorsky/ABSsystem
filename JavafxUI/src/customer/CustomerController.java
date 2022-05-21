@@ -11,6 +11,7 @@ import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import mainScene.MainSceneController;
 
 
@@ -55,34 +56,37 @@ public class CustomerController {
     @FXML private ScrollPane payment;
     @FXML private PaymentController paymentController;
     @FXML private Tab paymentTab;
+
+    @FXML private TabPane tabPane;
+
     @FXML
     public void initialize(){
 
+        //init information
+        informationController.setParentController(this);
+        informationController.getCustomerNameProperty().bind(this.customerNameProperty);
+
+        //init scramble
+        scrambleController.setParentController(this);
+
+        //init payment
+        paymentController.setParentController(this);
+        paymentController.getCustomerNameProperty().bind(customerNameProperty);
+
         if (areControllersInitialized(informationController, scrambleController, paymentController)){
+            tabPane.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
+                switch (newValue.getText()){
+                    case "Information":
+                        informationController.onShow();
+                        break;
 
-            //init information
-            informationController.setParentController(this);
-            informationController.getCustomerNameProperty().bind(this.customerNameProperty);
-            informationTab.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                informationController.onShow();
-            });
+                    case "Scramble":
+                        break;
 
-            //init scramble
-            scrambleController.setParentController(this);
-
-            //init payment
-            paymentController.setParentController(this);
-            paymentController.getCustomerNameProperty().bind(customerNameProperty);
-            paymentTab.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                paymentController.onShow();
-            });
-
-
-
+                    case "Payment":
+                        paymentController.onShow();
+                }
+            }));
         }
     }
-
-
-
-
 }

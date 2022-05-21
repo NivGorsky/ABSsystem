@@ -1,5 +1,6 @@
 package DTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NotificationsDTO {
@@ -18,5 +19,8 @@ public class NotificationsDTO {
         }
     }
 
+    public NotificationsDTO(){
+        notifications = new ArrayList<NotificationDTO>();
+    }
     public List<NotificationDTO> notifications;
 }

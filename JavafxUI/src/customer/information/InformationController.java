@@ -1,6 +1,7 @@
 package customer.information;
 import customer.CustomerController;
 import customer.information.accountTransactions.accountTransactionsController;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
@@ -18,6 +19,7 @@ public class InformationController implements ParentController {
     private CustomerController parentController;
     private StringProperty customerNameProperty;
     private MainSystem model;
+    private SimpleBooleanProperty isTabSelected;
 
     public InformationController () {
         customerNameProperty = new SimpleStringProperty();
@@ -90,10 +92,11 @@ public class InformationController implements ParentController {
                 accountTransactionsController.getCustomerNameProperty().bind(this.customerNameProperty);
                 //accountTransactionsController.updateAccountMovements();
                 borrowerLoansTableComponentController.setParentController(this);
-                customerNameProperty.addListener((observable, oldValue, newValue) -> {
-                    borrowerLoansTableComponentController.loadSpecificCustomerLoansAsBorrower(newValue);
-                    lenderLoansTableComponentController.loadSpecificCustomerLoansAsLender(newValue);
-                });
+                lenderLoansTableComponentController.setParentController(this);
+//                customerNameProperty.addListener((observable, oldValue, newValue) -> {
+//                    borrowerLoansTableComponentController.loadSpecificCustomerLoansAsBorrower(newValue);
+//                    lenderLoansTableComponentController.loadSpecificCustomerLoansAsLender(newValue);
+//                });
             }
         }
 
