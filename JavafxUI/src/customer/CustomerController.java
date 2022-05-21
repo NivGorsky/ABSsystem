@@ -47,15 +47,15 @@ public class CustomerController {
 
     @FXML private ScrollPane information;
     @FXML private InformationController informationController;
-    @FXML private Tab informationTab;
+//    @FXML private Tab informationTab;
 
     @FXML private ScrollPane scramble;
     @FXML private ScrambleController scrambleController;
-    @FXML private Tab scrambleTab;
+//    @FXML private Tab scrambleTab;
 
     @FXML private ScrollPane payment;
     @FXML private PaymentController paymentController;
-    @FXML private Tab paymentTab;
+//    @FXML private Tab paymentTab;
 
     @FXML private TabPane tabPane;
 
@@ -64,7 +64,7 @@ public class CustomerController {
 
         //init information
         informationController.setParentController(this);
-        informationController.getCustomerNameProperty().bind(this.customerNameProperty);
+        informationController.getCustomerNameProperty().bind(customerNameProperty);
 
         //init scramble
         scrambleController.setParentController(this);
@@ -81,6 +81,7 @@ public class CustomerController {
                         break;
 
                     case "Scramble":
+                        scrambleController.onShow();
                         break;
 
                     case "Payment":
@@ -88,5 +89,9 @@ public class CustomerController {
                 }
             }));
         }
+    }
+
+    public TabPane getTabPane() {
+        return tabPane;
     }
 }

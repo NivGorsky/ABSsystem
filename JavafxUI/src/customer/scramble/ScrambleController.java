@@ -100,4 +100,8 @@ public class ScrambleController {
 
     }
 
+    public void onShow(){
+
+    }
+
 }

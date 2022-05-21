@@ -90,13 +90,8 @@ public class InformationController implements ParentController {
             if (accountTransactionsController != null) {
                 accountTransactionsController.setParentController(this);
                 accountTransactionsController.getCustomerNameProperty().bind(this.customerNameProperty);
-                //accountTransactionsController.updateAccountMovements();
                 borrowerLoansTableComponentController.setParentController(this);
                 lenderLoansTableComponentController.setParentController(this);
-//                customerNameProperty.addListener((observable, oldValue, newValue) -> {
-//                    borrowerLoansTableComponentController.loadSpecificCustomerLoansAsBorrower(newValue);
-//                    lenderLoansTableComponentController.loadSpecificCustomerLoansAsLender(newValue);
-//                });
             }
         }
 

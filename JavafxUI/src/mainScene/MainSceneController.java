@@ -94,6 +94,8 @@ public class MainSceneController {
                 //customer
             default:
                 centerAnchorPane.getChildren().clear();
+                customerPaneController.getTabPane().getSelectionModel().select(1);
+                customerPaneController.getTabPane().getSelectionModel().select(0);
                 centerAnchorPane.getChildren().add(customerPane);
         }
 

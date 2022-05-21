@@ -84,7 +84,7 @@ public class accountTransactionsController {
         try {
             createTableViewColumns();
             customerNameProperty.addListener((observable, oldValue, newValue) -> {
-                updateAccountMovements();
+//                updateAccountMovements();
             });
         }
 
