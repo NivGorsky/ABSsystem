@@ -1,8 +1,11 @@
 package Engine;
 
 import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
+import Engine.LoanPlacing.LoanPlacingConigurations.loanPlacingConfigurationsHandler;
 import Exceptions.*;
 import Engine.LoanPlacing.LoanPlacing;
 import Engine.TimeLineMoving.MoveTimeLine;
@@ -18,6 +21,7 @@ public class ABSsystem implements MainSystem, SystemService
     private LinkedList<Loan> loans;
     private Map<Integer, Loan> loanId2Loan;
     private Map<Customer, List<Notification>> customer2Notifications;
+    private ArrayList<ArrayList<String>> scrambleQueryFields;
 
     public ABSsystem() {
 
@@ -27,6 +31,12 @@ public class ABSsystem implements MainSystem, SystemService
         loans = new LinkedList<>();
         status2loan = new TreeMap<>();
         customer2Notifications = new TreeMap<Customer, List<Notification>>();
+        initLoanPlacingQueryFields();
+    }
+
+    private void initLoanPlacingQueryFields(){
+        Path path = Paths.get("/Engine/LoanPlacing/LoanPlacingConfigurations/scrambleQueryFields.txt"); //enter the path here of the text csv file
+        scrambleQueryFields = loanPlacingConfigurationsHandler.readCSVFile(path);
     }
 
     @Override
@@ -371,6 +381,15 @@ public class ABSsystem implements MainSystem, SystemService
         }
 
         return result;
+    }
+
+    @Override
+    public ScrambleQueryFieldsDTO getScrambleQueryFields(){
+        ScrambleQueryFieldsDTO newScrambleQueryDTO = new ScrambleQueryFieldsDTO();
+        newScrambleQueryDTO.scrambleQueryFields.addAll(scrambleQueryFields);
+        newScrambleQueryDTO.loansCategories.addAll(LoanCategories.getCategories());
+
+        return newScrambleQueryDTO;
     }
 
 

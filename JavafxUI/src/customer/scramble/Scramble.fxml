@@ -41,7 +41,7 @@
                <children>
                   <VBox prefHeight="343.0" prefWidth="513.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                      <children>
-                        <GridPane prefHeight="410.0" prefWidth="422.0">
+                        <GridPane fx:id="scrambleQueryFieldsGrid" prefHeight="410.0" prefWidth="422.0">
                           <columnConstraints>
                               <ColumnConstraints hgrow="NEVER" maxWidth="3.0" minWidth="3.0" prefWidth="3.0" />
                             <ColumnConstraints hgrow="SOMETIMES" maxWidth="269.0" minWidth="10.0" prefWidth="240.0" />
