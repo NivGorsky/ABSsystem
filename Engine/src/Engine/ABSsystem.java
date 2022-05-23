@@ -31,12 +31,7 @@ public class ABSsystem implements MainSystem, SystemService
         loans = new LinkedList<>();
         status2loan = new TreeMap<>();
         customer2Notifications = new TreeMap<Customer, List<Notification>>();
-        initLoanPlacingQueryFields();
-    }
-
-    private void initLoanPlacingQueryFields(){
-        Path path = Paths.get("/Engine/LoanPlacing/LoanPlacingConfigurations/scrambleQueryFields.txt"); //enter the path here of the text csv file
-        scrambleQueryFields = loanPlacingConfigurationsHandler.readCSVFile(path);
+//        initLoanPlacingQueryFields();
     }
 
     @Override
@@ -161,13 +156,13 @@ public class ABSsystem implements MainSystem, SystemService
     }
 
     //system service interface
+
     @Override
     public void moveMoneyBetweenAccounts(Account accountToSubtract, Account accountToAdd, double amount)
     {
         accountToSubtract.substructLoanPayment(this.getCurrYaz(), amount);
         accountToAdd.addToBalance(this.getCurrYaz(), amount);
     }
-
     private void initStatusInfo(LoanDTO loanToInit, Loan l)
     {
         switch (l.getStatus())
@@ -319,13 +314,13 @@ public class ABSsystem implements MainSystem, SystemService
     }
 
     //new methods for javafx
+
     @Override
     public CustomerDTO getCustomerDTO(String customerName){
         Customer c = name2customer.get(customerName);
 
         return createCustomerDTO(c);
     }
-
     @Override
     public NotificationsDTO getNotificationsDTO(String customerName){
         Customer customer = name2customer.get(customerName);
@@ -383,14 +378,21 @@ public class ABSsystem implements MainSystem, SystemService
         return result;
     }
 
-    @Override
-    public ScrambleQueryFieldsDTO getScrambleQueryFields(){
-        ScrambleQueryFieldsDTO newScrambleQueryDTO = new ScrambleQueryFieldsDTO();
-        newScrambleQueryDTO.scrambleQueryFields.addAll(scrambleQueryFields);
-        newScrambleQueryDTO.loansCategories.addAll(LoanCategories.getCategories());
 
-        return newScrambleQueryDTO;
-    }
+//    @Override
+//    public ScrambleQueryFieldsDTO getScrambleQueryFields(){
+//        ScrambleQueryFieldsDTO newScrambleQueryDTO = new ScrambleQueryFieldsDTO();
+//        newScrambleQueryDTO.scrambleQueryFields.addAll(scrambleQueryFields);
+//        newScrambleQueryDTO.loansCategories.addAll(LoanCategories.getCategories());
+//
+//        return newScrambleQueryDTO;
+//    }
+
+//    private void initLoanPlacingQueryFields(){
+//        Path path = Paths.get("/Engine/LoanPlacing/LoanPlacingConfigurations/scrambleQueryFields.txt"); //enter the path here of the text csv file
+//        scrambleQueryFields = loanPlacingConfigurationsHandler.readCSVFile(path);
+//    }
+
 
 
 }

@@ -41,7 +41,7 @@
                <children>
                   <VBox prefHeight="343.0" prefWidth="513.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                      <children>
-                        <GridPane prefHeight="410.0" prefWidth="422.0">
+                        <GridPane fx:id="scrambleQueryFieldsGrid" prefHeight="410.0" prefWidth="422.0">
                           <columnConstraints>
                               <ColumnConstraints hgrow="NEVER" maxWidth="3.0" minWidth="3.0" prefWidth="3.0" />
                             <ColumnConstraints hgrow="SOMETIMES" maxWidth="269.0" minWidth="10.0" prefWidth="240.0" />
@@ -58,14 +58,14 @@
                             <RowConstraints maxHeight="231.0" minHeight="10.0" prefHeight="76.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <RadioButton fx:id="minInterestRatioButton" mnemonicParsing="false" onAction="#minInterestRadioButtonClicked" text="Min interest per yaz (Optional)" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                              <TextField fx:id="minInterestTextField" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                              <RadioButton fx:id="minInterestPerYazRatioButton" mnemonicParsing="false" text="Min interest per yaz (Optional)" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <TextField fx:id="minInterestPerYazTextField" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                               <TextField fx:id="maxPercentageOwnershipTextField" GridPane.columnIndex="3" GridPane.rowIndex="5" />
-                              <TextField fx:id="minYazTextField" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-                              <TextField fx:id="maxOpenLoansTextField" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-                              <RadioButton fx:id="minYazRadioButton" mnemonicParsing="false" onAction="#minYazRadioButtonClicked" text="Min yaz for loan (Optional)" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                              <RadioButton fx:id="maxOpenLoansRadioButton" mnemonicParsing="false" onAction="#maxOpenLoansRadioButtonClicked" text="Max open loans for borrower  (Optional)" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                              <RadioButton fx:id="maxPercentageOwnershipRadioButton" mnemonicParsing="false" onAction="#maxPercentageOwnershipRadioButtonClicked" text="Max percentage Ownership (Optional)" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                              <TextField fx:id="minYazForLoanTextField" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                              <TextField fx:id="maxOpenLoansForBorrowerTextField" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                              <RadioButton fx:id="minYazForLoanRadioButton" mnemonicParsing="false" text="Min yaz for loan (Optional)" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <RadioButton fx:id="maxOpenLoansForBorrowerRadioButton" mnemonicParsing="false" text="Max open loans for borrower  (Optional)" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                              <RadioButton fx:id="maxPercentageOwnershipRadioButton" mnemonicParsing="false" text="Max percentage Ownership (Optional)" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                               <RadioButton fx:id="amountRadioButton" mnemonicParsing="false" text="Amount (Mandatory)" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <TextField fx:id="amountTextField" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                            </children>
@@ -101,7 +101,7 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <RadioButton fx:id="categoriesRadioButton" mnemonicParsing="false" onAction="#categoriesRadioButtonClicked" text="Choose loan categories (Optional)" GridPane.columnSpan="2" />
+                        <RadioButton fx:id="chooseLoanCategoriesRadioButton" mnemonicParsing="false" onAction="#categoriesRadioButtonClicked" text="Choose loan categories (Optional)" GridPane.columnSpan="2" />
                         <TableView fx:id="loanCategoriesViewTable" onSort="#loanCategoriesViewTableSortClicked" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.rowSpan="2">
                           <columns>
                             <TableColumn fx:id="loansCategoriesTableView" prefWidth="307.0" text="C1" />

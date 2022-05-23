@@ -1,0 +1,9 @@
+Field name, is mandatory, type
+Amount, true, field
+Minimum interest per yaz, false, field
+Minimum yaz for loan, false, field
+Maximum open loans for borrower, false, field
+Maximum percentage ownership, false, field
+Choose loan categories, false, table
+
+

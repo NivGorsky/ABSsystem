@@ -23,5 +23,7 @@ public interface MainSystem {
     public NotificationsDTO getNotificationsDTO(String customerName);
     public ArrayList<LoanDTO> getLoansByCustomerNameAsBorrower(String customerName);
     public ArrayList<LoanDTO> getLoansByCustomerNameAsLender(String customerName);
-    public ScrambleQueryFieldsDTO getScrambleQueryFields();
+//    public ScrambleQueryFieldsDTO getScrambleQueryFields();
+
+
 }
