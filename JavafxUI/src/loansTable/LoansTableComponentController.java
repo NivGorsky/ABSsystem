@@ -81,47 +81,42 @@ public class LoansTableComponentController {
                 {
                     case "PENDING": {
                         FXMLLoader loader = new FXMLLoader();
-
                         URL url = getClass().getResource("pendingInfo.fxml");
                         loader.setLocation(url);
                         ScrollPane pendingInfo = loader.load(url.openStream());
                         this.pendingInfoController = loader.getController();
 
-                        //pendingInfoController.setData(loan);
+                        pendingInfoController.setData(loan);
                         additionalInfoScrollPane.setContent(pendingInfo);
                     }
                     case "ACTIVE": {
                         FXMLLoader loader = new FXMLLoader();
-
                         URL url = getClass().getResource("activeInfo.fxml");
                         loader.setLocation(url);
                         ScrollPane activeInfo = loader.load(url.openStream());
                         this.activeInfoController = loader.getController();
 
-                        //activeInfoController.setData(loan);
+                        activeInfoController.setData(loan);
                         additionalInfoScrollPane.setContent(activeInfo);
                     }
                     case "IN_RISK": {
                         FXMLLoader loader = new FXMLLoader();
-
                         URL url = getClass().getResource("inRiskInfo.fxml");
                         loader.setLocation(url);
                         ScrollPane inRiskInfo = loader.load(url.openStream());
                         this.inRiskInfoController = loader.getController();
 
-                        //inRiskInfoController.setData(loan);
+                        inRiskInfoController.setData(loan);
                         additionalInfoScrollPane.setContent(inRiskInfo);
                     }
-                    case "FINISHED":
-                    {
+                    case "FINISHED": {
                         FXMLLoader loader = new FXMLLoader();
-
                         URL url = getClass().getResource("finishedInfo.fxml");
                         loader.setLocation(url);
                         ScrollPane finishedInfo = loader.load(url.openStream());
                         this.finishedInfoController = loader.getController();
 
-                        //finishedInfoController.setData(loan);
+                        finishedInfoController.setData(loan);
                         additionalInfoScrollPane.setContent(finishedInfo);
                     }
                 }
