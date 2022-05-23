@@ -35,6 +35,7 @@ public class AdminSceneController implements ParentController {
         if(loansTableComponentController != null)
         {
             loansTableComponentController.setParentController(this);
+            customersInfoTableController.setParentController(this);
         }
     }
 
@@ -66,7 +67,7 @@ public class AdminSceneController implements ParentController {
 
         parentController.setFileInfo(selectedFile.getPath());
         loansTableComponentController.loadLoansData();
-        //customersInfoTableController.loadCustomersData();
+        customersInfoTableController.loadCustomersInfo();
 
 
     }

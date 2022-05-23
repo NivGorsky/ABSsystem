@@ -19,6 +19,7 @@ public class LoanDTO {
         private final SimpleDoubleProperty loanPayment;
         private final SimpleDoubleProperty interestPayment;
         private final SimpleStringProperty paymentType;
+        private SimpleDoubleProperty totalPayment;
 
         public PaymentDTO(int originalYaz, double loanPayment, double interestPayment, int actualYaz, String type) {
             this.originalYazToPay = new SimpleIntegerProperty(originalYaz);
@@ -26,31 +27,55 @@ public class LoanDTO {
             this.interestPayment = new SimpleDoubleProperty(interestPayment);
             this.actualPaymentYaz = new SimpleIntegerProperty(actualYaz);
             this.paymentType = new SimpleStringProperty(type);
+            this.totalPayment = new SimpleDoubleProperty();
+
+            setTotalPayment();
         }
 
         public int getOriginalYazToPay() { return originalYazToPay.get(); }
         public int getActualPaymentYaz() { return actualPaymentYaz.get(); }
         public double getLoanPayment() { return loanPayment.get(); }
         public double getInterestPayment() { return interestPayment.get(); }
+        public double getTotalPayment() { return totalPayment.get(); }
 
-        @Override
-        public String toString() {
-            return ("Payment yaz: " + actualPaymentYaz + "\n" +
-                    "Loan payment: " + loanPayment + "\n" +
-                    "Interest payment: " + interestPayment + "\n" +
-                    "Total payment: " + (loanPayment.doubleValue() + interestPayment.doubleValue()) + "\n");
+        public SimpleIntegerProperty getOriginalYazToPayProperty() {return originalYazToPay;}
+        public SimpleIntegerProperty getActualPaymentYazProperty() {return actualPaymentYaz;}
+        public SimpleDoubleProperty getLoanPaymentProperty() {return loanPayment;}
+        public SimpleDoubleProperty getInterestPaymentProperty() {return interestPayment;}
+        public SimpleStringProperty getPaymentTypeProperty() {return paymentType;}
+        public SimpleDoubleProperty getTotalPaymentProperty() {return totalPayment;}
+
+        private void setTotalPayment() {
+            totalPayment.set(loanPayment.doubleValue() + interestPayment.doubleValue());
         }
+
     }
 
     public static class LenderDetailsDTO {
 
-        public String lenderName;
-        public double lendersInvestAmount;
+        public SimpleStringProperty lenderName;
+        public SimpleDoubleProperty lendersInvestAmount;
 
         public LenderDetailsDTO(String lender, double amount)
         {
-            lenderName = lender;
-            lendersInvestAmount = amount;
+            lenderName = new SimpleStringProperty(lender);
+            lendersInvestAmount = new SimpleDoubleProperty(amount);
+        }
+
+        public String getLenderName() {
+            return lenderName.get();
+        }
+
+        public SimpleStringProperty lenderNameProperty() {
+            return lenderName;
+        }
+
+        public double getLendersInvestAmount() {
+            return lendersInvestAmount.get();
+        }
+
+        public SimpleDoubleProperty lendersInvestAmountProperty() {
+            return lendersInvestAmount;
         }
     }
 
@@ -66,6 +91,7 @@ public class LoanDTO {
     private final SimpleDoubleProperty debt;
     private final SimpleDoubleProperty paidInterest;
     private final SimpleDoubleProperty paidLoan;
+    private final SimpleDoubleProperty amountRaised;
 
     private final SortedMap<Integer, LoanDTO.PaymentDTO> unpaidPayments;
     private final SortedMap<Integer, LoanDTO.PaymentDTO> paidPayments;
@@ -84,7 +110,7 @@ public class LoanDTO {
 
 
     public LoanDTO(String loanName, String custName, double initialAmount, int totalYaz, double interestPerPayment, double totalInterest, int yazPerPayment,
-                      String status, String category, double paidInterest, double paidLoan, double debt)
+                      String status, String category, double paidInterest, double paidLoan, double debt, double amountRaised)
     {
         this.loanName = new SimpleStringProperty(loanName);
         this.customerName = new SimpleStringProperty(custName);
@@ -98,6 +124,7 @@ public class LoanDTO {
         this.paidInterest = new SimpleDoubleProperty(paidInterest);
         this.paidLoan = new SimpleDoubleProperty(paidLoan);
         this.debt = new SimpleDoubleProperty(debt);
+        this.amountRaised = new SimpleDoubleProperty(amountRaised);
 
         unpaidPayments = new TreeMap<>();
         paidPayments = new TreeMap<>();
@@ -160,6 +187,28 @@ public class LoanDTO {
     public String getStatus() { return status.get(); }
     public SimpleStringProperty getStatusProperty() { return status; }
 
+    public double getDebt() { return debt.get(); }
+    public SimpleDoubleProperty getDebtProperty() { return debt; }
+
+    public double getPaidLoan() { return paidLoan.get(); }
+    public SimpleDoubleProperty getPaidLoanProperty() { return paidLoan; }
+
+    public double getPaidInterest() { return paidInterest.get(); }
+    public SimpleDoubleProperty getPaidInterestProperty() { return paidInterest; }
+
+    public int getActivationYAZ() { return activationYaz.get(); }
+    public SimpleIntegerProperty getActivationYAZProperty() { return activationYaz; }
+
+    public int getNextPaymentYAZ() { return nextPaymentYaz.get(); }
+    public SimpleIntegerProperty getNextPaymentYAZProperty() { return nextPaymentYaz; }
+
+    public double getAmountRaised() { return amountRaised.get(); }
+    public SimpleDoubleProperty getAmountRaisedProperty() { return amountRaised; }
+
+    public int getFinishYAZ() { return finishYaz.get(); }
+    public SimpleIntegerProperty getFinishYAZProperty() { return finishYaz; }
+
+
     public ArrayList<LoanDTO.LenderDetailsDTO> getLendersNamesAndAmounts() { return lendersNameAndAmount; }
     public SortedMap<Integer, LoanDTO.PaymentDTO> getUnpaidPayments() { return unpaidPayments; }
     public SortedMap<Integer, LoanDTO.PaymentDTO> getPaidPayments() { return paidPayments; }
@@ -173,11 +222,9 @@ public class LoanDTO {
     public void setTotalMoneyRaised(double totalMoneyRaised) {
         this.totalMoneyRaised.set(totalMoneyRaised);
     }
-
     public void setActivationYaz(int activationYaz) {
         this.activationYaz.set(activationYaz);
     }
-
     public void setNextPaymentYaz(int nextPaymentYaz) {
         this.nextPaymentYaz.set(nextPaymentYaz);
     }

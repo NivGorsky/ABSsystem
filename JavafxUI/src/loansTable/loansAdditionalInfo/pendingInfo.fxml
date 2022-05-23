@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<ScrollPane fx:id="pendingInfo" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="215.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="loansTable.loansAdditionalInfo.PendingInfoController">
+  <content>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="215.0">
+         <children>
+            <Accordion layoutX="-31.0" layoutY="7.0" prefHeight="300.0" prefWidth="215.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <panes>
+                <TitledPane fx:id="lendersTP" animated="false" text="Lenders">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
+                           <children>
+                              <TableView fx:id="lendersTableView" prefHeight="300.0" prefWidth="215.0">
+                                <columns>
+                                  <TableColumn fx:id="nameCol" prefWidth="95.33331298828125" text="Name" />
+                                  <TableColumn fx:id="amountCol" prefWidth="91.66668701171875" text="Amount" />
+                                </columns>
+                              </TableView>
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </TitledPane>
+                <TitledPane animated="false" text="Raised Amount">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <Label fx:id="raisedAmountLabel" layoutX="14.0" layoutY="14.0" prefHeight="31.0" prefWidth="146.0" text="Raised Amount:" />
+                              <Label fx:id="amountToRaiseLabel" layoutX="14.0" layoutY="63.0" prefHeight="31.0" prefWidth="146.0" text="Remained To Raise: " />
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </TitledPane>
+              </panes>
+            </Accordion>
+         </children></AnchorPane>
+  </content>
+</ScrollPane>
