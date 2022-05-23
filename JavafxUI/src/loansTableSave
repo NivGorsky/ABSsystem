@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import org.controlsfx.control.MasterDetailPane?>
+
+<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="202.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="loansTable.LoansTableComponentController">
+  <content>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="202.0" prefWidth="950.0">
+         <children>
+            <TableView fx:id="loansTable" prefHeight="202.0" prefWidth="950.0">
+              <columns>
+                  <TableColumn fx:id="loanNameCol" prefWidth="118.0" text="Loan Name" />
+                  <TableColumn fx:id="loanerNameCol" prefWidth="118.0" text="Loaner Name" />
+                  <TableColumn fx:id="categoryCol" prefWidth="118.0" text="Category" />
+                  <TableColumn fx:id="initialAmountCol" prefWidth="118.0" text="Initial Amount" />
+                  <TableColumn fx:id="totalYazCol" prefWidth="118.0" text="Total Yaz" />
+                  <TableColumn fx:id="totalInterestCol" prefWidth="118.0" text="Total Interest" />
+                  <TableColumn fx:id="PaymentRateCol" prefWidth="118.0" text="Payment Rate" />
+                  <TableColumn fx:id="statusCol" prefWidth="118.0" text="Status" />
+              </columns>
+            </TableView>
+         </children></AnchorPane>
+  </content>
+</ScrollPane>

@@ -5,15 +5,14 @@ import adminScene.AdminSceneController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TitledPane;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.text.TextFlow;
-import org.controlsfx.control.table.TableRowExpanderColumn;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.*;
+import loansTable.loansAdditionalInfo.ActiveInfoController;
+import loansTable.loansAdditionalInfo.FinishedInfoController;
+import loansTable.loansAdditionalInfo.InRiskInfoController;
+import loansTable.loansAdditionalInfo.PendingInfoController;
 
-import java.awt.event.MouseEvent;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class LoansTableComponentController {
@@ -27,17 +26,123 @@ public class LoansTableComponentController {
     @FXML private TableColumn<LoanDTO, Double> totalInterestCol;
     @FXML private TableColumn<LoanDTO, Integer> PaymentRateCol;
     @FXML private TableColumn<LoanDTO, String> statusCol;
+    @FXML private ScrollPane additionalInfoScrollPane;
 
+    @FXML private PendingInfoController pendingInfoController;
+    @FXML private ActiveInfoController activeInfoController;
+    @FXML private InRiskInfoController inRiskInfoController;
+    @FXML private FinishedInfoController finishedInfoController;
 
     private ArrayList<LoanDTO> loans;
-
     private AdminSceneController parentController;
+
+    @FXML public void initialize()
+    {
+        if(pendingInfoController != null && activeInfoController!= null &&
+        inRiskInfoController != null && finishedInfoController != null)
+        {
+            pendingInfoController.setParentController(this);
+            activeInfoController.setParentController(this);
+            inRiskInfoController.setParentController(this);
+            finishedInfoController.setParentController(this);
+        }
+
+        loansTable.setRowFactory( tv -> {
+            TableRow<LoanDTO> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+                    LoanDTO rowData = row.getItem();
+                    System.out.println(rowData.getLoanName());
+                    displayAdditionalDetails(rowData.getLoanName());
+                }
+            });
+            return row ;
+        });
+    }
+
+    private void displayAdditionalDetails(String loanName)
+    {
+        LoanDTO loan = null;
+
+        for(LoanDTO l : loans)
+        {
+            if(l.getLoanName().equals(loanName))
+            {
+                loan=l;
+                break;
+            }
+        }
+
+        if(loan != null)
+        {
+            try
+            {
+                switch (loan.getStatus())
+                {
+                    case "PENDING": {
+                        FXMLLoader loader = new FXMLLoader();
+
+                        URL url = getClass().getResource("pendingInfo.fxml");
+                        loader.setLocation(url);
+                        ScrollPane pendingInfo = loader.load(url.openStream());
+                        this.pendingInfoController = loader.getController();
+
+                        //pendingInfoController.setData(loan);
+                        additionalInfoScrollPane.setContent(pendingInfo);
+                    }
+                    case "ACTIVE": {
+                        FXMLLoader loader = new FXMLLoader();
+
+                        URL url = getClass().getResource("activeInfo.fxml");
+                        loader.setLocation(url);
+                        ScrollPane activeInfo = loader.load(url.openStream());
+                        this.activeInfoController = loader.getController();
+
+                        //activeInfoController.setData(loan);
+                        additionalInfoScrollPane.setContent(activeInfo);
+                    }
+                    case "IN_RISK": {
+                        FXMLLoader loader = new FXMLLoader();
+
+                        URL url = getClass().getResource("inRiskInfo.fxml");
+                        loader.setLocation(url);
+                        ScrollPane inRiskInfo = loader.load(url.openStream());
+                        this.inRiskInfoController = loader.getController();
+
+                        //inRiskInfoController.setData(loan);
+                        additionalInfoScrollPane.setContent(inRiskInfo);
+                    }
+                    case "FINISHED":
+                    {
+                        FXMLLoader loader = new FXMLLoader();
+
+                        URL url = getClass().getResource("finishedInfo.fxml");
+                        loader.setLocation(url);
+                        ScrollPane finishedInfo = loader.load(url.openStream());
+                        this.finishedInfoController = loader.getController();
+
+                        //finishedInfoController.setData(loan);
+                        additionalInfoScrollPane.setContent(finishedInfo);
+                    }
+                }
+           }
+
+          catch(Exception ex)
+          {
+          }
+
+        }
+    }
+
+
+
 
     public void setParentController(AdminSceneController adminSceneController) {
         parentController = adminSceneController;
     }
 
-    public void loadLoansData() {
+    public void loadLoansData()
+    {
         loanNameCol.setCellValueFactory(cellData -> cellData.getValue().getLoanNameProperty());
         loanerNameCol.setCellValueFactory(cellData -> cellData.getValue().getCustomerNameProperty());
         categoryCol.setCellValueFactory(cellData -> cellData.getValue().getCategoryProperty());
@@ -54,19 +159,13 @@ public class LoansTableComponentController {
         loansTable.setItems(loansForTable);
     }
 
-    @FXML
-    public void clickItem(MouseEvent event)
+    private void loadFile(String path)
     {
-        if (event.getClickCount() == 2) //Checking double click
-        {
-           LoanDTO loan = loansTable.getSelectionModel().getSelectedItem();
-
-
-
-        }
-
 
     }
 
 
+
 }
+
+

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<ScrollPane fx:id="inRiskInfo" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="340.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="loansTable.loansAdditionalInfo.InRiskInfoController">
+  <content>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="340.0">
+         <children>
+            <Accordion layoutX="-2.0" prefHeight="300.0" prefWidth="340.0">
+              <panes>
+                <TitledPane fx:id="lendersTP" animated="false" text="Lenders">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="340.0">
+                           <children>
+                               <fx:include fx:id="lendersTableView" source="lendersTableComponent.fxml"/>
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </TitledPane>
+                <TitledPane fx:id="yazTP" animated="false" prefHeight="161.0" prefWidth="202.0" text="Activation Information">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <Label fx:id="activationYazLabel" layoutX="27.0" layoutY="14.0" prefHeight="22.0" prefWidth="80.0" text="Activation Yaz:" />
+                              <Label fx:id="nextPaymentLabel" layoutX="27.0" layoutY="61.0" prefHeight="25.0" prefWidth="126.0" text="Next Payment In Yaz: " />
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </TitledPane>
+                <TitledPane fx:id="paidPaymentsTP" animated="false" prefHeight="153.0" prefWidth="202.0" text="Paid Payments">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                               <fx:include fx:id="paidPaymentsTableView" source="paidPaymentsTableComponent.fxml"/>
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </TitledPane>
+                  <TitledPane fx:id="paymentsStatusTP" animated="false" text="Payments Status">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <Label fx:id="paidLoanLabel" layoutX="14.0" layoutY="14.0" text="Paid Loan: " />
+                              <Label fx:id="loanRemainedLabel" layoutX="11.0" layoutY="51.0" text="Loan Remained To Pay:" />
+                              <Label fx:id="paidInterestLabel" layoutX="14.0" layoutY="91.0" text="Paid Interest:" />
+                              <Label fx:id="InterestRemainedLabel" layoutX="14.0" layoutY="131.0" text="Interest Remained To Pay:" />
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </TitledPane>
+                  <TitledPane fx:id="unpaidPaymentsTP" animated="false" text="Unpaid Payments">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <TableView fx:id="unpaidPaymentsTableView" layoutY="36.0" prefHeight="163.0" prefWidth="340.0">
+                                 <columns>
+                                    <TableColumn fx:id="YazCol" prefWidth="70.0" text="YAZ" />
+                                    <TableColumn fx:id="unpaidLoanPartCol" prefWidth="85.0" text="Loan Part" />
+                                    <TableColumn fx:id="unpaidInterestPartCol" prefWidth="85.0" text="Interest Part" />
+                                    <TableColumn fx:id="totalUnpaidCol" prefWidth="85.0" text="Total" />
+                                 </columns>
+                              </TableView>
+                              <Label fx:id="unpaidPaymentsLabel" layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="138.0" text="unpaid" />
+                              <Label fx:id="debtLabel" layoutX="222.0" layoutY="14.0" prefHeight="17.0" prefWidth="94.0" text="debt" />
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </TitledPane>
+              </panes>
+            </Accordion>
+         </children></AnchorPane>
+  </content>
+</ScrollPane>

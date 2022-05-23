@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="240.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="loansTable.loansAdditionalInfo.FinishedInfoController">
+  <content>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="240.0">
+         <children>
+            <Accordion prefHeight="300.0" prefWidth="240.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <panes>
+                <TitledPane fx:id="lendersTP" animated="false" text="Lenders">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="240.0">
+                           <children>
+                               <fx:include fx:id="lendersTableView" source="lendersTableComponent.fxml"/>
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </TitledPane>
+                <TitledPane fx:id="paymentsTP" animated="false" text="Payments">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                          <children>
+                              <fx:include fx:id="paidPaymentsTableView" source="paidPaymentsTableComponent.fxml"/>
+                          </children>
+                    </AnchorPane>
+                  </content>
+                </TitledPane>
+                <TitledPane fx:id="yazInfoTP" animated="false" text="YAZ Info">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <Label fx:id="startYazLabel" layoutX="14.0" layoutY="27.0" text="Start YAZ: " />
+                              <Label fx:id="endYAZLabel" layoutX="14.0" layoutY="67.0" text="end YAZ: " />
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </TitledPane>
+              </panes>
+            </Accordion>
+         </children></AnchorPane>
+  </content>
+</ScrollPane>

@@ -7,22 +7,22 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="header" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="79.0" prefWidth="569.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="header.HeaderController">
+<GridPane fx:id="header" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="header.HeaderController">
    <columnConstraints>
-      <ColumnConstraints hgrow="NEVER" prefWidth="115.0" />
-      <ColumnConstraints hgrow="NEVER" maxWidth="357.3333740234375" prefWidth="357.3333740234375" />
-      <ColumnConstraints hgrow="NEVER" maxWidth="202.0" prefWidth="105.0" />
+      <ColumnConstraints hgrow="NEVER" prefWidth="200.0" />
+      <ColumnConstraints hgrow="NEVER" maxWidth="700" prefWidth="900" />
+      <ColumnConstraints hgrow="NEVER" maxWidth="100.0" prefWidth="100.0" />
    </columnConstraints>
    <rowConstraints>
-      <RowConstraints prefHeight="87.0" vgrow="NEVER" />
+      <RowConstraints prefHeight="70.0" maxHeight="60" vgrow="NEVER" />
    </rowConstraints>
    <children>
-      <ComboBox fx:id="viewByCB" prefHeight="75.0" prefWidth="105.0" promptText="View By:">
+      <ComboBox fx:id="viewByCB" prefHeight="60.0" prefWidth="105.0" promptText="View By:">
          <GridPane.margin>
-            <Insets left="5.0" right="5.0" />
+            <Insets top="5.0" left="5.0" right="5.0" />
          </GridPane.margin>
       </ComboBox>
-      <Label fx:id="filePathLabel" prefHeight="35.0" prefWidth="353.0" text="File Path" GridPane.columnIndex="1">
+      <Label fx:id="filePathLabel" prefHeight="35.0" prefWidth="500.0" text="File Path" GridPane.columnIndex="1">
          <GridPane.margin>
             <Insets left="5.0" right="5.0" />
          </GridPane.margin>
