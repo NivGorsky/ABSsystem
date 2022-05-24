@@ -37,6 +37,9 @@ public class AdminSceneController implements ParentController {
             loansTableComponentController.setParentController(this);
             customersInfoTableController.setParentController(this);
         }
+
+        increaseYazButton.getStyleClass().add("clickedItems");
+        loadFileButton.getStyleClass().add("clickedItems");
     }
 
 

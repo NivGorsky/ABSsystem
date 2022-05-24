@@ -2,15 +2,10 @@ import Engine.ABSsystem;
 import Engine.MainSystem;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import mainScene.MainSceneController;
-
-import javax.print.DocFlavor;
 
 import java.net.URL;
 
@@ -39,7 +34,11 @@ public class ABS_App extends Application
 
         primaryStage.setTitle("ABS System");
         Scene scene = new Scene(root, 1200, 650);
+        scene.getStylesheets().add(
+                getClass().getResource("/css/LightMode.css").toExternalForm());
+
         primaryStage.setScene(scene);
+        primaryStage.setFullScreen(true);
         primaryStage.show();
     }
 }

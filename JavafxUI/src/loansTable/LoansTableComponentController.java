@@ -1,6 +1,7 @@
 package loansTable;
 
 import DTO.LoanDTO;
+import Engine.MainSystem;
 import adminScene.AdminSceneController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -8,6 +9,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import mutualInterfaces.ParentController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -19,7 +22,7 @@ import loansTable.loansAdditionalInfo.PendingInfoController;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class LoansTableComponentController {
+public class LoansTableComponentController implements ParentController {
 
     @FXML private TableView<LoanDTO> loansTable;
     @FXML private TableColumn<LoanDTO, String> loanNameCol;
@@ -31,10 +34,15 @@ public class LoansTableComponentController {
     @FXML private TableColumn<LoanDTO, Integer> PaymentRateCol;
     @FXML private TableColumn<LoanDTO, String> statusCol;
     @FXML private ScrollPane additionalInfoScrollPane;
+    @FXML private Label noContentLabel;
     @FXML private PendingInfoController pendingInfoController;
     @FXML private ActiveInfoController activeInfoController;
     @FXML private InRiskInfoController inRiskInfoController;
     @FXML private FinishedInfoController finishedInfoController;
+
+    private ArrayList<LoanDTO> loans;
+    private ParentController parentController;
+
 
     @FXML public void initialize()
     {
@@ -52,7 +60,7 @@ public class LoansTableComponentController {
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
                     LoanDTO rowData = row.getItem();
-                    System.out.println(rowData.getLoanName());
+                    noContentLabel.visibleProperty().setValue(false);
                     displayAdditionalDetails(rowData.getLoanName());
                 }
             });
@@ -60,8 +68,10 @@ public class LoansTableComponentController {
         });
     }
 
-    private ArrayList<LoanDTO> loans;
-    private ParentController parentController;
+    @Override
+    public MainSystem getModel() {
+        return parentController.getModel();
+    }
 
     public void setParentController(ParentController adminSceneController) {
         parentController = adminSceneController;
@@ -82,57 +92,29 @@ public class LoansTableComponentController {
 
         if(loan != null)
         {
-            try
+            switch (loan.getStatus())
             {
-                switch (loan.getStatus())
-                {
-                    case "PENDING": {
-                        FXMLLoader loader = new FXMLLoader();
-                        URL url = getClass().getResource("pendingInfo.fxml");
-                        loader.setLocation(url);
-                        ScrollPane pendingInfo = loader.load(url.openStream());
-                        this.pendingInfoController = loader.getController();
-
-                        pendingInfoController.setData(loan);
-                        additionalInfoScrollPane.setContent(pendingInfo);
-                    }
-                    case "ACTIVE": {
-                        FXMLLoader loader = new FXMLLoader();
-                        URL url = getClass().getResource("activeInfo.fxml");
-                        loader.setLocation(url);
-                        ScrollPane activeInfo = loader.load(url.openStream());
-                        this.activeInfoController = loader.getController();
-
-                        activeInfoController.setData(loan);
-                        additionalInfoScrollPane.setContent(activeInfo);
-                    }
-                    case "IN_RISK": {
-                        FXMLLoader loader = new FXMLLoader();
-                        URL url = getClass().getResource("inRiskInfo.fxml");
-                        loader.setLocation(url);
-                        ScrollPane inRiskInfo = loader.load(url.openStream());
-                        this.inRiskInfoController = loader.getController();
-
-                        inRiskInfoController.setData(loan);
-                        additionalInfoScrollPane.setContent(inRiskInfo);
-                    }
-                    case "FINISHED": {
-                        FXMLLoader loader = new FXMLLoader();
-                        URL url = getClass().getResource("finishedInfo.fxml");
-                        loader.setLocation(url);
-                        ScrollPane finishedInfo = loader.load(url.openStream());
-                        this.finishedInfoController = loader.getController();
-
-                        finishedInfoController.setData(loan);
-                        additionalInfoScrollPane.setContent(finishedInfo);
-                    }
+                case "PENDING": {
+                    FXMLLoader loader = loadFile("pendingInfo.fxml");
+                    this.pendingInfoController = loader.getController();
+                    pendingInfoController.setData(loan);
+                }
+                case "ACTIVE": {
+                    FXMLLoader loader = loadFile("activeInfo.fxml");
+                    this.activeInfoController = loader.getController();
+                    activeInfoController.setData(loan);
+                }
+                case "IN_RISK": {
+                    FXMLLoader loader = loadFile("inRiskInfo.fxml");
+                    this.inRiskInfoController = loader.getController();
+                    inRiskInfoController.setData(loan);
+                }
+                case "FINISHED": {
+                    FXMLLoader loader =loadFile("finishedInfo.fxml");
+                    this.finishedInfoController = loader.getController();
+                    finishedInfoController.setData(loan);
                 }
             }
-
-            catch(Exception ex)
-            {
-            }
-
         }
     }
 
@@ -181,13 +163,23 @@ public class LoansTableComponentController {
         loansTable.getItems().clear();
     }
 
-    private void loadFile(String path)
+    private FXMLLoader loadFile(String path)
     {
+        FXMLLoader loader = null;
+        try {
+            loader = new FXMLLoader();
+            URL url = getClass().getResource("inRiskInfo.fxml");
+            loader.setLocation(url);
+            ScrollPane container = loader.load(url.openStream());
+            additionalInfoScrollPane.setContent(container);
+        }
+        catch (Exception ex)
+        {
 
+        }
+
+        return null;
     }
-
-
-
 }
 
 

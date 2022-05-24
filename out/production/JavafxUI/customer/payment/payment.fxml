@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -13,9 +14,9 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<ScrollPane prefHeight="626.0" prefWidth="1123.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="customer.payment.PaymentController">
+<ScrollPane prefHeight="626.0" prefWidth="1123.0" styleClass="root" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="customer.payment.PaymentController">
    <content>
-      <GridPane prefHeight="617.0" prefWidth="1097.0">
+      <GridPane prefHeight="617.0" prefWidth="1097.0" styleClass="root">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="747.0" minWidth="10.0" prefWidth="425.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="534.0" minWidth="0.0" prefWidth="475.0" />
@@ -28,12 +29,12 @@
             <RowConstraints maxHeight="135.23394775390625" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <BorderPane prefHeight="187.0" prefWidth="436.0" GridPane.columnIndex="2" GridPane.rowSpan="2">
+            <BorderPane prefHeight="187.0" prefWidth="436.0" styleClass="root" GridPane.columnIndex="2" GridPane.rowSpan="2">
                <top>
                   <Label prefHeight="66.0" prefWidth="67.0" text="notificatinos" BorderPane.alignment="CENTER" />
                </top>
                <center>
-                  <Accordion fx:id="notificationsBoard" prefHeight="293.0" prefWidth="298.0" BorderPane.alignment="CENTER">
+                  <Accordion fx:id="notificationsBoard" prefHeight="293.0" prefWidth="298.0" styleClass="root" BorderPane.alignment="CENTER">
                     <panes>
                       <TitledPane animated="false" text="untitled 1">
                         <content>
@@ -56,10 +57,18 @@
                           </content>
                         </TitledPane>
                     </panes>
+                     <stylesheets>
+                        <URL value="@../../css/LightMode.css" />
+                        <URL value="@../../css/DarkMode.css" />
+                     </stylesheets>
                   </Accordion>
                </center>
+               <stylesheets>
+                  <URL value="@../../css/DarkMode.css" />
+                  <URL value="@../../css/LightMode.css" />
+               </stylesheets>
             </BorderPane>
-            <GridPane prefHeight="276.0" prefWidth="494.0" GridPane.rowIndex="1">
+            <GridPane prefHeight="276.0" prefWidth="494.0" styleClass="root" GridPane.rowIndex="1">
               <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="173.0" minWidth="0.0" prefWidth="0.0" />
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="263.5321350097656" minWidth="10.0" prefWidth="258.14910888671875" />
@@ -85,10 +94,26 @@
                     </columns>
                   </TableView>
                </children>
+               <stylesheets>
+                  <URL value="@../../css/DarkMode.css" />
+                  <URL value="@../../css/LightMode.css" />
+               </stylesheets>
             </GridPane>
-            <AnchorPane prefHeight="200.0" prefWidth="200.0" />
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="root">
+               <stylesheets>
+                  <URL value="@../../css/LightMode.css" />
+                  <URL value="@../../css/DarkMode.css" />
+               </stylesheets></AnchorPane>
             <fx:include fx:id="borrowerLoansTableComponent" source="../../loansTable/loansTableComponent.fxml" />
          </children>
+         <stylesheets>
+            <URL value="@../../css/LightMode.css" />
+            <URL value="@../../css/DarkMode.css" />
+         </stylesheets>
       </GridPane>
    </content>
+   <stylesheets>
+      <URL value="@../../css/DarkMode.css" />
+      <URL value="@../../css/LightMode.css" />
+   </stylesheets>
 </ScrollPane>
