@@ -51,10 +51,17 @@ public class ABSsystem implements MainSystem, SystemService
             XMLFileChecker.isFileExists(path);
             XMLFileChecker.isXMLFile(path);
             takeDataFromDescriptor(SchemaForLAXB.descriptor);
+            injectSystemServiceInterfaceToLoans();
         }
         catch (XMLFileException ex)
         {
             throw ex;
+        }
+    }
+
+    private void injectSystemServiceInterfaceToLoans(){
+        for (Loan loan:loans){
+            loan.setSystemService(this);
         }
     }
 
@@ -161,7 +168,7 @@ public class ABSsystem implements MainSystem, SystemService
     @Override
     public void moveMoneyBetweenAccounts(Account accountToSubtract, Account accountToAdd, double amount)
     {
-        accountToSubtract.substructLoanPayment(this.getCurrYaz(), amount);
+        accountToSubtract.substructFromBalance(this.getCurrYaz(), amount);
         accountToAdd.addToBalance(this.getCurrYaz(), amount);
     }
     private void initStatusInfo(LoanDTO loanToInit, Loan l)

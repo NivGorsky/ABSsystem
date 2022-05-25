@@ -23,9 +23,9 @@ public class LoanDTO {
 
         public PaymentDTO(int originalYaz, double loanPayment, double interestPayment, int actualYaz, String type) {
             this.originalYazToPay = new SimpleIntegerProperty(originalYaz);
+            this.actualPaymentYaz = new SimpleIntegerProperty(actualYaz);
             this.loanPayment = new SimpleDoubleProperty(loanPayment);
             this.interestPayment = new SimpleDoubleProperty(interestPayment);
-            this.actualPaymentYaz = new SimpleIntegerProperty(actualYaz);
             this.paymentType = new SimpleStringProperty(type);
             this.totalPayment = new SimpleDoubleProperty();
 
@@ -92,10 +92,8 @@ public class LoanDTO {
     private final SimpleDoubleProperty paidInterest;
     private final SimpleDoubleProperty paidLoan;
     private final SimpleDoubleProperty amountRaised;
-
     private final SortedMap<Integer, LoanDTO.PaymentDTO> unpaidPayments;
     private final SortedMap<Integer, LoanDTO.PaymentDTO> paidPayments;
-
 
     //pending info
     private final ArrayList<LoanDTO.LenderDetailsDTO> lendersNameAndAmount;
@@ -108,10 +106,13 @@ public class LoanDTO {
     //finish info
     private SimpleIntegerProperty finishYaz;
 
-
     public LoanDTO(String loanName, String custName, double initialAmount, int totalYaz, double interestPerPayment, double totalInterest, int yazPerPayment,
                       String status, String category, double paidInterest, double paidLoan, double debt, double amountRaised)
     {
+        this.totalMoneyRaised = new SimpleDoubleProperty();
+        this.activationYaz = new SimpleIntegerProperty();
+        this.nextPaymentYaz = new SimpleIntegerProperty();
+        this.finishYaz = new SimpleIntegerProperty();
         this.loanName = new SimpleStringProperty(loanName);
         this.customerName = new SimpleStringProperty(custName);
         this.initialAmount = new SimpleDoubleProperty(initialAmount);

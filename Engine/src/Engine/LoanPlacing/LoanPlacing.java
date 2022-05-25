@@ -133,7 +133,7 @@ public abstract class LoanPlacing {
             currentAmountToTransfer = loanEntry.amountToLend;
             loansAccount = loanEntry.loan.getLoanAccount();
             absService.moveMoneyBetweenAccounts(lendersAccount, loansAccount, currentAmountToTransfer);
-            absService.moveMoneyBetweenAccounts(loansAccount, borrowersAccount, currentAmountToTransfer);
+            //absService.moveMoneyBetweenAccounts(loansAccount, borrowersAccount, currentAmountToTransfer);
             loanEntry.loan.addNewLender(lender, currentAmountToTransfer);
             lender.addLoanAsLender(loanEntry.loan);
         }
@@ -173,15 +173,19 @@ public abstract class LoanPlacing {
             }
         }
 
+        else if(!isLoanStatusAllowsMoreInvestments(loan)){
+            result = false;
+        }
+
 //        else if(loanDto.getMinimumYazForReturn()) need to verify what does that mean
 
-//        else if(loanDto.getMaximumPercentOwnership() >  100 - loan.getLoanPercentageTakenByLenders()){
-//            if(loanDto.getMaximumPercentOwnership() != -1){
-//                result = false;
-//            }
-//        }
+        else if(loanDto.getMaximumPercentOwnership() < 100 - loan.getLoanPercentageTakenByLenders()){
+            if(loanDto.getMaximumPercentOwnership() != -1){
+                result = false;
+            }
+        }
 
-        else if(loanDto.getMaximumOpenLoansForBorrower() > maximumOpenLoansForLoanBorrower){
+        else if(maximumOpenLoansForLoanBorrower > loanDto.getMaximumOpenLoansForBorrower()){
             if(loanDto.getMaximumOpenLoansForBorrower() != -1){
                 result = false;
             }
@@ -205,6 +209,10 @@ public abstract class LoanPlacing {
         catch (Exception e){
             throw new DataBaseAccessException(null, "There was a problem while trying to createLoanPlacingDB ");
         }
+    }
+
+    private static boolean isLoanStatusAllowsMoreInvestments(Loan l){
+        return l.getStatus() == Loan.LoanStatus.PENDING || l.getStatus() == Loan.LoanStatus.NEW;
     }
 
     private static LoanPlacingDBEntry createLoanPlacingDBDatumFromLoan(Engine.Loan l){

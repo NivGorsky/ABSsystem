@@ -13,9 +13,10 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import mainScene.MainSceneController;
+import mutualInterfaces.ParentController;
 
 
-public class CustomerController {
+public class CustomerController implements ParentController {
 
     private MainSystem model;
     private MainSceneController parentController;
@@ -98,5 +99,10 @@ public class CustomerController {
     public void chooseTab(int tabIndex){
         tabPane.getSelectionModel().select(1);
         tabPane.getSelectionModel().select(0);
+    }
+
+    @Override
+    public MainSystem getModel() {
+        return parentController.getModel();
     }
 }

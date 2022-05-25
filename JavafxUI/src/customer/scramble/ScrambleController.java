@@ -17,12 +17,14 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import mutualInterfaces.ParentController;
+
 import java.util.regex.*;
 import java.util.*;
 
 public class ScrambleController {
 
-    private CustomerController parentController;
+    private ParentController parentController;
     private MainSystem model;
     private ArrayList<SimpleField> scrambleQueryFields;
     private BooleanProperty isScrambleFormValid;
@@ -47,7 +49,7 @@ public class ScrambleController {
         formFields2TheirValidity = new HashMap<Node, BooleanProperty>();
     }
 
-    public void setParentController(CustomerController parentController){
+    public void setParentController(ParentController parentController){
         this.parentController = parentController;
     }
 
@@ -133,30 +135,84 @@ public class ScrambleController {
     }
 
     private void placeToLoans(){
-        String customerName = parentController.getCustomerNameProperty().getValue();
-        double amountToInvest = Double.parseDouble(amountTextField.getText());
-        ArrayList<String> categoriesWillingToInvestIn = convertTableDataToStrings();
-        double minimumInterestPerYaz = ;
-        int minimumYazForReturn;
-        int maximumPercentOwnership;
-        int maximumOpenLoansForBorrower;
-        LoanPlacingDTO loanPlacingDTO = new LoanPlacingDTO()
+        try {
+            double amountToInvest = Double.parseDouble(amountTextField.getText());
+            ArrayList<String> categoriesWillingToInvestIn = convertTableDataToStrings();
+            double minimumInterestPerYaz = getTextFieldContentToDouble(minInterestPerYazTextField);
+            int minimumYazForLoan = getTextFieldContentToInt(minYazForLoanTextField);
+            int maximumPercentOwnership = getTextFieldContentToInt(maxPercentageOwnershipTextField);
+            int maximumOpenLoansForBorrower = getTextFieldContentToInt(maxOpenLoansForBorrowerTextField);
+            String customerName = "";
+
+            if (parentController instanceof CustomerController){
+                customerName = ((CustomerController)parentController).getCustomerNameProperty().getValue();
+                LoanPlacingDTO loanPlacingDTO = new LoanPlacingDTO(amountToInvest, categoriesWillingToInvestIn, minimumInterestPerYaz, minimumYazForLoan, maximumPercentOwnership, maximumOpenLoansForBorrower, customerName);
+                parentController.getModel().assignLoansToLender(loanPlacingDTO);
+            }
+
+            else{
+                throw new Exception("Parent controller of scramble controller is not Customer controller, can not retrive customer's name");
+            }
+        }
+
+        catch (Exception e){
+            //open a message box to user
+            System.out.println("Could not perform place to loans");
+        }
     }
 
     private Double getTextFieldContentToDouble(TextField textField){
-        Double value = textField.disableProperty().getValue()? -1: Double.parseDouble(textField.getText());
-        
+        Double value = -1.0;
+
+        try {
+            value = textField.disableProperty().getValue() ? -1 : Double.parseDouble(textField.getText());
+        }
+
+        catch (Exception e){
+            System.out.println("Could not convert text field to value");
+        }
+
+        return value;
+    }
+
+    private int getTextFieldContentToInt(TextField textField){
+        int value = -1;
+
+        try {
+            value = textField.disableProperty().getValue() ? -1 : Integer.parseInt(textField.getText());
+        }
+
+        catch (Exception e){
+            System.out.println("Could not convert text field to value");
+        }
+
         return value;
     }
 
     private ArrayList<String> convertTableDataToStrings(){
         ArrayList<String> categoriesAsStrings = new ArrayList<>();
 
-        for (LoanCategoryForTable categoryFromTable:loanCategoriesViewTable.getSelectionModel().getSelectedItems()){
-            categoriesAsStrings.add(categoryFromTable.getCategoryProperty().getValue());
+        if(!chooseLoanCategoriesRadioButton.isSelected()){
+            convertAllTableDataToStrings(categoriesAsStrings);
+        }
+
+        else{
+            convertAllTableDataToStrings(categoriesAsStrings);
         }
 
         return categoriesAsStrings;
+    }
+
+    private void convertAllTableDataToStrings(ArrayList<String> categoriesAsStrings){
+        for (LoanCategoryForTable categoryFromTable:loanCategoriesViewTable.getItems()){
+            categoriesAsStrings.add(categoryFromTable.getCategoryProperty().getValue());
+        }
+    }
+
+    private void convertOnlyChosenTableDataToStrings(ArrayList<String> categoriesAsStrings){
+        for (LoanCategoryForTable categoryFromTable:loanCategoriesViewTable.getSelectionModel().getSelectedItems()){
+            categoriesAsStrings.add(categoryFromTable.getCategoryProperty().getValue());
+        }
     }
 
     private void bindScrambleButtonToIsFormValid(){

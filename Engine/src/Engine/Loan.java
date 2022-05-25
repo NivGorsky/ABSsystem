@@ -6,6 +6,7 @@ import Exceptions.*;
 public class Loan
 {
     static int loansNum = 0;
+    private SystemService systemService;
 
     public enum LoanStatus {
         NEW, PENDING, ACTIVE, IN_RISK, FINISHED
@@ -125,6 +126,7 @@ public class Loan
     public double getLoanPercentageTakenByLenders(){return this.loanPercentageTakenByLenders;}
     public double getLoanAmountFinancedByLenders(){return this.loanAmountFinancedByLenders;}
     public Account getLoanAccount(){return this.account;}
+    public void setSystemService(SystemService systemService){this.systemService = systemService;}
 
     //setters
     public void setLoanStatus(Loan.LoanStatus newStatus, int currentYaz){
@@ -144,7 +146,6 @@ public class Loan
                 break;
         }
     }
-
 
     //methods
     public void addNewLender(Engine.Customer newLender, double lendersPartOfLoanAmount) throws Exception
@@ -241,6 +242,14 @@ public class Loan
 
     private void updateLoanToActive(int yaz){
         this.paymentsData.addYazToAllPayments(yaz);
+        makeMoneyTransferBetweenLoanAccountAndBorrower();
+
+
+    }
+
+    private void makeMoneyTransferBetweenLoanAccountAndBorrower(){
+        Customer borrower = systemService.getCustomerByName(this.borrowerName);
+        systemService.moveMoneyBetweenAccounts(this.account, borrower.getAccount(), this.loanAmountFinancedByLenders);
     }
 }
 
