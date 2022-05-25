@@ -54,11 +54,15 @@ public class HeaderController {
        isFileSelected.addListener(((observable, oldValue, newValue) -> {
            ArrayList<String> customerNames = parentController.getCustomers();
            viewByOptions.addAll(FXCollections.observableArrayList(customerNames));
-           viewByCB.setItems(viewByOptions);;}));
+           viewByCB.setItems(viewByOptions);}));
 
        displayModeCB.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
            parentController.switchStyleSheet(displayModeCB.getSelectionModel().getSelectedItem());
        });
+    }
+
+    public SimpleBooleanProperty getIsFileSelectedProperty() {
+        return isFileSelected;
     }
 
     public void setParentController(MainSceneController parentController)

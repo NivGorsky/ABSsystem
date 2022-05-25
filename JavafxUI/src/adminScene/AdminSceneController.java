@@ -1,8 +1,9 @@
 package adminScene;
-
 import Engine.Customer;
 import Engine.MainSystem;
+import Exceptions.XMLFileException;
 import customersInfoTable.CustomersInfoTableController;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.ScrollPane;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -12,6 +13,7 @@ import loansTable.LoansTableComponentController;
 import mainScene.MainSceneController;
 import mutualInterfaces.ParentController;
 
+import javax.xml.bind.JAXBException;
 import java.io.File;
 
 public class AdminSceneController implements ParentController {
@@ -27,9 +29,6 @@ public class AdminSceneController implements ParentController {
 
     private MainSceneController parentController;
 
-    public AdminSceneController() {
-    }
-
     @FXML public void initialize()
     {
         if(loansTableComponentController != null)
@@ -37,11 +36,12 @@ public class AdminSceneController implements ParentController {
             loansTableComponentController.setParentController(this);
             customersInfoTableController.setParentController(this);
         }
-
-        increaseYazButton.getStyleClass().add("clickedItems");
-        loadFileButton.getStyleClass().add("clickedItems");
     }
 
+    public void setIncreaseYAZButtonDisable(SimpleBooleanProperty isFileSelected)
+    {
+        increaseYazButton.disableProperty().bind(isFileSelected.not());
+    }
 
     @FXML public void increaseYazButtonClicked()
     {
@@ -56,23 +56,15 @@ public class AdminSceneController implements ParentController {
         fileChooser.setTitle("Select a file");
         File selectedFile = fileChooser.showOpenDialog(parentController.getPrimaryStage());
 
-        if(selectedFile == null) {
-           //exception;
-        }
-
         try {
             parentController.getModel().loadXML(selectedFile.getPath());
+            parentController.setFileInfo(selectedFile.getPath());
+            loansTableComponentController.loadLoansData();
+            customersInfoTableController.loadCustomersInfo();
         }
-        catch (Exception ex) {
-            //System.out.println(ex.getMessage());
-            //show error
+        catch (XMLFileException | JAXBException ex) {
+            parentController.getExceptionDialogCreator().createExceptionDialog(ex);
         }
-
-        parentController.setFileInfo(selectedFile.getPath());
-        loansTableComponentController.loadLoansData();
-        customersInfoTableController.loadCustomersInfo();
-
-
     }
 
     public void setParentController(MainSceneController parentController)

@@ -1,11 +1,12 @@
 package mainScene;
-
 import Engine.MainSystem;
 import adminScene.AdminSceneController;
 import customer.CustomerController;
 import header.HeaderController;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
@@ -29,10 +30,14 @@ public class MainSceneController {
     @FXML private AnchorPane centerAnchorPane;
     @FXML private ScrollPane root;
 
-
     private MainSystem model;
     private Stage primaryStage;
+    private ExceptionDialogCreator exceptionDialogCreator;
 
+    public MainSceneController()
+    {
+        exceptionDialogCreator = new ExceptionDialogCreator();
+    }
 
     @FXML public void initialize()
     {
@@ -43,6 +48,8 @@ public class MainSceneController {
             loadCustomerComponent();
             customerPaneController.getCustomerNameProperty().bind(headerController.getChosenCustomerNameProperty());
         }
+
+        adminSceneController.setIncreaseYAZButtonDisable(headerController.getIsFileSelectedProperty());
     }
 
     public HeaderController getHeaderController(){return headerController;}
@@ -51,8 +58,7 @@ public class MainSceneController {
     {
         this.primaryStage = primaryStage;
     }
-    public void setModel(MainSystem model)
-    {
+    public void setModel(MainSystem model) {
         this.model = model;
         customerPaneController.setModel(model);
     }
@@ -61,6 +67,7 @@ public class MainSceneController {
     }
     public Stage getPrimaryStage() { return primaryStage; }
     public MainSystem getModel() { return model; }
+    public ExceptionDialogCreator getExceptionDialogCreator() { return exceptionDialogCreator;}
 
     public void setFileInfo(String path)
     {
@@ -78,8 +85,8 @@ public class MainSceneController {
             customerPaneController.setParent(this);
         }
 
-        catch (Exception e){
-
+        catch (Exception ex) {
+            exceptionDialogCreator.createExceptionDialog(ex);
         }
     }
 
@@ -100,7 +107,7 @@ public class MainSceneController {
     }
 
     public void switchStyleSheet(String selectedItem) {
-;        switch (selectedItem)
+        switch (selectedItem)
         {
             case("Light Mode"):
             {

@@ -50,10 +50,16 @@
 
   }
 
+.tab-label {
+    -fx-text-fill: #6998E5;
+    -fx-border-radius: 12px;
+}
+
   .tab:selected {
       -fx-font-weight: bold;
  }
 
+.radio-button,
  .label {
      -fx-text-fill: #6998E5;
  }
@@ -63,8 +69,8 @@
  }
 
  .table-view .column-header-background{
-     -fx-background-color: #FFE69A;
-     -fx-border-color: #FFD24C;
+    -fx-background-color: #FFE69A;
+    -fx-border-color: #FFD24C;
     -fx-background-radius: 10px;
     -fx-border-width: 2px;
     -fx-border-radius: 10px;

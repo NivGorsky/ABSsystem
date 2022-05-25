@@ -55,10 +55,16 @@
 
 }
 
+.tab-label {
+    -fx-text-fill: #F47C7C;
+    -fx-border-radius: 12px;
+}
+
 .tab:selected {
     -fx-font-weight: bold;
 }
 
+.radio-button,
 .label {
     -fx-text-fill: #F47C7C;
 }
@@ -92,6 +98,7 @@
 .table-view .table-cell {
     -fx-border-color: #EF9F9F;
     -fx-background-color: #FAD4D4;
+    -fx-text-fill: #F47C7C;
 }
 
 .table-row-cell:hover {
