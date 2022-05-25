@@ -1,6 +1,6 @@
 package customer.scramble;
-
 import DTO.LoanCategorisDTO;
+import DTO.LoanPlacingDTO;
 import Engine.MainSystem;
 import customer.CustomerController;
 import customer.scramble.scrambleFields.simpleField.SimpleField;
@@ -17,9 +17,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-
 import java.util.regex.*;
-
 import java.util.*;
 
 public class ScrambleController {
@@ -111,7 +109,7 @@ public class ScrambleController {
 
     @FXML
     void findLoansButtonClicked(ActionEvent event) {
-
+        placeToLoans();
     }
 
     @FXML
@@ -132,6 +130,33 @@ public class ScrambleController {
         bindFieldsToTheirValidity();
         bindIsScrambleFormValidPropertyToAllFieldsProperties();
         bindScrambleButtonToIsFormValid();
+    }
+
+    private void placeToLoans(){
+        String customerName = parentController.getCustomerNameProperty().getValue();
+        double amountToInvest = Double.parseDouble(amountTextField.getText());
+        ArrayList<String> categoriesWillingToInvestIn = convertTableDataToStrings();
+        double minimumInterestPerYaz = ;
+        int minimumYazForReturn;
+        int maximumPercentOwnership;
+        int maximumOpenLoansForBorrower;
+        LoanPlacingDTO loanPlacingDTO = new LoanPlacingDTO()
+    }
+
+    private Double getTextFieldContentToDouble(TextField textField){
+        Double value = textField.disableProperty().getValue()? -1: Double.parseDouble(textField.getText());
+        
+        return value;
+    }
+
+    private ArrayList<String> convertTableDataToStrings(){
+        ArrayList<String> categoriesAsStrings = new ArrayList<>();
+
+        for (LoanCategoryForTable categoryFromTable:loanCategoriesViewTable.getSelectionModel().getSelectedItems()){
+            categoriesAsStrings.add(categoryFromTable.getCategoryProperty().getValue());
+        }
+
+        return categoriesAsStrings;
     }
 
     private void bindScrambleButtonToIsFormValid(){
@@ -230,7 +255,6 @@ public class ScrambleController {
         return (Pattern.matches("[0-9]+",text)) || (textField.disableProperty().getValue());
         }
 
-
     private boolean areTableSelectedItemsValid(ObservableList<?> selectedItems){
 
         return true;
@@ -302,8 +326,6 @@ public class ScrambleController {
 
         loanCategoriesViewTable.setItems(observableCategories);
     }
-
-
 
 
     //create fields dynamically methods ->
