@@ -6,12 +6,9 @@ import customer.CustomerController;
 import header.HeaderController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -32,8 +29,10 @@ public class MainSceneController {
     @FXML private AnchorPane centerAnchorPane;
     @FXML private ScrollPane root;
 
+
     private MainSystem model;
     private Stage primaryStage;
+
 
     @FXML public void initialize()
     {
@@ -101,17 +100,40 @@ public class MainSceneController {
     }
 
     public void switchStyleSheet(String selectedItem) {
-        switch (selectedItem)
+;        switch (selectedItem)
         {
             case("Light Mode"):
             {
-                primaryStage.getScene().getStylesheets().add(
-                        getClass().getResource("/css/LightMode.css").toExternalForm());
+                    primaryStage.getScene().getStylesheets().clear();
+                    primaryStage.getScene().getStylesheets().add(
+                            getClass().getResource("/css/LightMode.css").toExternalForm());
+
+                break;
             }
             case ("Dark Mode"):
             {
+                  primaryStage.getScene().getStylesheets().clear();
+                    primaryStage.getScene().getStylesheets().add(
+                            getClass().getResource("/css/DarkMode.css").toExternalForm());
+
+                break;
+            }
+            case ("MTA Mode"):
+            {
+
+                    primaryStage.getScene().getStylesheets().clear();
+                    primaryStage.getScene().getStylesheets().add(
+                            getClass().getResource("/css/MTAMode.css").toExternalForm());
+
+                break;
+            }
+            case ("Barbi Mode"):
+            {
+                primaryStage.getScene().getStylesheets().clear();
                 primaryStage.getScene().getStylesheets().add(
-                        getClass().getResource("/css/DarkMode.css").toExternalForm());
+                        getClass().getResource("/css/BarbiMode.css").toExternalForm());
+
+                break;
             }
         }
     }

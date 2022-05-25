@@ -24,22 +24,15 @@ public class HeaderController {
     private SimpleBooleanProperty isFileSelected;
     private SimpleStringProperty selectedFilePath;
     private SimpleIntegerProperty currentYAZ;
-    //private SimpleBooleanProperty isLightMode;
-    //private SimpleBooleanProperty isDarkMode;
-    //private SimpleBooleanProperty isColorMode;
 
     ObservableList<String> viewByOptions =  FXCollections.observableArrayList("Admin");
-    ObservableList<String> displayModeOptions =  FXCollections.observableArrayList("Light Mode", "Dark Mode", "Color Mode");
+    ObservableList<String> displayModeOptions =  FXCollections.observableArrayList("Light Mode", "Dark Mode", "MTA Mode", "Barbi Mode");
 
     public HeaderController()
     {
         isFileSelected = new SimpleBooleanProperty(false);
         selectedFilePath = new SimpleStringProperty("File not loaded");
         currentYAZ = new SimpleIntegerProperty(1);
-
-        //isLightMode = new SimpleBooleanProperty(true);
-        //isDarkMode = new SimpleBooleanProperty(false);
-        //isColorMode = new SimpleBooleanProperty(false);
     }
 
     public ReadOnlyObjectProperty<String> getChosenCustomerNameProperty(){

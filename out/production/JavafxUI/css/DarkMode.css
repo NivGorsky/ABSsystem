@@ -19,8 +19,9 @@
     -fx-background-color: #2D3437;
 }
 
-
-
+.scroll-pane .corner {
+    -fx-background-color: #2D3437 ;
+}
 
 
 .button {
@@ -64,6 +65,18 @@
     -fx-text-fill: #8FD6E1;
 }
 
+.tab-label {
+    -fx-text-fill: #8FD6E1;
+    -fx-border-radius: 12px;
+}
+
+.tab-pane *.tab-header-area *.tab-header-background {
+    -fx-background-color: #393E46;
+}
+
+.tab:selected {
+   -fx-font-weight: bold;
+}
 
 .table-view {
     -fx-background-color: transperent;
