@@ -104,7 +104,7 @@
                         <RadioButton fx:id="chooseLoanCategoriesRadioButton" mnemonicParsing="false" onAction="#categoriesRadioButtonClicked" text="Choose loan categories (Optional)" GridPane.columnSpan="2" />
                         <TableView fx:id="loanCategoriesViewTable" onSort="#loanCategoriesViewTableSortClicked" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.rowSpan="2">
                           <columns>
-                            <TableColumn fx:id="loansCategoriesTableView" prefWidth="307.0" text="C1" />
+                            <TableColumn fx:id="loanCategoryViewColumn" prefWidth="410.0" text="Loan Categoris" />
                           </columns>
                         </TableView>
                      </children>

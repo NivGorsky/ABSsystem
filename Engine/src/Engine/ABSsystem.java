@@ -309,9 +309,9 @@ public class ABSsystem implements MainSystem, SystemService
     }
 
     @Override
-    public ArrayList<String> getSystemLoanCategories()
+    public LoanCategorisDTO getSystemLoanCategories()
     {
-        return LoanCategories.getCategories();
+        return new LoanCategorisDTO(LoanCategories.getCategories());
     }
 
     //new methods for javafx

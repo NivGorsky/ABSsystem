@@ -1,12 +1,14 @@
 package customer.scramble;
 
+import DTO.LoanCategorisDTO;
 import Engine.MainSystem;
-import com.sun.javafx.collections.ObservableListWrapper;
 import customer.CustomerController;
 import customer.scramble.scrambleFields.simpleField.SimpleField;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -16,11 +18,9 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
-import javax.xml.soap.Text;
 import java.util.regex.*;
 
 import java.util.*;
-import java.util.concurrent.Callable;
 
 public class ScrambleController {
 
@@ -30,10 +30,22 @@ public class ScrambleController {
     private BooleanProperty isScrambleFormValid;
     private Map<Node, BooleanProperty> formFields2TheirValidity;
 
+    public class LoanCategoryForTable {
+        private final SimpleStringProperty category;
+
+        public LoanCategoryForTable (String name){
+            category = new SimpleStringProperty(name);
+        }
+
+        public SimpleStringProperty getCategoryProperty(){
+            return this.category;
+        }
+    }
+
     public ScrambleController(){
         scrambleQueryFields = new ArrayList<>();
         isScrambleFormValid = new SimpleBooleanProperty();
-        loanCategoriesViewTable = new TableView<String>();
+        loanCategoriesViewTable = new TableView<>();
         formFields2TheirValidity = new HashMap<Node, BooleanProperty>();
     }
 
@@ -81,7 +93,10 @@ public class ScrambleController {
     private RadioButton chooseLoanCategoriesRadioButton;
 
     @FXML
-    private TableView<String> loanCategoriesViewTable;
+    private TableView<LoanCategoryForTable> loanCategoriesViewTable;
+
+    @FXML
+    private TableColumn<LoanCategoryForTable, String> loanCategoryViewColumn;
 
     @FXML
     private Button findLoansButton;
@@ -124,24 +139,6 @@ public class ScrambleController {
     }
 
     private void bindIsScrambleFormValidPropertyToAllFieldsProperties(){
-
-//        for (BooleanProperty booleanProperty:formFields2TheirValidity.values()){
-//            booleanProperty.bind(Bindings.createBooleanBinding(
-//                    () ->{
-//                    boolean isValid = true;
-//
-//                    for (BooleanProperty fieldBooleanProperty:formFields2TheirValidity.values()){
-//                        if(!fieldBooleanProperty.getValue()){
-//                            isValid = false;
-//                            break;
-//                        }
-//                    }
-//
-//                    return isValid;
-//            },
-//            booleanProperty));
-//        }
-
         isScrambleFormValid.bind(Bindings.createBooleanBinding(
                 ()-> {
                     boolean isValid = true;
@@ -161,18 +158,6 @@ public class ScrambleController {
                 formFields2TheirValidity.get(maxOpenLoansForBorrowerTextField),
                 formFields2TheirValidity.get(amountTextField)
                 ));
-
-//        this.startXProperty().bind(Bindings.createDoubleBinding(
-//                () -> {
-//                    double slope = (target.getCenterY() - source.getCenterY())/(target.getCenterX() - source.getCenterX());
-//                    return source.getCenterX() + Math.cos(Math.atan(slope)) * source.getRadius();
-//                },
-//                source.centerXProperty(),
-//                source.centerYProperty(),
-//                target.centerXProperty(),
-//                target.centerYProperty(),
-//                source.radiusProperty(),
-//                ));
     }
 
     private void initializeTextFields(){
@@ -182,6 +167,7 @@ public class ScrambleController {
 
     private void initializeTableView(){
         setSelectionModelOfTableView();
+        loanCategoryViewColumn.setCellValueFactory(cellData -> cellData.getValue().getCategoryProperty());
     }
 
     private void setSelectionModelOfTableView(){
@@ -277,7 +263,10 @@ public class ScrambleController {
 
         loanCategoriesViewTable.disableProperty().bind(chooseLoanCategoriesRadioButton.selectedProperty().not());
         chooseLoanCategoriesRadioButton.selectedProperty().addListener(((observable, oldValue, newValue) -> {
-            loanCategoriesViewTable.getSelectionModel().getSelectedItems().clear();
+            if(!loanCategoriesViewTable.getSelectionModel().getSelectedItems().isEmpty()){
+                loanCategoriesViewTable.getSelectionModel().clearSelection();
+            }
+
             formFields2TheirValidity.get(loanCategoriesViewTable).setValue(newValue);
         }));
     }
@@ -299,7 +288,19 @@ public class ScrambleController {
     }
 
     public void onShow(){
-        //createScrambleFields();
+        getLoanCategoriesToTable();
+    }
+
+    private void getLoanCategoriesToTable(){
+        LoanCategorisDTO loanCategorisDTO = model.getSystemLoanCategories();
+        ObservableList<LoanCategoryForTable> observableCategories = FXCollections.observableArrayList();
+
+        for (String loanCategory:loanCategorisDTO.loanCategories){
+            LoanCategoryForTable newLoanCategory = new LoanCategoryForTable(loanCategory);
+            observableCategories.add(newLoanCategory);
+        }
+
+        loanCategoriesViewTable.setItems(observableCategories);
     }
 
 

@@ -16,7 +16,7 @@ public interface MainSystem {
     public TimelineDTO moveTimeLine();
     public ArrayList<String> getCustomersNames();
     public int getCurrYaz();
-    public ArrayList<String> getSystemLoanCategories();
+    public LoanCategorisDTO getSystemLoanCategories();
 
     //new methods for javafx
     public CustomerDTO getCustomerDTO(String customerName);

@@ -234,7 +234,7 @@ public class ConsoleUI {
         {
             System.out.println("6- Invest money in loans\n");
             CustomerDTO chosenCustomer = chooseCustomerWithBalance();
-            AssignLoanToLenders assignLoanToLendersForm = new AssignLoanToLenders(chosenCustomer.getCustomerName(), this.engine.getSystemLoanCategories());
+            AssignLoanToLenders assignLoanToLendersForm = new AssignLoanToLenders(chosenCustomer.getCustomerName(), this.engine.getSystemLoanCategories().loanCategories);
             assignLoanToLendersForm.getAssigningParametersFromUser();
             engine.assignLoansToLender(assignLoanToLendersForm.getDTO());
         }
