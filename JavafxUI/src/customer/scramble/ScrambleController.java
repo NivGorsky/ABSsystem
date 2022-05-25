@@ -1,10 +1,13 @@
 package customer.scramble;
 
 import Engine.MainSystem;
+import com.sun.javafx.collections.ObservableListWrapper;
 import customer.CustomerController;
 import customer.scramble.scrambleFields.simpleField.SimpleField;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -13,10 +16,11 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import javax.xml.soap.Text;
+import java.util.regex.*;
+
+import java.util.*;
+import java.util.concurrent.Callable;
 
 public class ScrambleController {
 
@@ -105,20 +109,75 @@ public class ScrambleController {
 
     }
 
-
-
     @FXML
     public void initialize(){
         initializeTextFields();
         initializeTableView();
         setFields2TheirValidity();
         bindFieldsToTheirValidity();
+        bindIsScrambleFormValidPropertyToAllFieldsProperties();
+        bindScrambleButtonToIsFormValid();
+    }
+
+    private void bindScrambleButtonToIsFormValid(){
+        findLoansButton.disableProperty().bind(isScrambleFormValid.not());
+    }
+
+    private void bindIsScrambleFormValidPropertyToAllFieldsProperties(){
+
+//        for (BooleanProperty booleanProperty:formFields2TheirValidity.values()){
+//            booleanProperty.bind(Bindings.createBooleanBinding(
+//                    () ->{
+//                    boolean isValid = true;
+//
+//                    for (BooleanProperty fieldBooleanProperty:formFields2TheirValidity.values()){
+//                        if(!fieldBooleanProperty.getValue()){
+//                            isValid = false;
+//                            break;
+//                        }
+//                    }
+//
+//                    return isValid;
+//            },
+//            booleanProperty));
+//        }
+
+        isScrambleFormValid.bind(Bindings.createBooleanBinding(
+                ()-> {
+                    boolean isValid = true;
+
+                    for (BooleanProperty fieldBooleanProperty:formFields2TheirValidity.values()){
+                        if(!fieldBooleanProperty.getValue()){
+                            isValid = false;
+                            break;
+                        }
+                    }
+
+                    return isValid;
+                },
+                formFields2TheirValidity.get(minInterestPerYazTextField),
+                formFields2TheirValidity.get(maxPercentageOwnershipTextField),
+                formFields2TheirValidity.get(minYazForLoanTextField),
+                formFields2TheirValidity.get(maxOpenLoansForBorrowerTextField),
+                formFields2TheirValidity.get(amountTextField)
+                ));
+
+//        this.startXProperty().bind(Bindings.createDoubleBinding(
+//                () -> {
+//                    double slope = (target.getCenterY() - source.getCenterY())/(target.getCenterX() - source.getCenterX());
+//                    return source.getCenterX() + Math.cos(Math.atan(slope)) * source.getRadius();
+//                },
+//                source.centerXProperty(),
+//                source.centerYProperty(),
+//                target.centerXProperty(),
+//                target.centerYProperty(),
+//                source.radiusProperty(),
+//                ));
     }
 
     private void initializeTextFields(){
         setMandatoryToggleButtons();
         bindTextFieldsAndRadioButtonSelection();
-
     }
 
     private void initializeTableView(){
@@ -131,26 +190,24 @@ public class ScrambleController {
         );
     }
 
-    enum FormCLAZZ {
+    enum FieldClazz {
         TextField,TableView
     }
 
     private void bindFieldsToTheirValidity(){
-        FormCLAZZ typeOfNode;
+        FieldClazz typeOfNode;
 
         for (Node key:formFields2TheirValidity.keySet()){
-            typeOfNode = FormCLAZZ.valueOf(key.getClass().getSimpleName());
+            typeOfNode = FieldClazz.valueOf(key.getClass().getSimpleName());
 
             switch (typeOfNode){
                 case TextField:
-                    TextField textFieldKey = (TextField)key;
-                    registerValidityPropertyAsListenerToTextField(textFieldKey);
+                    registerValidityPropertyAsListenerToTextField((TextField)key);
 
                     break;
 
                 case TableView:
-                    TableView<?> tableView = (TableView<?>)key;
-                    registerValidityPropertyAsListenerToTableView(tableView);
+                    registerValidityPropertyAsListenerToTableView((TableView<?>)key);
 
                     break;
             }
@@ -173,7 +230,7 @@ public class ScrambleController {
 
     private void registerValidityPropertyAsListenerToTextField(TextField textFieldKey){
         textFieldKey.textProperty().addListener(((observable, oldValue, newValue) -> {
-            if(isTextFieldValid(newValue)){
+            if(isTextFieldValid(newValue, textFieldKey)){
                 formFields2TheirValidity.get(textFieldKey).setValue(true);
             }
 
@@ -183,11 +240,10 @@ public class ScrambleController {
         }));
     }
 
-    private Boolean isTextFieldValid(String text){
-        //check regex
+    private Boolean isTextFieldValid(String text, TextField textField){
+        return (Pattern.matches("[0-9]+",text)) || (textField.disableProperty().getValue());
+        }
 
-        return true;
-    }
 
     private boolean areTableSelectedItemsValid(ObservableList<?> selectedItems){
 
@@ -196,24 +252,43 @@ public class ScrambleController {
 
     private void bindTextFieldsAndRadioButtonSelection(){
         minInterestPerYazTextField.disableProperty().bind(minInterestPerYazRatioButton.selectedProperty().not());
-        minInterestPerYazTextField.disableProperty().bind(minInterestPerYazRatioButton.selectedProperty().not());
+        minInterestPerYazTextField.disableProperty().addListener(((observable, oldValue, newValue) -> {
+            minInterestPerYazTextField.textProperty().setValue("");
+            formFields2TheirValidity.get(minInterestPerYazTextField).setValue(newValue);
+        }));
+
         minYazForLoanTextField.disableProperty().bind(minYazForLoanRadioButton.selectedProperty().not());
+        minYazForLoanTextField.disableProperty().addListener(((observable, oldValue, newValue) -> {
+            minYazForLoanTextField.textProperty().setValue("");
+            formFields2TheirValidity.get(minYazForLoanTextField).setValue(newValue);
+        }));
+
         maxOpenLoansForBorrowerTextField.disableProperty().bind(maxOpenLoansForBorrowerRadioButton.selectedProperty().not());
+        maxOpenLoansForBorrowerTextField.disableProperty().addListener(((observable, oldValue, newValue) -> {
+            maxOpenLoansForBorrowerTextField.textProperty().setValue("");
+            formFields2TheirValidity.get(maxOpenLoansForBorrowerTextField).setValue(newValue);
+        }));
+
         maxPercentageOwnershipTextField.disableProperty().bind(maxPercentageOwnershipRadioButton.selectedProperty().not());
+        maxPercentageOwnershipTextField.disableProperty().addListener(((observable, oldValue, newValue) -> {
+            maxPercentageOwnershipTextField.textProperty().setValue("");
+            formFields2TheirValidity.get(maxPercentageOwnershipTextField).setValue(newValue);
+        }));
+
         loanCategoriesViewTable.disableProperty().bind(chooseLoanCategoriesRadioButton.selectedProperty().not());
-
-        //form validity
-
-
+        chooseLoanCategoriesRadioButton.selectedProperty().addListener(((observable, oldValue, newValue) -> {
+            loanCategoriesViewTable.getSelectionModel().getSelectedItems().clear();
+            formFields2TheirValidity.get(loanCategoriesViewTable).setValue(newValue);
+        }));
     }
 
     private void setFields2TheirValidity(){
-        formFields2TheirValidity.put(amountTextField,new SimpleBooleanProperty());
-        formFields2TheirValidity.put(minInterestPerYazTextField,new SimpleBooleanProperty());
-        formFields2TheirValidity.put(minYazForLoanTextField,new SimpleBooleanProperty());
-        formFields2TheirValidity.put(maxOpenLoansForBorrowerTextField,new SimpleBooleanProperty());
-        formFields2TheirValidity.put(maxPercentageOwnershipTextField,new SimpleBooleanProperty());
-        formFields2TheirValidity.put(loanCategoriesViewTable,new SimpleBooleanProperty());
+        formFields2TheirValidity.put(amountTextField,new SimpleBooleanProperty(false));
+        formFields2TheirValidity.put(minInterestPerYazTextField,new SimpleBooleanProperty(true));
+        formFields2TheirValidity.put(minYazForLoanTextField,new SimpleBooleanProperty(true));
+        formFields2TheirValidity.put(maxOpenLoansForBorrowerTextField,new SimpleBooleanProperty(true));
+        formFields2TheirValidity.put(maxPercentageOwnershipTextField,new SimpleBooleanProperty(true));
+        formFields2TheirValidity.put(loanCategoriesViewTable,new SimpleBooleanProperty(true));
     }
 
     private void setMandatoryToggleButtons(){
