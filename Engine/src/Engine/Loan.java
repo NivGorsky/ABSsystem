@@ -162,10 +162,13 @@ public class Loan
 
         for(LenderDetails lender : this.lendersBelongToLoan)
         {
-            if(newLender.getName().equals( lender.lender.getName()))
+            if(newLender.getName().equals(lender.lender.getName()))
             {
                 lender.lendersAmount += lendersPartOfLoanAmount;
-                lender.lendersPartOfLoanInPercent = (lendersPartOfLoanAmount/initialAmount)*100;
+                lender.lendersPartOfLoanInPercent += (lendersPartOfLoanAmount/initialAmount)*100;
+                this.loanPercentageTakenByLenders += (lendersPartOfLoanAmount/initialAmount)*100;
+                this.loanAmountFinancedByLenders += lendersPartOfLoanAmount;
+
                 return;
             }
         }
@@ -177,6 +180,11 @@ public class Loan
         this.lendersBelongToLoan.add(newLenderDetails);
         this.loanPercentageTakenByLenders += newLenderDetails.lendersPartOfLoanInPercent;
         this.loanAmountFinancedByLenders += newLenderDetails.lendersAmount;
+    }
+
+    private void addExistLender(Engine.Customer newLender, double lendersPartOfLoanAmount){
+
+
     }
 
 
@@ -243,8 +251,6 @@ public class Loan
     private void updateLoanToActive(int yaz){
         this.paymentsData.addYazToAllPayments(yaz);
         makeMoneyTransferBetweenLoanAccountAndBorrower();
-
-
     }
 
     private void makeMoneyTransferBetweenLoanAccountAndBorrower(){

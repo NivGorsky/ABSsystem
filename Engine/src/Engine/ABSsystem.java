@@ -1,17 +1,18 @@
 package Engine;
 
 import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
+import java.util.function.Consumer;
 
-import Engine.LoanPlacing.LoanPlacingConigurations.loanPlacingConfigurationsHandler;
+import Engine.LoanPlacing.loanPlacingAsTask.LoanPlacingAsTask;
 import Exceptions.*;
-import Engine.LoanPlacing.LoanPlacing;
+import Engine.LoanPlacing.regularLoanPlacing.LoanPlacing;
 import Engine.TimeLineMoving.MoveTimeLine;
 import DTO.*;
 import Engine.XML_Handler.*;
 import Exceptions.XMLFileException;
+import customer.scramble.ScrambleController;
+import javafx.concurrent.Task;
 
 public class ABSsystem implements MainSystem, SystemService
 {
@@ -22,6 +23,9 @@ public class ABSsystem implements MainSystem, SystemService
     private Map<Integer, Loan> loanId2Loan;
     private Map<Customer, List<Notification>> customer2Notifications;
     private ArrayList<ArrayList<String>> scrambleQueryFields;
+    private ScrambleController scrambleController;
+    private Integer numberOfLoansAssignedInSinglePlacingAlgorithmRun;
+    private Task<Boolean> currentRunningTask;
 
     public ABSsystem() {
 
@@ -32,6 +36,7 @@ public class ABSsystem implements MainSystem, SystemService
         status2loan = new TreeMap<>();
         customer2Notifications = new TreeMap<Customer, List<Notification>>();
 //        initLoanPlacingQueryFields();
+        numberOfLoansAssignedInSinglePlacingAlgorithmRun = -1;
     }
 
     @Override
@@ -372,6 +377,11 @@ public class ABSsystem implements MainSystem, SystemService
         return loansByCustomerAsBorrower;
     }
 
+    @Override
+    public void setScrambleController(ScrambleController controller){
+        this.scrambleController = controller;
+    }
+
     private boolean isCustomerIsLenderInLoan(Loan loan, String customerName){
         boolean result = false;
         LinkedList<Loan.LenderDetails> lendersDetails = loan.getLendersDetails();
@@ -384,6 +394,38 @@ public class ABSsystem implements MainSystem, SystemService
         }
 
         return result;
+    }
+
+    @Override
+    public void assignLoansToLenderWithTask(LoanPlacingDTO loanPlacingDTO, Consumer<Integer> numberOfLoansAssigned){
+        //Consumers wiring
+        Consumer<Integer> numberOfLoansAssignedToLenderConsumer = number -> {
+            this.numberOfLoansAssignedInSinglePlacingAlgorithmRun = number;
+            numberOfLoansAssigned.accept(number);
+        };
+
+        currentRunningTask = new LoanPlacingAsTask(numberOfLoansAssignedToLenderConsumer, loanPlacingDTO, this.loans, this, getCurrYaz());
+        scrambleController.bindTaskToUIComponents(currentRunningTask);
+        new Thread(currentRunningTask).start();
+    }
+
+
+
+
+
+
+//    public void collectMetadata(Consumer<Long> totalWordsDelegate, Consumer<Long> totalLinesDelegate, Runnable onFinish) {
+//
+//        Consumer<Long> totalWordsConsumer = tw -> {
+//            this.totalWords = tw;
+//            totalWordsDelegate.accept(tw);
+//        };
+//
+//        currentRunningTask = new CollectMetadataTask(fileName.get(), totalWordsConsumer, totalLinesDelegate);
+//
+//        controller.bindTaskToUIComponents(currentRunningTask, onFinish);
+//
+//        new Thread(currentRunningTask).start();
     }
 
 
@@ -403,4 +445,4 @@ public class ABSsystem implements MainSystem, SystemService
 
 
 
-}
+

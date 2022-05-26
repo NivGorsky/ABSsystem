@@ -4,6 +4,9 @@ import DTO.*;
 import Exceptions.XMLFileException;
 import javax.xml.bind.JAXBException;
 import java.util.ArrayList;
+import java.util.function.Consumer;
+
+import customer.scramble.ScrambleController;
 
 public interface MainSystem {
 
@@ -24,6 +27,10 @@ public interface MainSystem {
     public ArrayList<LoanDTO> getLoansByCustomerNameAsBorrower(String customerName);
     public ArrayList<LoanDTO> getLoansByCustomerNameAsLender(String customerName);
 //    public ScrambleQueryFieldsDTO getScrambleQueryFields();
+    public void setScrambleController(ScrambleController controller);
+    public void assignLoansToLenderWithTask(LoanPlacingDTO loanPlacingDTO, Consumer<Integer> numberOfLoansAssigned);
+
+
 
 
 }

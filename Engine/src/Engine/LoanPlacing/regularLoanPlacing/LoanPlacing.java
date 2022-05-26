@@ -1,4 +1,4 @@
-package Engine.LoanPlacing;
+package Engine.LoanPlacing.regularLoanPlacing;
 import DTO.*;
 import Engine.Account;
 import Engine.Customer;
@@ -13,8 +13,9 @@ public abstract class LoanPlacing {
 
     private static int currentYaz;
 
-    public static void placeToLoans(LoanPlacingDTO loanPlacingDto, LinkedList<Engine.Loan> loans, SystemService absService, int currentYaz) throws Exception
+    public static void placeToLoans(LoanPlacingDTO loanPlacingDto, LinkedList<Engine.Loan> loans, SystemService absService, int currentYazReceived) throws Exception
     {
+        currentYaz = currentYazReceived;
         LinkedList<Engine.Loan> relevantLoans = getRelevantLoans(loanPlacingDto, loans, absService);
         LinkedList<Loan> loansMadePaymentsTo;
 

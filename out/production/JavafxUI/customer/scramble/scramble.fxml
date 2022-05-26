@@ -109,7 +109,14 @@
                         </TableView>
                      </children>
                   </GridPane>
-                  <Button fx:id="findLoansButton" mnemonicParsing="false" onAction="#findLoansButtonClicked" prefHeight="60.0" prefWidth="863.0" text="Find loans" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" GridPane.rowSpan="2" />
+                  <BorderPane GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" GridPane.rowSpan="2">
+                     <center>
+                        <Button fx:id="findLoansButton" mnemonicParsing="false" onAction="#findLoansButtonClicked" prefHeight="56.0" prefWidth="475.0" text="Find loans" />
+                     </center>
+                     <top>
+                        <Label fx:id="progressBarMessageLabel" prefHeight="33.0" prefWidth="61.0" text="Label" BorderPane.alignment="CENTER" />
+                     </top>
+                  </BorderPane>
                   <ProgressBar fx:id="findLoansProgressionBar" prefHeight="20.0" prefWidth="868.0" progress="0.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" />
                </children>
             </GridPane>

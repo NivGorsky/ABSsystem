@@ -3,6 +3,7 @@ package mainScene;
 import Engine.MainSystem;
 import adminScene.AdminSceneController;
 import customer.CustomerController;
+import customer.scramble.ScrambleController;
 import header.HeaderController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,7 +25,6 @@ public class MainSceneController {
 
     @FXML private GridPane header;
     @FXML private HeaderController headerController;
-
     @FXML private ScrollPane adminScene;
     @FXML private AdminSceneController adminSceneController;
     @FXML private TabPane customerPane;

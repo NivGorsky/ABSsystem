@@ -5,20 +5,17 @@ import Engine.MainSystem;
 import customer.CustomerController;
 import customer.scramble.scrambleFields.simpleField.SimpleField;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import mutualInterfaces.ParentController;
-
 import java.util.regex.*;
 import java.util.*;
 
@@ -29,6 +26,7 @@ public class ScrambleController {
     private ArrayList<SimpleField> scrambleQueryFields;
     private BooleanProperty isScrambleFormValid;
     private Map<Node, BooleanProperty> formFields2TheirValidity;
+    private IntegerProperty numberOfLoansPlaced;
 
     public class LoanCategoryForTable {
         private final SimpleStringProperty category;
@@ -47,6 +45,7 @@ public class ScrambleController {
         isScrambleFormValid = new SimpleBooleanProperty();
         loanCategoriesViewTable = new TableView<>();
         formFields2TheirValidity = new HashMap<Node, BooleanProperty>();
+        numberOfLoansPlaced = new SimpleIntegerProperty(0);
     }
 
     public void setParentController(ParentController parentController){
@@ -105,6 +104,9 @@ public class ScrambleController {
     private ProgressBar findLoansProgressionBar;
 
     @FXML
+    private Label progressBarMessageLabel;
+
+    @FXML
     void categoriesRadioButtonClicked(ActionEvent event) {
 
     }
@@ -147,7 +149,8 @@ public class ScrambleController {
             if (parentController instanceof CustomerController){
                 customerName = ((CustomerController)parentController).getCustomerNameProperty().getValue();
                 LoanPlacingDTO loanPlacingDTO = new LoanPlacingDTO(amountToInvest, categoriesWillingToInvestIn, minimumInterestPerYaz, minimumYazForLoan, maximumPercentOwnership, maximumOpenLoansForBorrower, customerName);
-                parentController.getModel().assignLoansToLender(loanPlacingDTO);
+                //parentController.getModel().assignLoansToLender(loanPlacingDTO);
+                parentController.getModel().assignLoansToLenderWithTask(loanPlacingDTO, numberOfLoansPlaced::set);
             }
 
             else{
@@ -369,6 +372,7 @@ public class ScrambleController {
 
     public void onShow(){
         getLoanCategoriesToTable();
+        parentController.getModel().setScrambleController(this);
     }
 
     private void getLoanCategoriesToTable(){
@@ -382,6 +386,58 @@ public class ScrambleController {
 
         loanCategoriesViewTable.setItems(observableCategories);
     }
+
+    public void bindTaskToUIComponents(Task<Boolean> task){
+        progressBarMessageLabel.textProperty().bind(task.messageProperty());
+        findLoansProgressionBar.progressProperty().bind(task.progressProperty());
+        // task percent label
+       findLoansButton.textProperty().bind(
+                Bindings.concat(
+                        Bindings.format(
+                                "%.0f",
+                                Bindings.multiply(
+                                        task.progressProperty(),
+                                        100)),
+                        " %"));
+
+//        // task message
+//        taskMessageLabel.textProperty().bind(aTask.messageProperty());
+//
+//        // task progress bar
+//        taskProgressBar.progressProperty().bind(aTask.progressProperty());
+//
+//        // task percent label
+//        progressPercentLabel.textProperty().bind(
+//                Bindings.concat(
+//                        Bindings.format(
+//                                "%.0f",
+//                                Bindings.multiply(
+//                                        aTask.progressProperty(),
+//                                        100)),
+//                        " %"));
+//
+//        // task cleanup upon finish
+        task.valueProperty().addListener((observable, oldValue, newValue) -> {
+            onTaskFinished();
+        });
+    }
+
+    public void onTaskFinished(){
+        progressBarMessageLabel.textProperty().unbind();
+        progressBarMessageLabel.textProperty().set("");
+        findLoansProgressionBar.progressProperty().unbind();
+        findLoansProgressionBar.progressProperty().setValue(0);
+        findLoansButton.textProperty().unbind();
+        findLoansButton.textProperty().set("Find loans");
+
+    }
+
+//    public void onTaskFinished(Optional<Runnable> onFinish) {
+//        this.taskMessageLabel.textProperty().unbind();
+//        this.progressPercentLabel.textProperty().unbind();
+//        this.taskProgressBar.progressProperty().unbind();
+//        onFinish.ifPresent(Runnable::run);
+//    }
 
 
     //create fields dynamically methods ->
