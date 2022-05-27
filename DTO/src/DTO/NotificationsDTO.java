@@ -11,11 +11,10 @@ public class NotificationsDTO {
         public String amount;
         public String details;
 
-        public NotificationDTO(String yaz, String loanName, String amount, String details){
+        public NotificationDTO(String yaz, String loanName, String amount){
             this.loanName = loanName;
             this.yaz = yaz;
             this.amount = amount;
-            this.details = details;
         }
     }
 

@@ -343,7 +343,7 @@ public class ABSsystem implements MainSystem, SystemService
 
         for (Notification n : customerNotifications)
         {
-           NotificationsDTO.NotificationDTO singleNotificationDTO = newNotificationsDTO.new NotificationDTO(n.yaz, n.loanName, n.amount, n.details);
+           NotificationsDTO.NotificationDTO singleNotificationDTO = newNotificationsDTO.new NotificationDTO(n.yaz, n.loanName, n.amount);
            newNotificationsDTO.notifications.add(singleNotificationDTO);
         }
 

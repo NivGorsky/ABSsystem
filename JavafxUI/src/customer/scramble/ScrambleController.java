@@ -113,7 +113,13 @@ public class ScrambleController {
 
     @FXML
     void findLoansButtonClicked(ActionEvent event) {
-        placeToLoans();
+        if(isAmountForScrambleValid()){
+            placeToLoans();
+        }
+
+        else{
+            parentController.createExceptionDialog(new Exception("Insufficient funds for this scramble request"));
+        }
     }
 
     @FXML
@@ -134,6 +140,13 @@ public class ScrambleController {
         bindFieldsToTheirValidity();
         bindIsScrambleFormValidPropertyToAllFieldsProperties();
         bindScrambleButtonToIsFormValid();
+    }
+
+    private boolean isAmountForScrambleValid(){
+        double amountEnteredToTextField = Double.parseDouble(amountTextField.getText());
+        String customerName = ((CustomerController)parentController).getCustomerNameProperty().getValue();
+
+        return parentController.getModel().getCustomerDTO(customerName).getBalance() >= amountEnteredToTextField;
     }
 
     private void placeToLoans(){
@@ -200,7 +213,7 @@ public class ScrambleController {
         }
 
         else{
-            convertAllTableDataToStrings(categoriesAsStrings);
+            convertOnlyChosenTableDataToStrings(categoriesAsStrings);
         }
 
         return categoriesAsStrings;
@@ -429,69 +442,6 @@ public class ScrambleController {
         findLoansProgressionBar.progressProperty().setValue(0);
         findLoansButton.textProperty().unbind();
         findLoansButton.textProperty().set("Find loans");
-
+        amountTextField.textProperty().set("");
     }
-
-//    public void onTaskFinished(Optional<Runnable> onFinish) {
-//        this.taskMessageLabel.textProperty().unbind();
-//        this.progressPercentLabel.textProperty().unbind();
-//        this.taskProgressBar.progressProperty().unbind();
-//        onFinish.ifPresent(Runnable::run);
-//    }
-
-
-    //create fields dynamically methods ->
-//    private void createScrambleFields(){
-//        ScrambleQueryFieldsDTO fieldsDTO = this.model.getScrambleQueryFields();
-//        int fieldIndex = 1;
-//
-//        for (ArrayList<String> scrambleQueryField: fieldsDTO.scrambleQueryFields){
-//            createField(scrambleQueryField, fieldIndex, fieldsDTO);
-//            ++fieldIndex;
-//        }
-//    }
-
-//    private void createField(ArrayList<String> fieldConfigurations, int rowIndex, ScrambleQueryFieldsDTO fieldsDTO){
-//        int colIndexOfSimpleField = 1;
-//        String typeOfField = fieldConfigurations.get(2);
-//
-//        switch (typeOfField){
-//            case("field"):
-//                addSimpleField(rowIndex, colIndexOfSimpleField, fieldConfigurations);
-//                break;
-//
-//            case("table"):
-//                addTableField(fieldConfigurations, fieldsDTO);
-//                break;
-//        }
-//    }
-
-    private void addSimpleField(int rowIndex, int colIndex, ArrayList<String> fieldConfigurations){
-        SimpleField newScrambleSimpleQueryField = new SimpleField(fieldConfigurations.get(0), fieldConfigurations.get(1), fieldConfigurations.get(2));
-        scrambleQueryFieldsGrid.addRow(rowIndex);
-        scrambleQueryFieldsGrid.add(newScrambleSimpleQueryField.radioButton, colIndex, rowIndex);
-        scrambleQueryFieldsGrid.add(newScrambleSimpleQueryField.textField, colIndex + 2, rowIndex);
-    }
-
-//    private void addTableField(ArrayList<String> fieldConfigurations, ScrambleQueryFieldsDTO fieldsDTO){
-//        // need to put all the categoris that came from the DTO in the table....
-//
-//        TableField newTableField = new TableField(fieldConfigurations.get(0), fieldConfigurations.get(1), fieldConfigurations.get(2));
-//        ArrayList<Category> newCategoryList = new ArrayList<>();
-//        for (Lo:
-//             ) {
-//
-//        }
-////        TableColumn<AccountMovementDTO, Integer> yazCol = new TableColumn<AccountMovementDTO, Integer>("Yaz");
-////        yazCol.setCellValueFactory(new PropertyValueFactory<AccountMovementDTO, Integer>("yaz"));
-////        accountTransactionsTableView.getColumns().add(yazCol);
-//
-//        TableColumn<TableCategory, String> categoryCol = new TableColumn<TableCategory, String>("Category");
-//        categoryCol.setCellValueFactory(new PropertyValueFactory<TableCategory,String>("category"));
-//        newTableField.tableView.getColumns().add(categoryCol);
-//        newTableField.tableView.setItems();
-//
-//
-//
-//    }
 }

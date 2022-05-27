@@ -9,13 +9,13 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import loansTable.LoansTableComponentController;
 import mutualInterfaces.ParentController;
-
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public class PaymentController implements ParentController {
     private CustomerController parentController;
     private MainSystem model;
     private StringProperty customerNameProperty;
-    private final ListProperty<NotificationsDTO.NotificationDTO> notifications;
+    private final ObservableList<NotificationsDTO.NotificationDTO> notifications;
 
     @FXML ScrollPane borrowerLoansTableComponent;
     @FXML LoansTableComponentController borrowerLoansTableComponentController;
@@ -76,8 +76,7 @@ public class PaymentController implements ParentController {
     }
 
     public PaymentController(){
-
-        notifications = new SimpleListProperty<NotificationsDTO.NotificationDTO>();
+        notifications = FXCollections.observableArrayList();
         customerNameProperty = new SimpleStringProperty();
     }
     public StringProperty getCustomerNameProperty(){return this.customerNameProperty;}
@@ -93,11 +92,12 @@ public class PaymentController implements ParentController {
     }
 
     private void wireNotificationsListeners(){
-        notifications.addListener(((observable, oldValue, newValue) -> {
+        notifications.addListener((ListChangeListener<Object>) c -> {
             notificationsBoard.getPanes().clear();
             List<TitledPane> notificationsPanes = createNotificationsPanes();
             notificationsBoard.getPanes().addAll(notificationsPanes);
-        }));
+            notificationsBoard.setExpandedPane(notificationsBoard.getPanes().get(0));
+        });
     }
 
     private List<TitledPane> createNotificationsPanes(){
@@ -114,20 +114,21 @@ public class PaymentController implements ParentController {
 
     private Label createNotificationTextLabel(NotificationsDTO.NotificationDTO notification){
         StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Yaz to make payment: ");
         stringBuilder.append(notification.yaz);
         stringBuilder.append('\n');
+        stringBuilder.append("Loan name: ");
         stringBuilder.append(notification.loanName);
         stringBuilder.append('\n');
+        stringBuilder.append("Amount to pay: ");
         stringBuilder.append(notification.amount);
         stringBuilder.append('\n');
-        stringBuilder.append(notification.details);
 
         return new Label(stringBuilder.toString());
     }
 
     public void updateNotifications(){
-        NotificationsDTO notificationsDTO = new NotificationsDTO();
-        notificationsDTO = model.getNotificationsDTO(customerNameProperty.getValue());
+        NotificationsDTO notificationsDTO = model.getNotificationsDTO(customerNameProperty.getValue());
         notifications.addAll(notificationsDTO.notifications);
     }
 
