@@ -82,7 +82,6 @@ public abstract class MoveTimeLine {
                 case PENDING:
 //                    throw new Exception("In function IterateThroughSortedLoansAndMakePayments, loan should not be relevant, its PENDING");
             }
-
         }
     }
 
@@ -197,7 +196,6 @@ public abstract class MoveTimeLine {
                 case PENDING:
 //                    throw new Exception("In function IterateThroughSortedLoansAndMakePayments, loan should not be relevant, its PENDING");
             }
-
         }
     }
 
