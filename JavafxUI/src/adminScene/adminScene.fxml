@@ -5,62 +5,58 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<ScrollPane fx:id="adminScene" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminScene.AdminSceneController">
-  <content>
-    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="700.0" prefWidth="1200.0">
-         <children>
-            <BorderPane layoutX="1.0" prefHeight="700.0" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <center>
-                  <GridPane minHeight="50.0" prefHeight="700.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="600.0" prefWidth="600.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" prefWidth="600.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints maxHeight="97.66668701171875" minHeight="20.0" prefHeight="30.0" vgrow="NEVER" />
-                      <RowConstraints fx:id="LoansRow" maxHeight="25.0" minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
-                      <RowConstraints fx:id="loansTableRow" maxHeight="350.0" minHeight="10.0" prefHeight="200.0" vgrow="SOMETIMES" />
-                        <RowConstraints fx:id="customerInfoRow" maxHeight="30.0" minHeight="7.333343505859375" prefHeight="20.0" vgrow="SOMETIMES" />
-                        <RowConstraints fx:id="customersInfoTableRow" maxHeight="350.0" minHeight="10.0" prefHeight="170.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                     <children>
-                        <Button fx:id="increaseYazButton" mnemonicParsing="false" onAction="#increaseYazButtonClicked" prefWidth="120.0" text="Increase YAZ" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                           <GridPane.margin>
-                              <Insets bottom="6.0" top="6.0" />
-                           </GridPane.margin></Button>
-                        <Button fx:id="loadFileButton" mnemonicParsing="false" onAction="#loadFileButtonClicked" prefWidth="120.0" text="Load File" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                           <GridPane.margin>
-                              <Insets bottom="6.0" top="6.0" />
-                           </GridPane.margin>
-                        </Button>
-                        <Label fx:id="loansLabelComponent" prefHeight="20.0" prefWidth="52.0" text="Loans:" GridPane.rowIndex="1" GridPane.valignment="TOP">
-                           <GridPane.margin>
-                              <Insets left="5.0" top="5.0" />
-                           </GridPane.margin>
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
-                        <Label fx:id="customersInfoLabel" prefHeight="20.0" prefWidth="160.0" text="Customers Information:" GridPane.rowIndex="3" GridPane.valignment="TOP">
-                            <font>
-                              <Font size="14.0" />
-                           </font>
-                           <GridPane.margin>
-                              <Insets left="5.0" top="5.0" />
-                           </GridPane.margin>
-                        </Label>
-                        <fx:include fx:id="loansTableComponent" source="../loansTable/loansTableComponent.fxml" GridPane.rowIndex="2" />
-                        <fx:include fx:id="customersInfoTable" source="../customersInfoTable/customersInfoTable.fxml" GridPane.rowIndex="4" />
-                     </children>
+<ScrollPane fx:id="adminScene" fitToHeight="true" fitToWidth="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1500.0" styleClass="root" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminScene.AdminSceneController">
+    <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="700.0" prefWidth="1500.0" styleClass="root">
+            <children>
+                  <GridPane layoutX="-1.0" minHeight="50.0" prefHeight="700.0" prefWidth="1525.0" styleClass="root">
+                      <columnConstraints>
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="600.0" prefWidth="600.0" />
+                          <ColumnConstraints hgrow="SOMETIMES" prefWidth="600.0" />
+                      </columnConstraints>
+                      <rowConstraints>
+                          <RowConstraints maxHeight="97.66668701171875" minHeight="20.0" prefHeight="50.0" vgrow="NEVER" />
+                          <RowConstraints fx:id="LoansRow" maxHeight="61.333343505859375" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+                          <RowConstraints fx:id="loansTableRow" maxHeight="350.0" minHeight="10.0" prefHeight="275.0" vgrow="SOMETIMES" />
+                          <RowConstraints fx:id="customerInfoRow" maxHeight="92.6666259765625" minHeight="0.0" prefHeight="40.0" vgrow="SOMETIMES" />
+                          <RowConstraints fx:id="customersInfoTableRow" maxHeight="391.0" minHeight="10.0" prefHeight="285.0" vgrow="SOMETIMES" />
+                      </rowConstraints>
+                      <children>
+                          <Button fx:id="increaseYazButton" mnemonicParsing="false" onAction="#increaseYazButtonClicked" prefHeight="14.0" prefWidth="112.0" text="Increase YAZ" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                              <GridPane.margin>
+                                  <Insets bottom="6.0" top="6.0" />
+                              </GridPane.margin>
+                  </Button>
+                          <Button fx:id="loadFileButton" mnemonicParsing="false" onAction="#loadFileButtonClicked" prefWidth="120.0" text="Load File" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                              <GridPane.margin>
+                                  <Insets bottom="6.0" top="6.0" />
+                              </GridPane.margin>
+                          </Button>
+                          <Label fx:id="loansLabelComponent" prefHeight="20.0" prefWidth="52.0" text="Loans:" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                              <GridPane.margin>
+                                  <Insets left="5.0" top="5.0" />
+                              </GridPane.margin>
+                              <font>
+                                  <Font size="14.0" />
+                              </font>
+                          </Label>
+                          <Label fx:id="customersInfoLabel" prefHeight="45.0" prefWidth="160.0" text="Customers Information:" GridPane.rowIndex="3" GridPane.valignment="TOP">
+                              <font>
+                                  <Font size="14.0" />
+                              </font>
+                              <GridPane.margin>
+                                  <Insets left="5.0" top="5.0" />
+                              </GridPane.margin>
+                          </Label>
+                          <fx:include fx:id="loansTableComponent" source="../loansTable/loansTableComponent.fxml" GridPane.rowIndex="2" />
+                          <fx:include fx:id="customersInfoTable" prefWidth="1500.0" source="../customersInfoTable/customersInfoTable.fxml" GridPane.rowIndex="4" />
+                      </children>
                   </GridPane>
-               </center>
-            </BorderPane>
-         </children></AnchorPane>
-  </content>
+            </children></AnchorPane>
+    </content>
 </ScrollPane>

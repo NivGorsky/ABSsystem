@@ -10,6 +10,7 @@ import javafx.scene.control.TitledPane;
 import loansTable.LoansTableComponentController;
 import loansTable.loansAdditionalInfo.LendersTableViewController;
 import loansTable.loansAdditionalInfo.PaidPaymentsTableViewController;
+import mutualInterfaces.ParentController;
 
 public class FinishedInfoController {
 
@@ -28,9 +29,9 @@ public class FinishedInfoController {
     private int startYAZ;
     private int endYAZ;
 
-    private LoansTableComponentController parentController;
+    private ParentController parentController;
 
-    public void setParentController(LoansTableComponentController parentController)
+    public void setParentController(ParentController parentController)
     {
         this.parentController = parentController;
     }

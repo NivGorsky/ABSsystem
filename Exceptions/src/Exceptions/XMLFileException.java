@@ -9,7 +9,8 @@ public class XMLFileException extends Exception{
         this.ExceptionMsg = msg;
     }
 
-    public String getExceptionMsg() {
+    @Override
+    public String getMessage() {
         return ExceptionMsg;
     }
 }

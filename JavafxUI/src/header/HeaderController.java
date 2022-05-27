@@ -1,24 +1,21 @@
 package header;
 
-import DTO.CustomerDTO;
 import Engine.MainSystem;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import mainScene.MainSceneController;
 
-import java.awt.event.ActionEvent;
 import java.util.ArrayList;
-import java.util.EventListener;
 
 public class HeaderController {
 
     @FXML private ComboBox<String> viewByCB;
+    @FXML private ComboBox<String> displayModeCB;
     @FXML private Label filePathLabel;
     @FXML private Label currentYazLabel;
 
@@ -27,9 +24,9 @@ public class HeaderController {
     private SimpleBooleanProperty isFileSelected;
     private SimpleStringProperty selectedFilePath;
     private SimpleIntegerProperty currentYAZ;
-    private MainSystem model;
 
-    ObservableList<String> options =  FXCollections.observableArrayList("Admin");
+    ObservableList<String> viewByOptions =  FXCollections.observableArrayList("Admin");
+    ObservableList<String> displayModeOptions =  FXCollections.observableArrayList("Light Mode", "Dark Mode", "MTA Mode", "Barbi Mode");
 
     public HeaderController()
     {
@@ -44,7 +41,8 @@ public class HeaderController {
 
     @FXML public void initialize()
     {
-       viewByCB.setItems(options);
+       displayModeCB.setItems(displayModeOptions);
+       viewByCB.setItems(viewByOptions);
        viewByCB.getSelectionModel().selectFirst(); //always start as admin and disable option to customer until file loaded
        filePathLabel.textProperty().bind(Bindings.concat("File Path: ", selectedFilePath));
        currentYazLabel.textProperty().bind(Bindings.concat("Current YAZ: ", currentYAZ));
@@ -54,9 +52,17 @@ public class HeaderController {
        });
        currentYazLabel.disableProperty().bind(isFileSelected.not());
        isFileSelected.addListener(((observable, oldValue, newValue) -> {
-           ArrayList<String> customerNames = model.getCustomersNames();
-           options.addAll(FXCollections.observableArrayList(customerNames));
-           viewByCB.setItems(options);;}));
+           ArrayList<String> customerNames = parentController.getCustomers();
+           viewByOptions.addAll(FXCollections.observableArrayList(customerNames));
+           viewByCB.setItems(viewByOptions);}));
+
+       displayModeCB.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+           parentController.switchStyleSheet(displayModeCB.getSelectionModel().getSelectedItem());
+       });
+    }
+
+    public SimpleBooleanProperty getIsFileSelectedProperty() {
+        return isFileSelected;
     }
 
     public void setParentController(MainSceneController parentController)
@@ -66,5 +72,6 @@ public class HeaderController {
     public void setSelectedFilePathProperty(String path) { selectedFilePath.set(path); }
     public void setCurrentYAZProperty(int newCurrentYaz) { currentYAZ.set(newCurrentYaz); }
     public void setIsFileSelectedProperty(Boolean isSelected) { isFileSelected.set(isSelected);}
-    public void setModel(MainSystem model){this.model = model;}
+
+
 }

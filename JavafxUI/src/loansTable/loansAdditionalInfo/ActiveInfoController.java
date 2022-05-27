@@ -11,6 +11,7 @@ package loansTable.loansAdditionalInfo;
         import javafx.scene.control.TableView;
         import javafx.scene.control.TitledPane;
         import loansTable.LoansTableComponentController;
+        import mutualInterfaces.ParentController;
 
 public class ActiveInfoController {
 
@@ -39,9 +40,9 @@ public class ActiveInfoController {
     private double paidInterest;
     private double remainedInterest;
 
-    private LoansTableComponentController parentController;
+    private ParentController parentController;
 
-    public void setParentController(LoansTableComponentController parentController)
+    public void setParentController(ParentController parentController)
     {
         this.parentController = parentController;
     }

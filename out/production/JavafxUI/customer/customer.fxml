@@ -3,19 +3,19 @@
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 
-<TabPane fx:id="tabPane" prefHeight="600.0" prefWidth="950.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="customer.CustomerController">
+<TabPane fx:id="tabPane" prefHeight="700.0" prefWidth="1500.0" styleClass="root" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="customer.CustomerController">
  <tabs>
-   <Tab fx:id="informationTab" text="Information">
+   <Tab fx:id="informationTab" styleClass="root" text="Information">
          <content>
             <fx:include fx:id="information" source="information/Information.fxml" />
          </content>
       </Tab>
-   <Tab fx:id="scrambleTab" text="Scramble">
+   <Tab fx:id="scrambleTab" styleClass="root" text="Scramble">
         <content>
            <fx:include fx:id="scramble" source="scramble/Scramble.fxml" />
         </content>
       </Tab>
-     <Tab fx:id="paymentTab" text="Payment">
+     <Tab fx:id="paymentTab" styleClass="root" text="Payment">
         <content>
            <fx:include fx:id="payment" source="payment/Payment.fxml" />
         </content>
