@@ -16,7 +16,6 @@ public class MoveTimeLine {
         currentYaz = timeLine.getCurrentYaz();
         operationsToPerformAfterForwardingTheYaz(absSystem);
     }
-
     private static void operationsToPerformBeforeForwardingTheYaz(SystemService absSystem){
         Map<String , Customer> allCustomers = absSystem.getAllCustomers();
         LinkedList<Loan> allRelevantLoansForCurrentBorrower = new LinkedList<Loan>();
@@ -163,7 +162,7 @@ public class MoveTimeLine {
     private static void createNewNotificationForBorrower(Loan loan, Customer borrower, SystemService absSystem){
         Notification newNotification = new Notification();
         LoanPaymentsData.Payment payment = loan.peekPaymentForSpecificYaz(currentYaz);
-        
+
         if(payment!= null){
             newNotification.amount = Double.toString(payment.getBothPartsOfAmountToPay());
             newNotification.loanName = loan.getLoanName();

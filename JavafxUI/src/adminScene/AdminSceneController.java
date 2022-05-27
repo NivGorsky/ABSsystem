@@ -49,6 +49,7 @@ public class AdminSceneController implements ParentController {
         parentController.getModel().moveTimeLine();
         int yaz = parentController.getModel().getCurrYaz();
         parentController.getHeaderController().setCurrentYAZProperty(yaz);
+        this.onShow();
     }
 
     @FXML public void loadFileButtonClicked()
