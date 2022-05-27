@@ -105,4 +105,8 @@ public class CustomerController implements ParentController {
     public MainSystem getModel() {
         return parentController.getModel();
     }
+    @Override
+    public void createExceptionDialog(Exception ex) {
+        parentController.createExceptionDialog(ex);
+    }
 }

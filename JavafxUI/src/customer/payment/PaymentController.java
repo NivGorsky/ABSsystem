@@ -66,6 +66,11 @@ public class PaymentController implements ParentController {
     }
 
     @Override
+    public void createExceptionDialog(Exception ex) {
+        parentController.createExceptionDialog(ex);
+    }
+
+    @Override
     public MainSystem getModel(){
         return model;
     }

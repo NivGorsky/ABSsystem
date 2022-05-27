@@ -3,6 +3,7 @@ import Engine.Customer;
 import Engine.MainSystem;
 import Exceptions.XMLFileException;
 import customersInfoTable.CustomersInfoTableController;
+import exceptionDialog.ExceptionDialogCreator;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.ScrollPane;
 import javafx.fxml.FXML;
@@ -63,7 +64,7 @@ public class AdminSceneController implements ParentController {
             customersInfoTableController.loadCustomersInfo();
         }
         catch (XMLFileException | JAXBException ex) {
-            parentController.getExceptionDialogCreator().createExceptionDialog(ex);
+            ExceptionDialogCreator.createExceptionDialog(ex);
         }
     }
 
@@ -72,6 +73,12 @@ public class AdminSceneController implements ParentController {
         this.parentController = parentController;
     }
     public MainSystem getModel() { return parentController.getModel(); }
+
+    @Override
+    public void createExceptionDialog(Exception ex) {
+        parentController.createExceptionDialog(ex);
+    }
+
     public void onShow(){
         //need to add methods for on show for the customer information
 

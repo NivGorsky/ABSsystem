@@ -73,6 +73,11 @@ public class LoansTableComponentController implements ParentController {
         return parentController.getModel();
     }
 
+    @Override
+    public void createExceptionDialog(Exception ex) {
+        parentController.createExceptionDialog(ex);
+    }
+
     public void setParentController(ParentController adminSceneController) {
         parentController = adminSceneController;
     }

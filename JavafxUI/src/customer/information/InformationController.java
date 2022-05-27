@@ -36,6 +36,12 @@ public class InformationController implements ParentController {
     @Override
     public MainSystem getModel(){return model;}
 
+    @Override
+    public void createExceptionDialog(Exception ex) {
+        parentController.createExceptionDialog(ex);
+    }
+
+
 
     @FXML private ScrollPane accountTransactions;
     @FXML private accountTransactionsController accountTransactionsController;
@@ -78,14 +84,14 @@ public class InformationController implements ParentController {
         }
 
         catch (Exception e){
-            //present an error window to the user
+
         }
 
         //make the actual withdraw
     }
 
     @FXML
-    public void initialize(){
+    public void initialize() {
         try {
             if (accountTransactionsController != null) {
                 accountTransactionsController.setParentController(this);

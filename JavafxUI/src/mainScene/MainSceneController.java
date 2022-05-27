@@ -1,10 +1,9 @@
 package mainScene;
 import Engine.MainSystem;
+import exceptionDialog.ExceptionDialogCreator;
 import adminScene.AdminSceneController;
 import customer.CustomerController;
-import customer.scramble.ScrambleController;
 import header.HeaderController;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Dialog;
@@ -32,12 +31,6 @@ public class MainSceneController {
 
     private MainSystem model;
     private Stage primaryStage;
-    private ExceptionDialogCreator exceptionDialogCreator;
-
-    public MainSceneController()
-    {
-        exceptionDialogCreator = new ExceptionDialogCreator();
-    }
 
     @FXML public void initialize()
     {
@@ -67,12 +60,16 @@ public class MainSceneController {
     }
     public Stage getPrimaryStage() { return primaryStage; }
     public MainSystem getModel() { return model; }
-    public ExceptionDialogCreator getExceptionDialogCreator() { return exceptionDialogCreator;}
 
     public void setFileInfo(String path)
     {
         headerController.setSelectedFilePathProperty(path);
         headerController.setIsFileSelectedProperty(true);
+    }
+
+    public void createExceptionDialog(Exception ex)
+    {
+        ExceptionDialogCreator.createExceptionDialog(ex);
     }
 
     private void loadCustomerComponent(){
@@ -86,7 +83,7 @@ public class MainSceneController {
         }
 
         catch (Exception ex) {
-            exceptionDialogCreator.createExceptionDialog(ex);
+            ExceptionDialogCreator.createExceptionDialog(ex);
         }
     }
 
