@@ -10,8 +10,14 @@ public abstract class MoveTimeLine {
 
     public static void moveTimeLineInOneYaz(SystemService absSystem, Timeline timeLine)
     {
-        moveYaz(absSystem);
         currentYaz = timeLine.getCurrentYaz();
+
+        operationsToPerformBeforeForwardingTheYaz(absSystem, timeLine);
+        moveYaz(absSystem);
+        operationsToPerformAfterForwardingTheYaz(absSystem, timeLine);
+    }
+
+    private static void operationsToPerformAfterForwardingTheYaz(SystemService absSystem, Timeline timeLine){
         Map<String , Customer> allCustomers = absSystem.getAllCustomers();
         LinkedList<Loan> allRelevantLoansForCurrentBorrower = new LinkedList<Loan>();
         Customer currentCustomer = null;
@@ -30,6 +36,58 @@ public abstract class MoveTimeLine {
 //            allLoansAsBorrower.clear();
             allRelevantLoansForCurrentBorrower.clear();
         }
+    }
+
+    private static void operationsToPerformBeforeForwardingTheYaz(SystemService absSystem, Timeline timeLine){
+        Map<String , Customer> allCustomers = absSystem.getAllCustomers();
+        LinkedList<Loan> allRelevantLoansForCurrentBorrower = new LinkedList<Loan>();
+        ArrayList<Loan> allLoansAsBorrower = null;
+
+        for (Customer currentCustomer:allCustomers.values()){
+            allLoansAsBorrower = currentCustomer.getLoansAsBorrower();
+
+            if(allLoansAsBorrower.isEmpty()){
+                continue;
+            }
+            allRelevantLoansForCurrentBorrower = getActiveAndExpiredLoansContainsPaymentsForCurrentYaz(allLoansAsBorrower, absSystem); //active loans that contain payment for curreny yaz
+            Collections.sort(allRelevantLoansForCurrentBorrower, new ForwardingYazLoanComparator());
+            IterateThroughSortedLoansAndChangedUnpayedActiveLoansToInRisk(allRelevantLoansForCurrentBorrower, currentCustomer, absSystem);
+            allRelevantLoansForCurrentBorrower.clear();
+        }
+    }
+
+    private static void IterateThroughSortedLoansAndChangedUnpayedActiveLoansToInRisk(LinkedList<Loan> allRelevantLoans, Customer borrower, SystemService absSystem){
+        for (Loan loan:allRelevantLoans){
+            switch (loan.getStatus()){
+                case IN_RISK:
+                    //the loan's status is already "IN RISK"
+
+                    break;
+                case ACTIVE:
+                    if(isThereUnpaidPaymentsForCurrentYaz(loan)){
+                        loan.setLoanStatus(Loan.LoanStatus.IN_RISK, currentYaz);
+                    }
+
+                    break;
+
+                case NEW:
+//                    throw new Exception("In function IterateThroughSortedLoansAndMakePayments, loan should not be relevant, its NEW");
+
+                    break;
+
+                case FINISHED:
+//                    throw new Exception("In function IterateThroughSortedLoansAndMakePayments, loan should not be relevant, its FINISHED");
+
+                    break;
+                case PENDING:
+//                    throw new Exception("In function IterateThroughSortedLoansAndMakePayments, loan should not be relevant, its PENDING");
+            }
+
+        }
+    }
+
+    private static boolean isThereUnpaidPaymentsForCurrentYaz(Loan loan){
+        return loan.isTherePaymentsOfSpecificType(LoanPaymentsData.PaymentType.UNPAID);
     }
 
     private static void moveYaz(SystemService absSystem){
@@ -107,6 +165,7 @@ public abstract class MoveTimeLine {
         newNotification.amount = Double.toString(payment.getBothPartsOfAmountToPay());
         newNotification.loanName = loan.getLoanName();
         newNotification.yaz = Integer.toString(currentYaz);
+        newNotification.DateTime = new Date().toString();
 
         absSystem.addNotificationToCustomer(borrower, newNotification);
     }

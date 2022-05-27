@@ -17,9 +17,8 @@ import javafx.scene.control.*;
 import loansTable.LoansTableComponentController;
 import mutualInterfaces.ParentController;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Observable;
+import java.time.ZoneOffset;
+import java.util.*;
 
 public class PaymentController implements ParentController {
 
@@ -105,7 +104,7 @@ public class PaymentController implements ParentController {
 
         for (NotificationsDTO.NotificationDTO notification: notifications){
             Label textLabel = createNotificationTextLabel(notification);
-            TitledPane newPane = new TitledPane(Instant.now().toString(), textLabel);
+            TitledPane newPane = new TitledPane(notification.dateTime, textLabel);
             notificationPanes.add(newPane);
         }
 
@@ -129,6 +128,7 @@ public class PaymentController implements ParentController {
 
     public void updateNotifications(){
         NotificationsDTO notificationsDTO = model.getNotificationsDTO(customerNameProperty.getValue());
+        notifications.clear();
         notifications.addAll(notificationsDTO.notifications);
     }
 
