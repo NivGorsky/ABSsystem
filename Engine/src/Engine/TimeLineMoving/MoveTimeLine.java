@@ -4,20 +4,38 @@ import Engine.*;
 
 import java.util.*;
 
-public abstract class MoveTimeLine {
+public class MoveTimeLine {
 
     private static int currentYaz;
 
     public static void moveTimeLineInOneYaz(SystemService absSystem, Timeline timeLine)
     {
         currentYaz = timeLine.getCurrentYaz();
-
-        operationsToPerformBeforeForwardingTheYaz(absSystem, timeLine);
+        operationsToPerformBeforeForwardingTheYaz(absSystem);
         moveYaz(absSystem);
-        operationsToPerformAfterForwardingTheYaz(absSystem, timeLine);
+        currentYaz = timeLine.getCurrentYaz();
+        operationsToPerformAfterForwardingTheYaz(absSystem);
     }
 
-    private static void operationsToPerformAfterForwardingTheYaz(SystemService absSystem, Timeline timeLine){
+    private static void operationsToPerformBeforeForwardingTheYaz(SystemService absSystem){
+        Map<String , Customer> allCustomers = absSystem.getAllCustomers();
+        LinkedList<Loan> allRelevantLoansForCurrentBorrower = new LinkedList<Loan>();
+        ArrayList<Loan> allLoansAsBorrower = null;
+
+        for (Customer currentCustomer:allCustomers.values()){
+            allLoansAsBorrower = currentCustomer.getLoansAsBorrower();
+
+            if(allLoansAsBorrower.isEmpty()){
+                continue;
+            }
+            allRelevantLoansForCurrentBorrower = getActiveAndExpiredLoansContainsPaymentsForCurrentYaz(allLoansAsBorrower, absSystem); //active loans that contain payment for curreny yaz
+            Collections.sort(allRelevantLoansForCurrentBorrower, new ForwardingYazLoanComparator());
+            IterateThroughSortedLoansAndChangedUnpayedActiveLoansToInRisk(allRelevantLoansForCurrentBorrower, currentCustomer, absSystem);
+            allRelevantLoansForCurrentBorrower.clear();
+        }
+    }
+
+    private static void operationsToPerformAfterForwardingTheYaz(SystemService absSystem){
         Map<String , Customer> allCustomers = absSystem.getAllCustomers();
         LinkedList<Loan> allRelevantLoansForCurrentBorrower = new LinkedList<Loan>();
         Customer currentCustomer = null;
@@ -38,24 +56,6 @@ public abstract class MoveTimeLine {
         }
     }
 
-    private static void operationsToPerformBeforeForwardingTheYaz(SystemService absSystem, Timeline timeLine){
-        Map<String , Customer> allCustomers = absSystem.getAllCustomers();
-        LinkedList<Loan> allRelevantLoansForCurrentBorrower = new LinkedList<Loan>();
-        ArrayList<Loan> allLoansAsBorrower = null;
-
-        for (Customer currentCustomer:allCustomers.values()){
-            allLoansAsBorrower = currentCustomer.getLoansAsBorrower();
-
-            if(allLoansAsBorrower.isEmpty()){
-                continue;
-            }
-            allRelevantLoansForCurrentBorrower = getActiveAndExpiredLoansContainsPaymentsForCurrentYaz(allLoansAsBorrower, absSystem); //active loans that contain payment for curreny yaz
-            Collections.sort(allRelevantLoansForCurrentBorrower, new ForwardingYazLoanComparator());
-            IterateThroughSortedLoansAndChangedUnpayedActiveLoansToInRisk(allRelevantLoansForCurrentBorrower, currentCustomer, absSystem);
-            allRelevantLoansForCurrentBorrower.clear();
-        }
-    }
-
     private static void IterateThroughSortedLoansAndChangedUnpayedActiveLoansToInRisk(LinkedList<Loan> allRelevantLoans, Customer borrower, SystemService absSystem){
         for (Loan loan:allRelevantLoans){
             switch (loan.getStatus()){
@@ -65,6 +65,8 @@ public abstract class MoveTimeLine {
                     break;
                 case ACTIVE:
                     if(isThereUnpaidPaymentsForCurrentYaz(loan)){
+                        LoanPaymentsData.Payment payment = loan.pollPaymentForSpecificYaz(currentYaz);
+                        changePaymentStatus(loan, payment, LoanPaymentsData.PaymentType.EXPIRED);
                         loan.setLoanStatus(Loan.LoanStatus.IN_RISK, currentYaz);
                     }
 
@@ -161,12 +163,15 @@ public abstract class MoveTimeLine {
     private static void createNewNotificationForBorrower(Loan loan, Customer borrower, SystemService absSystem){
         Notification newNotification = new Notification();
         LoanPaymentsData.Payment payment = loan.peekPaymentForSpecificYaz(currentYaz);
-        newNotification.amount = Double.toString(payment.getBothPartsOfAmountToPay());
-        newNotification.loanName = loan.getLoanName();
-        newNotification.yaz = Integer.toString(currentYaz);
-        newNotification.DateTime = new Date().toString();
+        
+        if(payment!= null){
+            newNotification.amount = Double.toString(payment.getBothPartsOfAmountToPay());
+            newNotification.loanName = loan.getLoanName();
+            newNotification.yaz = Integer.toString(currentYaz);
+            newNotification.DateTime = new Date().toString();
 
-        absSystem.addNotificationToCustomer(borrower, newNotification);
+            absSystem.addNotificationToCustomer(borrower, newNotification);
+        }
     }
 
     private static void IterateThroughSortedLoansAndSendNotificatinos(LinkedList<Loan> allRelevantLoans, Customer borrower, SystemService absSystem){
