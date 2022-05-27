@@ -8,22 +8,22 @@
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<ScrollPane fx:id="inRiskInfo" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="340.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="loansTable.loansAdditionalInfo.InRiskInfoController">
+<ScrollPane fx:id="inRiskInfo" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="340.0" styleClass="root" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="loansTable.loansAdditionalInfo.InRiskInfoController">
   <content>
-    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="340.0">
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="340.0" styleClass="root">
          <children>
-            <Accordion layoutX="-2.0" prefHeight="300.0" prefWidth="340.0">
+            <Accordion layoutX="-2.0" prefHeight="300.0" prefWidth="340.0" styleClass="root">
               <panes>
-                <TitledPane fx:id="lendersTP" animated="false" text="Lenders">
+                <TitledPane fx:id="lendersTP" animated="false" styleClass="root" text="Lenders">
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="340.0">
                            <children>
-                               <fx:include fx:id="lendersTableView" source="lendersTableComponent.fxml"/>
+                               <fx:include fx:id="lendersTableView" source="lendersTableComponent.fxml" />
                            </children>
                         </AnchorPane>
                   </content>
                 </TitledPane>
-                <TitledPane fx:id="yazTP" animated="false" prefHeight="161.0" prefWidth="202.0" text="Activation Information">
+                <TitledPane fx:id="yazTP" animated="false" prefHeight="161.0" prefWidth="202.0" styleClass="root" text="Activation Information">
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
@@ -33,16 +33,16 @@
                         </AnchorPane>
                   </content>
                 </TitledPane>
-                <TitledPane fx:id="paidPaymentsTP" animated="false" prefHeight="153.0" prefWidth="202.0" text="Paid Payments">
+                <TitledPane fx:id="paidPaymentsTP" animated="false" prefHeight="153.0" prefWidth="202.0" styleClass="root" text="Paid Payments">
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                               <fx:include fx:id="paidPaymentsTableView" source="paidPaymentsTableComponent.fxml"/>
+                               <fx:include fx:id="paidPaymentsTableView" source="paidPaymentsTableComponent.fxml" />
                            </children>
                         </AnchorPane>
                   </content>
                 </TitledPane>
-                  <TitledPane fx:id="paymentsStatusTP" animated="false" text="Payments Status">
+                  <TitledPane fx:id="paymentsStatusTP" animated="false" styleClass="root" text="Payments Status">
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
@@ -54,7 +54,7 @@
                         </AnchorPane>
                     </content>
                   </TitledPane>
-                  <TitledPane fx:id="unpaidPaymentsTP" animated="false" text="Unpaid Payments">
+                  <TitledPane fx:id="unpaidPaymentsTP" animated="false" styleClass="root" text="Unpaid Payments">
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
