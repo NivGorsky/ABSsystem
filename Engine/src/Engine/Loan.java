@@ -128,7 +128,17 @@ public class Loan
     public Account getLoanAccount(){return this.account;}
     public void setSystemService(SystemService systemService){this.systemService = systemService;}
 
+
     //setters
+    public void setAmountPaid(double paymentAmount) {
+        amountPaid+=paymentAmount;
+    }
+
+    public void setInterestPaid(double interestPaid){
+        interestPaid += interestPaid;
+    }
+
+
     public void setLoanStatus(Loan.LoanStatus newStatus, int currentYaz){
 
         this.status = newStatus;

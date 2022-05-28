@@ -31,8 +31,6 @@ public class ActiveInfoController {
     @FXML private TableView<LoanDTO.PaymentDTO> paidPaymentsTableView;
     @FXML private PaidPaymentsTableViewController paidPaymentsTableViewController;
 
-    private double paidLoan;
-    private double remainedLoan;
     private double paidInterest;
     private double remainedInterest;
 
@@ -42,22 +40,19 @@ public class ActiveInfoController {
     {
         this.parentController = parentController;
     }
-    
+
     public void setData(LoanDTO loan)
     {
        lendersTableViewController.setLendersData(loan);
        paidPaymentsTableViewController.setPaidPaymentsData(loan);
 
-       paidLoan = loan.getPaidLoan();
-       paidLoanLabel.setText("Loan already paid: " + paidLoan);
-
-       remainedLoan = loan.getInitialAmount() - paidLoan;
-       loanRemainedLabel.setText("Loan remained to pay: "+ remainedLoan);
-
+       paidLoanLabel.setText("Loan already paid: " + loan.getPaidLoan());
+       loanRemainedLabel.setText("Loan remained to pay: "+ (loan.getInitialAmount() - loan.getPaidLoan()));
        paidInterest = loan.getPaidInterest();
        paidInterestLabel.setText("Interest already paid: " + paidInterest);
-
        remainedInterest = loan.getTotalInterest() - paidInterest;
        InterestRemainedLabel.setText("Interest remained to pay: " + remainedInterest);
+       activationYazLabel.setText("Activated in YAZ: " + loan.getActivationYAZ());
+       nextPaymentLabel.setText("Next payment in YAZ: " + loan.getUnpaidPayments().firstKey());
     }
 }

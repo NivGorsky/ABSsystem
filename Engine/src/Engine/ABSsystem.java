@@ -247,6 +247,9 @@ public class ABSsystem implements MainSystem, SystemService {
         moveMoneyBetweenAccounts(borrowerAccount, loansAccount, amountToPay);
         splitLoanMoneyToLenders(loan);
         payment.setPaymentType(LoanPaymentsData.PaymentType.PAID);
+        payment.setActualPaymentYaz(this.getCurrYaz());
+        loan.setAmountPaid(payment.getLoanPartOfThePayment());
+        loan.setAmountPaid(payment.getInterestPartOfThePayment());
     }
 
     private void splitLoanMoneyToLenders(Loan loan){
@@ -261,9 +264,6 @@ public class ABSsystem implements MainSystem, SystemService {
 
             moveMoneyBetweenAccounts(loansAccount, lendersAccount, amountToTransfer);
         }
-
-
-
     }
 
     private LoanDTO createLoanDTO(Loan l) {
@@ -455,7 +455,7 @@ public class ABSsystem implements MainSystem, SystemService {
     }
 
     @Override
-    public void payToLender(LoanDTO.LenderDetailsDTO lenderDTO, LoanDTO loanDTO, int yaz) { //change later to DTO
+    public void payToLender(LoanDTO.LenderDetailsDTO lenderDTO, LoanDTO loanDTO, int yaz) throws Exception{
         try {
             Customer lender = name2customer.get(lenderDTO.getLenderName());
             Customer borrower = name2customer.get(loanDTO.getCustomerName());
@@ -472,19 +472,25 @@ public class ABSsystem implements MainSystem, SystemService {
         }
 
         catch (Exception e) {
-            System.out.println("There was a problem while trying to pay to lender");
+            throw new Exception("There was a problem while trying to pay to lender");
         }
     }
 
     @Override
-    public void payToAllLendersForCurrentYaz(LoanDTO loanDTO, int yaz) {
-        for (LoanDTO.LenderDetailsDTO lenderDetailsDTO : loanDTO.getLenderDTOS()) {
-            payToLender(lenderDetailsDTO, loanDTO, yaz);
+    public void payToAllLendersForCurrentYaz(LoanDTO loanDTO, int yaz) throws Exception {
+        for (LoanDTO.LenderDetailsDTO lenderDetailsDTO : loanDTO.getLenderDTOS())
+        {
+            try {
+                payToLender(lenderDetailsDTO, loanDTO, yaz);
+            }
+            catch (Exception ex) {
+                throw ex;
+            }
         }
     }
 
     @Override
-    public void closeLoan(LoanDTO loanDTO, int yaz){
+    public void closeLoan(LoanDTO loanDTO, int yaz) throws Exception{
         try {
             Loan loan = getLoanByName(loanDTO.getLoanName());
             PaymentsDB paymentsDb = (PaymentsDB)loan.getPayments(LoanPaymentsData.PaymentType.UNPAID);
@@ -498,7 +504,7 @@ public class ABSsystem implements MainSystem, SystemService {
         }
 
         catch (Exception e){
-            System.out.println("There was a problem while trying to close the loan");
+           throw new Exception("There was a problem while trying to close the loan");
         }
     }
 

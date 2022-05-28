@@ -33,38 +33,45 @@ public class PaymentController implements ParentController {
     @FXML private TableColumn<LoanDTO.LenderDetailsDTO, String> lendersNameTableColumn;
     @FXML private TableColumn<LoanDTO.LenderDetailsDTO, Double> lendersAmountTableColumn;
     @FXML private TableView<LoanDTO.LenderDetailsDTO> lendersTableView;
-
-    @FXML
-    private Button payToLenderButton;
-
-    @FXML
-    private Button payToAllLendersButton;
-
-    @FXML
-    private Button closeLoanButton;
+    @FXML private Button payToLenderButton;
+    @FXML private Button payToAllLendersButton;
+    @FXML private Button closeLoanButton;
 
     @FXML
     void closeLoanButtonClicked(ActionEvent event) {
         double loanAmountToPay = selectedLoanFromLoansTable.getDebt();
         String customerName = this.customerNameProperty.getValue();
-
-        if(parentController.getModel().getCustomerDTO(customerName).getBalance() >= loanAmountToPay){
-            parentController.getModel().closeLoan(selectedLoanFromLoansTable, parentController.getModel().getCurrYaz());
+        try {
+            if(parentController.getModel().getCustomerDTO(customerName).getBalance() >= loanAmountToPay){
+                parentController.getModel().closeLoan(selectedLoanFromLoansTable, parentController.getModel().getCurrYaz());
+            }
+            else{
+                throw new Exception("Insufficient funds to pay the loan");
+            }
         }
-
-        else{
-            parentController.createExceptionDialog(new Exception("Insufficient funds to pay the loan"));
+        catch (Exception ex) {
+           parentController.createExceptionDialog(ex);
         }
     }
 
     @FXML
     void payToAllLendersButtonClicked(ActionEvent event) {
-        parentController.getModel().payToAllLendersForCurrentYaz(selectedLoanFromLoansTable,parentController.getModel().getCurrYaz());
+        try {
+            parentController.getModel().payToAllLendersForCurrentYaz(selectedLoanFromLoansTable,parentController.getModel().getCurrYaz());
+        }
+        catch (Exception ex) {
+            parentController.createExceptionDialog(ex);
+        }
     }
 
     @FXML
     void payToLenderButtonClicked(ActionEvent event) {
-        parentController.getModel().payToLender(lendersTableView.getSelectionModel().getSelectedItem(), selectedLoanFromLoansTable , parentController.getModel().getCurrYaz());
+        try {
+            parentController.getModel().payToLender(lendersTableView.getSelectionModel().getSelectedItem(), selectedLoanFromLoansTable , parentController.getModel().getCurrYaz());
+        }
+        catch (Exception ex) {
+            parentController.createExceptionDialog(ex);
+        }
     }
 
     @Override
