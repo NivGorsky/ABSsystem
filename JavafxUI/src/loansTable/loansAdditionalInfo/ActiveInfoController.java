@@ -42,30 +42,22 @@ public class ActiveInfoController {
     {
         this.parentController = parentController;
     }
-
-    @FXML public void initialize()
-    {
-        paidLoanLabel.textProperty().bind(Bindings.concat("Loan already paid: " + paidLoan));
-        loanRemainedLabel.textProperty().bind(Bindings.concat("Loan remained to pay: "+ remainedLoan));
-        paidInterestLabel.textProperty().bind(Bindings.concat("Interest already paid: " + paidInterest));
-        InterestRemainedLabel.textProperty().bind(Bindings.concat("Interest remained to pay: " + remainedInterest));
-    }
-
+    
     public void setData(LoanDTO loan)
     {
-        lendersTableViewController.setLendersData(loan);
-       // paidPaymentsTableViewController.setPaidPaymentsData(loan);
+       lendersTableViewController.setLendersData(loan);
+       paidPaymentsTableViewController.setPaidPaymentsData(loan);
 
-        paidLoan = loan.getPaidLoan();
-      //  paidLoanLabel.setText("Loan already paid: " + paidLoan);
+       paidLoan = loan.getPaidLoan();
+       paidLoanLabel.setText("Loan already paid: " + paidLoan);
 
-        remainedLoan = loan.getInitialAmount() - paidLoan;
-      //  loanRemainedLabel.setText("Loan remained to pay: "+ remainedLoan);
+       remainedLoan = loan.getInitialAmount() - paidLoan;
+       loanRemainedLabel.setText("Loan remained to pay: "+ remainedLoan);
 
-        paidInterest = loan.getPaidInterest();
-     //   paidInterestLabel.setText("Interest already paid: " + paidInterest);
+       paidInterest = loan.getPaidInterest();
+       paidInterestLabel.setText("Interest already paid: " + paidInterest);
 
-        remainedInterest = loan.getTotalInterest() - paidInterest;
-     //   InterestRemainedLabel.setText("Interest remained to pay: " + remainedInterest);
+       remainedInterest = loan.getTotalInterest() - paidInterest;
+       InterestRemainedLabel.setText("Interest remained to pay: " + remainedInterest);
     }
 }
