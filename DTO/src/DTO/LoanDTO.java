@@ -2,6 +2,7 @@ package DTO;
 
 import Engine.Loan;
 import Engine.LoanPaymentsData;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -64,6 +65,14 @@ public class LoanDTO {
 
         public String getLenderName() {
             return lenderName.get();
+        }
+
+        public SimpleStringProperty getLenderNameProperty(){
+            return lenderName;
+        }
+
+        public SimpleDoubleProperty getLendersInvestAmountProperty(){
+            return this.lendersInvestAmount;
         }
 
         public SimpleStringProperty lenderNameProperty() {

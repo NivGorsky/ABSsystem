@@ -1,5 +1,6 @@
 package customer.payment;
 
+import DTO.LoanDTO;
 import DTO.NotificationsDTO;
 import Engine.MainSystem;
 import Engine.Timeline;
@@ -15,6 +16,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import loansTable.LoansTableComponentController;
+import mutualInterfaces.Delegate;
 import mutualInterfaces.ParentController;
 import java.time.Instant;
 import java.time.ZoneOffset;
@@ -27,15 +29,15 @@ public class PaymentController implements ParentController {
     //TODO: create the make payment API call
 
     private CustomerController parentController;
-    private MainSystem model;
     private StringProperty customerNameProperty;
     private final ObservableList<NotificationsDTO.NotificationDTO> notifications;
-
+    private LoanDTO selectedLoanFromLoansTable;
     @FXML ScrollPane borrowerLoansTableComponent;
     @FXML LoansTableComponentController borrowerLoansTableComponentController;
     @FXML private Accordion notificationsBoard;
-
-
+    @FXML private TableColumn<LoanDTO.LenderDetailsDTO, String> lendersNameTableColumn;
+    @FXML private TableColumn<LoanDTO.LenderDetailsDTO, Double> lendersAmountTableColumn;
+    @FXML private TableView<LoanDTO.LenderDetailsDTO> lendersTableView;
 
     @FXML
     private Button payToLenderButton;
@@ -45,9 +47,6 @@ public class PaymentController implements ParentController {
 
     @FXML
     private Button closeLoanButton;
-
-    @FXML
-    private TableColumn<?, ?> lendersTableView;
 
     @FXML
     void closeLoanButtonClicked(ActionEvent event) {
@@ -71,23 +70,49 @@ public class PaymentController implements ParentController {
 
     @Override
     public MainSystem getModel(){
-        return model;
+        return parentController.getModel();
     }
 
     public PaymentController(){
         notifications = FXCollections.observableArrayList();
         customerNameProperty = new SimpleStringProperty();
     }
+
     public StringProperty getCustomerNameProperty(){return this.customerNameProperty;}
+
     public void setParentController(CustomerController parentController){
         this.parentController = parentController;
     }
-    public void setModel(MainSystem model){this.model = model;}
+
     public void initialize(){
         borrowerLoansTableComponentController.setParentController(this);
+        initNotifications();
+        borrowerLoansTableComponentController.changeTableSelectionModelToSingle();
+        borrowerLoansTableComponentController.setLoanSelectionListener();
+        initLendersTable();
+        initPaymentButtons();
+    }
+
+    private void initNotifications(){
         notificationsBoard.getPanes().clear();
         wireNotificationsListeners();
-        //updateNotifications(); //need to check if it's okay since the model isnt yet placed
+    }
+
+    private void initPaymentButtons(){
+       lendersTableView.getItems().addListener((ListChangeListener<Object>) c -> {
+            payToAllLendersButton.setDisable(lendersTableView.getItems().isEmpty());
+        });
+
+    }
+
+    private void initLendersTable(){
+        createTableViewColumns();
+        lendersTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+    }
+
+    private void createTableViewColumns(){
+        lendersNameTableColumn.setCellValueFactory(cellData -> cellData.getValue().getLenderNameProperty());
+        lendersAmountTableColumn.setCellValueFactory(cellData -> cellData.getValue().getLendersInvestAmountProperty().asObject());
     }
 
     private void wireNotificationsListeners(){
@@ -127,7 +152,7 @@ public class PaymentController implements ParentController {
     }
 
     public void updateNotifications(){
-        NotificationsDTO notificationsDTO = model.getNotificationsDTO(customerNameProperty.getValue());
+        NotificationsDTO notificationsDTO = parentController.getModel().getNotificationsDTO(customerNameProperty.getValue());
         notifications.clear();
         notifications.addAll(notificationsDTO.notifications);
     }
@@ -136,5 +161,22 @@ public class PaymentController implements ParentController {
         updateNotifications();
         borrowerLoansTableComponentController.clearTable();
         borrowerLoansTableComponentController.loadSpecificCustomerLoansAsBorrower(customerNameProperty.getValue());
+        lendersTableView.getItems().clear();
+        payToAllLendersButton.setDisable(true);
+    }
+
+    public void LoanWasSelectedFromLoansTable(LoanDTO loanDTO){
+        ObservableList<LoanDTO.LenderDetailsDTO> lendersForTable = FXCollections.observableArrayList();
+        lendersForTable.addAll((loanDTO).getLendersNamesAndAmounts());
+        lendersTableView.getItems().clear();
+        lendersTableView.setItems(lendersForTable);
+
+        if(lendersForTable.isEmpty()){
+            payToAllLendersButton.setDisable(true);
+        }
+
+        else{
+            payToAllLendersButton.setDisable(false);
+        }
     }
 }

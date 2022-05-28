@@ -12,18 +12,18 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import mutualInterfaces.ParentController;
 
 import java.net.URL;
 import java.util.ArrayList;
 
 
-public class MainSceneController {
+public class MainSceneController implements ParentController {
 
     @FXML private GridPane header;
     @FXML private HeaderController headerController;
     @FXML private ScrollPane adminScene;
     @FXML private AdminSceneController adminSceneController;
-
     @FXML private TabPane customerPane;
     @FXML private CustomerController customerPaneController;
     @FXML private AnchorPane centerAnchorPane;
@@ -53,7 +53,6 @@ public class MainSceneController {
     }
     public void setModel(MainSystem model) {
         this.model = model;
-        customerPaneController.setModel(model);
     }
     public void setRoot(ScrollPane root){
         this.root = root;

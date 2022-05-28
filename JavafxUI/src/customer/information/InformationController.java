@@ -18,7 +18,6 @@ public class InformationController implements ParentController {
 
     private CustomerController parentController;
     private StringProperty customerNameProperty;
-    private MainSystem model;
     private SimpleBooleanProperty isTabSelected;
 
     public InformationController () {
@@ -28,13 +27,9 @@ public class InformationController implements ParentController {
         this.parentController = parentController;
     }
     public StringProperty getCustomerNameProperty(){return this.customerNameProperty;}
-    public void setModel(MainSystem  model){
-        this.model = model;
-        accountTransactionsController.setModel(model);
-    }
 
     @Override
-    public MainSystem getModel(){return model;}
+    public MainSystem getModel(){return parentController.getModel();}
 
     @Override
     public void createExceptionDialog(Exception ex) {
@@ -61,7 +56,7 @@ public class InformationController implements ParentController {
 
         try {
             //make the actual deposit
-            model.depositMoney(customerName, amount);
+            parentController.getModel().depositMoney(customerName, amount);
             accountTransactionsController.updateAccountMovements();
         }
 
@@ -78,7 +73,7 @@ public class InformationController implements ParentController {
                 String customerName = customerNameProperty.getValue();
                 double amount = Double.parseDouble(amountTextField.getText());
 
-                model.withdrawMoney(customerName, amount);
+                parentController.getModel().withdrawMoney(customerName, amount);
                 accountTransactionsController.updateAccountMovements();
             }
         }

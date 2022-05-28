@@ -3,6 +3,7 @@ package loansTable;
 import DTO.LoanDTO;
 import Engine.MainSystem;
 import adminScene.AdminSceneController;
+import customer.payment.PaymentController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -11,6 +12,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import jdk.nashorn.internal.objects.annotations.Function;
+import mutualInterfaces.Delegate;
 import mutualInterfaces.ParentController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -122,14 +125,12 @@ public class LoansTableComponentController implements ParentController {
             }
         }
     }
-
     public void loadLoansData()
     {
         createTableLoanColumns();
         ArrayList<LoanDTO> loans = parentController.getModel().showLoansInfo();
         putLoansInTable(loans);
     }
-
     public void loadSpecificCustomerLoansAsLender(String customerName){
         createTableLoanColumns();
         ArrayList<LoanDTO> loans = parentController.getModel().getLoansByCustomerNameAsLender(customerName);
@@ -164,6 +165,7 @@ public class LoansTableComponentController implements ParentController {
 
         loansTable.setItems(loansForTable);
     }
+
     public void clearTable(){
         loansTable.getItems().clear();
     }
@@ -185,6 +187,19 @@ public class LoansTableComponentController implements ParentController {
 
         return null;
     }
+    public void changeTableSelectionModelToSingle(){
+        loansTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+    }
+
+    public void setLoanSelectionListener(){
+        loansTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if(parentController instanceof PaymentController){
+                PaymentController parentControllerAsPaymentController = (PaymentController)parentController;
+                parentControllerAsPaymentController.LoanWasSelectedFromLoansTable(newValue);
+            }
+        });
+    }
+
 }
 
 

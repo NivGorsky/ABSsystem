@@ -22,7 +22,6 @@ import java.util.*;
 public class ScrambleController {
 
     private ParentController parentController;
-    private MainSystem model;
     private ArrayList<SimpleField> scrambleQueryFields;
     private BooleanProperty isScrambleFormValid;
     private Map<Node, BooleanProperty> formFields2TheirValidity;
@@ -52,9 +51,6 @@ public class ScrambleController {
         this.parentController = parentController;
     }
 
-    public void setModel(MainSystem model){
-        this.model = model;
-    }
     @FXML
     private RadioButton minInterestPerYazRatioButton;
 
@@ -389,7 +385,7 @@ public class ScrambleController {
     }
 
     private void getLoanCategoriesToTable(){
-        LoanCategorisDTO loanCategorisDTO = model.getSystemLoanCategories();
+        LoanCategorisDTO loanCategorisDTO = parentController.getModel().getSystemLoanCategories();
         ObservableList<LoanCategoryForTable> observableCategories = FXCollections.observableArrayList();
 
         for (String loanCategory:loanCategorisDTO.loanCategories){

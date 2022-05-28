@@ -18,7 +18,6 @@ import mutualInterfaces.ParentController;
 
 public class CustomerController implements ParentController {
 
-    private MainSystem model;
     private MainSceneController parentController;
     private StringProperty customerNameProperty;
 
@@ -33,13 +32,6 @@ public class CustomerController implements ParentController {
 
     public StringProperty getCustomerNameProperty(){
         return customerNameProperty;
-    }
-
-    public void setModel(MainSystem model){
-        this.model = model;
-        informationController.setModel(model);
-        scrambleController.setModel(model);
-        paymentController.setModel(model);
     }
 
     public void setParent(MainSceneController parent){

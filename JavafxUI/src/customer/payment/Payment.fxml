@@ -79,9 +79,10 @@
                   <Button fx:id="payToLenderButton" mnemonicParsing="false" onAction="#payToLenderButtonClicked" prefHeight="27.0" prefWidth="160.0" text="Pay to lender" GridPane.columnIndex="3" GridPane.rowIndex="3" />
                   <Button fx:id="payToAllLendersButton" mnemonicParsing="false" onAction="#payToAllLendersButtonClicked" prefHeight="27.0" prefWidth="187.0" text="Pay to all lenders" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                   <Button fx:id="closeLoanButton" mnemonicParsing="false" onAction="#closeLoanButtonClicked" prefHeight="27.0" prefWidth="165.0" text="Close loan" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-                  <TableView prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="4">
+                  <TableView fx:id="lendersTableView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="4">
                     <columns>
-                      <TableColumn fx:id="lendersTableView" prefWidth="262.9999828338623" text="Lenders" />
+                      <TableColumn fx:id="lendersNameTableColumn" prefWidth="117.99996948242188" text="Lender's name" />
+                        <TableColumn fx:id="lendersAmountTableColumn" prefWidth="145.0" text="Lender's invest amount" />
                     </columns>
                   </TableView>
                </children>

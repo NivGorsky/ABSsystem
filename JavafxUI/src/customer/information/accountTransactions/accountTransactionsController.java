@@ -27,7 +27,6 @@ public class accountTransactionsController {
     //TODO: create the link between this controller's customer name property to the customer controller customer name property.
 
     private InformationController parentController;
-    private MainSystem model;
     private StringProperty customerNameProperty;
     private ObservableList<AccountMovementDTO> accountMovements;
     private boolean isModelLoaded;//only if it;s proiperty
@@ -36,15 +35,10 @@ public class accountTransactionsController {
         this.parentController = parentController;
     }
 
-    public void setModel(MainSystem model){
-        this.model = model;
-        this.isModelLoaded = true;
-    }
-
     public StringProperty getCustomerNameProperty(){return this.customerNameProperty;}
 
     public void updateAccountMovements(){
-        CustomerDTO customerDTO = model.getCustomerDTO(customerNameProperty.getValue());
+        CustomerDTO customerDTO = parentController.getModel().getCustomerDTO(customerNameProperty.getValue());
         List<AccountMovementDTO> movementsFromEngine = customerDTO.getAccountMovements();
         accountMovements.clear();
         accountMovements.addAll(movementsFromEngine);
