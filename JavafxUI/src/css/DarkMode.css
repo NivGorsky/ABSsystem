@@ -111,6 +111,11 @@
     -fx-background-color: transparent;
 }
 
+.progress-bar > .track {
+    -fx-text-box-border: #393E46;
+    -fx-control-inner-background: #393E46;
+}
+
 .table-view .table-cell {
     -fx-border-color: transparent;
     -fx-text-fill: #8FD6E1;

@@ -113,6 +113,11 @@
     -fx-font-weight: bold;
 }
 
+.progress-bar > .track {
+    -fx-text-box-border: #FFE69A;
+    -fx-control-inner-background: #FFF0C1;
+}
+
 .root .scroll-bar .thumb {
     -fx-background-color:  linear-gradient(#FFE69A, #FFD24C);
 }
