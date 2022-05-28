@@ -1,8 +1,6 @@
 package DTO;
 
-import Engine.Loan;
 import Engine.LoanPaymentsData;
-import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -219,7 +217,7 @@ public class LoanDTO {
     public SimpleIntegerProperty getFinishYAZProperty() { return finishYaz; }
 
 
-    public ArrayList<LoanDTO.LenderDetailsDTO> getLendersNamesAndAmounts() { return lendersNameAndAmount; }
+    public ArrayList<LoanDTO.LenderDetailsDTO> getLenderDTOS() { return lendersNameAndAmount; }
     public SortedMap<Integer, LoanDTO.PaymentDTO> getUnpaidPayments() { return unpaidPayments; }
     public SortedMap<Integer, LoanDTO.PaymentDTO> getPaidPayments() { return paidPayments; }
 

@@ -17,15 +17,19 @@ public class LoanPaymentsData {
         private int scheduledYaz;
         private int actualPaymentYaz;
         private double loanPartOfThePayment;
-        private double InterestPartOfThePayment;
+        private double loanPartThatWasPaid;
+        private double interestPartThatWasPaid;
+        private double interestPartOfThePayment;
         private String borrowerName;
 
         public Payment(int scheduledYaz, double loanPartOfThePayment, double interestPartOfThePayment, String borrowerName, PaymentType paymentType) {
             this.scheduledYaz = scheduledYaz;
             this.loanPartOfThePayment = loanPartOfThePayment;
-            this.InterestPartOfThePayment = interestPartOfThePayment;
+            this.interestPartOfThePayment = interestPartOfThePayment;
             this.borrowerName = borrowerName;
             this.paymentType = paymentType;
+            this.loanPartThatWasPaid = 0;
+            this.interestPartThatWasPaid = 0;
         }
 
         public int getActualPaymentYaz() {
@@ -36,14 +40,14 @@ public class LoanPaymentsData {
             return loanPartOfThePayment;
         }
         public double getInterestPartOfThePayment() {
-            return InterestPartOfThePayment;
+            return interestPartOfThePayment;
         }
         public boolean isPaid() {
             return this.paymentType == PaymentType.PAID;
         }
         public String getBorrowerName(){return this.borrowerName;}
         public PaymentType getPaymentType(){return this.paymentType;}
-        public double getBothPartsOfAmountToPay(){return this.loanPartOfThePayment + this.InterestPartOfThePayment;}
+        public double getBothPartsOfAmountToPay(){return this.loanPartOfThePayment + this.interestPartOfThePayment;}
 
         public void setActualPaymentYaz(int actualPaymentYaz) {
             this.actualPaymentYaz = actualPaymentYaz;
@@ -52,13 +56,21 @@ public class LoanPaymentsData {
             this.loanPartOfThePayment = loanPartOfThePayment;
         }
         public void setInterestPartOfThePayment(double interestPartOfThePayment) {
-            this.InterestPartOfThePayment = interestPartOfThePayment;
+            this.interestPartOfThePayment = interestPartOfThePayment;
         }
         public void setPaid(boolean payed) {
             this.paymentType = PaymentType.PAID;
         }
         public void setPaymentType(PaymentType newType){this.paymentType = newType;}
         public void setScheduledYaz(int yaz){this.scheduledYaz = yaz;}
+        public void setPartialPaidInPercents(double percentageOfPaymentThatWasPaid){
+            double loanPartThatWasPaidInAmount = (percentageOfPaymentThatWasPaid/ 100) * loanPartOfThePayment;
+            double interestPartThatWasPaidInAmount = (percentageOfPaymentThatWasPaid / 100) * interestPartOfThePayment;
+            this.loanPartThatWasPaid += loanPartThatWasPaidInAmount;
+            this.interestPartThatWasPaid += interestPartThatWasPaidInAmount;
+        }
+
+        public double getBothPartsOfPaymentThatWasPaid(){return this.loanPartThatWasPaid + this.interestPartThatWasPaid;}
 
         public int compare(LoanPaymentsData.Payment p1, LoanPaymentsData.Payment p2) { return (p1.scheduledYaz - p2.scheduledYaz); }
     }

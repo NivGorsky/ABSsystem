@@ -3,10 +3,7 @@ package customer.payment;
 import DTO.LoanDTO;
 import DTO.NotificationsDTO;
 import Engine.MainSystem;
-import Engine.Timeline;
 import customer.CustomerController;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -16,10 +13,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import loansTable.LoansTableComponentController;
-import mutualInterfaces.Delegate;
 import mutualInterfaces.ParentController;
-import java.time.Instant;
-import java.time.ZoneOffset;
+
 import java.util.*;
 
 public class PaymentController implements ParentController {
@@ -27,12 +22,13 @@ public class PaymentController implements ParentController {
     //TODO: decided which properties this controller should hold
     //TODO: Maybe create a new component for notification
     //TODO: create the make payment API call
-
     private CustomerController parentController;
     private StringProperty customerNameProperty;
     private final ObservableList<NotificationsDTO.NotificationDTO> notifications;
     private LoanDTO selectedLoanFromLoansTable;
+
     @FXML ScrollPane borrowerLoansTableComponent;
+
     @FXML LoansTableComponentController borrowerLoansTableComponentController;
     @FXML private Accordion notificationsBoard;
     @FXML private TableColumn<LoanDTO.LenderDetailsDTO, String> lendersNameTableColumn;
@@ -50,17 +46,26 @@ public class PaymentController implements ParentController {
 
     @FXML
     void closeLoanButtonClicked(ActionEvent event) {
+        double loanAmountToPay = selectedLoanFromLoansTable.getDebt();
+        String customerName = this.customerNameProperty.getValue();
 
+        if(parentController.getModel().getCustomerDTO(customerName).getBalance() >= loanAmountToPay){
+            parentController.getModel().closeLoan(selectedLoanFromLoansTable, parentController.getModel().getCurrYaz());
+        }
+
+        else{
+            parentController.createExceptionDialog(new Exception("Insufficient funds to pay the loan"));
+        }
     }
 
     @FXML
     void payToAllLendersButtonClicked(ActionEvent event) {
-
+        parentController.getModel().payToAllLendersForCurrentYaz(selectedLoanFromLoansTable,parentController.getModel().getCurrYaz());
     }
 
     @FXML
     void payToLenderButtonClicked(ActionEvent event) {
-
+        parentController.getModel().payToLender(lendersTableView.getSelectionModel().getSelectedItem(), selectedLoanFromLoansTable , parentController.getModel().getCurrYaz());
     }
 
     @Override
@@ -76,6 +81,11 @@ public class PaymentController implements ParentController {
     public PaymentController(){
         notifications = FXCollections.observableArrayList();
         customerNameProperty = new SimpleStringProperty();
+        selectedLoanFromLoansTable = null;
+    }
+
+    public void setSelectedLoanFromLoansTable(LoanDTO selectedLoan){
+        this.selectedLoanFromLoansTable = selectedLoan;
     }
 
     public StringProperty getCustomerNameProperty(){return this.customerNameProperty;}
@@ -108,6 +118,9 @@ public class PaymentController implements ParentController {
     private void initLendersTable(){
         createTableViewColumns();
         lendersTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        lendersTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+           payToLenderButton.setDisable(lendersTableView.getSelectionModel().isEmpty());
+        });
     }
 
     private void createTableViewColumns(){
@@ -163,13 +176,18 @@ public class PaymentController implements ParentController {
         borrowerLoansTableComponentController.loadSpecificCustomerLoansAsBorrower(customerNameProperty.getValue());
         lendersTableView.getItems().clear();
         payToAllLendersButton.setDisable(true);
+        payToLenderButton.setDisable(true);
+        closeLoanButton.setDisable(true);
     }
 
     public void LoanWasSelectedFromLoansTable(LoanDTO loanDTO){
         ObservableList<LoanDTO.LenderDetailsDTO> lendersForTable = FXCollections.observableArrayList();
-        lendersForTable.addAll((loanDTO).getLendersNamesAndAmounts());
-        lendersTableView.getItems().clear();
-        lendersTableView.setItems(lendersForTable);
+        if(loanDTO.getStatus() != "FINISHED") {
+            lendersForTable.addAll((loanDTO).getLenderDTOS());
+            lendersTableView.getItems().clear();
+            lendersTableView.setItems(lendersForTable);
+            closeLoanButton.setDisable(false);
+        }
 
         if(lendersForTable.isEmpty()){
             payToAllLendersButton.setDisable(true);

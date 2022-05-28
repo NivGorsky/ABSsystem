@@ -5,6 +5,7 @@ import java.util.*;
 import java.util.function.Consumer;
 
 import Engine.LoanPlacing.loanPlacingAsTask.LoanPlacingAsTask;
+import Engine.PaymentsDB.PaymentsDB;
 import Exceptions.*;
 import Engine.LoanPlacing.regularLoanPlacing.LoanPlacing;
 import Engine.TimeLineMoving.MoveTimeLine;
@@ -14,10 +15,9 @@ import Exceptions.XMLFileException;
 import customer.scramble.ScrambleController;
 import javafx.concurrent.Task;
 
-public class ABSsystem implements MainSystem, SystemService
-{
+public class ABSsystem implements MainSystem, SystemService {
     private final Timeline systemTimeline;
-    private Map<String,Customer> name2customer;
+    private Map<String, Customer> name2customer;
     private Map<Loan.LoanStatus, Loan> status2loan;
     private LinkedList<Loan> loans;
     private Map<Integer, Loan> loanId2Loan;
@@ -40,54 +40,49 @@ public class ABSsystem implements MainSystem, SystemService
     }
 
     @Override
-    public int getCurrYaz() { return systemTimeline.getCurrentYaz();}
+    public int getCurrYaz() {
+        return systemTimeline.getCurrentYaz();
+    }
 
     @Override
-    public ArrayList<String> getCustomersNames()
-    {
+    public ArrayList<String> getCustomersNames() {
         return new ArrayList<>(name2customer.keySet());
     }
 
     @Override
-    public void loadXML(String path) throws XMLFileException
-    {
+    public void loadXML(String path) throws XMLFileException {
         try {
             InputStream loadedXMLFile = SchemaForLAXB.getDescriptorFromXML(path);
             XMLFileChecker.isFileExists(path);
             XMLFileChecker.isXMLFile(path);
             takeDataFromDescriptor(SchemaForLAXB.descriptor);
             injectSystemServiceInterfaceToLoans();
-        }
-        catch (XMLFileException ex)
-        {
+        } catch (XMLFileException ex) {
             throw ex;
         }
     }
 
-    private void injectSystemServiceInterfaceToLoans(){
-        for (Loan loan:loans){
+    private void injectSystemServiceInterfaceToLoans() {
+        for (Loan loan : loans) {
             loan.setSystemService(this);
         }
     }
 
-    private void resetSystem()
-    {
+    private void resetSystem() {
         resetLoans();
         systemTimeline.resetSystemYaz();
         name2customer = new TreeMap<>();
         LoanCategories.categories = new ArrayList<>();
     }
 
-    private void resetLoans()
-    {
+    private void resetLoans() {
         loanId2Loan = new TreeMap<>();
         loans = new LinkedList<>();
         status2loan = new TreeMap<>();
     }
 
     @Override
-    public ArrayList<LoanDTO> showLoansInfo()
-    {
+    public ArrayList<LoanDTO> showLoansInfo() {
         ArrayList<LoanDTO> loansInfo = new ArrayList<>();
         for (Loan l : loans) {
             LoanDTO curr = createLoanDTO(l);
@@ -98,11 +93,9 @@ public class ABSsystem implements MainSystem, SystemService
     }
 
     @Override
-    public ArrayList<CustomerDTO> showCustomersInfo()
-    {
+    public ArrayList<CustomerDTO> showCustomersInfo() {
         ArrayList<CustomerDTO> customersInfo = new ArrayList<>();
-        for(Customer c : name2customer.values())
-        {
+        for (Customer c : name2customer.values()) {
             CustomerDTO curr = createCustomerDTO(c);
             customersInfo.add(curr);
         }
@@ -111,35 +104,29 @@ public class ABSsystem implements MainSystem, SystemService
     }
 
     @Override
-    public void depositMoney(String customerName, double amount)
-    {
+    public void depositMoney(String customerName, double amount) {
         Customer chosenCustomer = name2customer.get(customerName);
         chosenCustomer.depositMoney(systemTimeline.getCurrentYaz(), amount);
     }
 
     @Override
-    public void withdrawMoney(String customerName, double amount) throws ValueOutOfRangeException
-    {
+    public void withdrawMoney(String customerName, double amount) throws ValueOutOfRangeException {
         try {
             Customer chosenCustomer = name2customer.get(customerName);
             chosenCustomer.withdrawMoney(systemTimeline.getCurrentYaz(), amount);
-        }
-        catch (ValueOutOfRangeException ex)
-        {
+        } catch (ValueOutOfRangeException ex) {
             throw ex;
         }
 
     }
 
     @Override
-    public void assignLoansToLender(LoanPlacingDTO loanPlacingDTO) throws Exception
-    {
+    public void assignLoansToLender(LoanPlacingDTO loanPlacingDTO) throws Exception {
         LoanPlacing.placeToLoans(loanPlacingDTO, this.loans, this, getCurrYaz());
     }
 
     @Override
-    public TimelineDTO moveTimeLine()
-    {
+    public TimelineDTO moveTimeLine() {
         TimelineDTO timeline;
 
         MoveTimeLine.moveTimeLineInOneYaz(this, systemTimeline);
@@ -148,15 +135,13 @@ public class ABSsystem implements MainSystem, SystemService
         return timeline;
     }
 
-    private LoanDTO createLoanDTO(Loan l)
-    {
-        LoanDTO loan = new LoanDTO(l.getLoanName(),  l.getBorrowerName(), l.getInitialAmount(),
+    private LoanDTO createLoanDTO(Loan l) {
+        LoanDTO loan = new LoanDTO(l.getLoanName(), l.getBorrowerName(), l.getInitialAmount(),
                 l.getMaxYazToPay(), l.getInterestPerPaymentSetByBorrowerInPercents(), l.getTotalInterestForLoan(),
                 l.getPaymentRateInYaz(), l.getStatus().toString(), l.getCategory(), l.getInterestPaid(), l.getAmountPaid(),
                 l.getDebt(), l.getLoanAmountFinancedByLenders());
 
-        for(Loan.LenderDetails ld : l.getLendersDetails())
-        {
+        for (Loan.LenderDetails ld : l.getLendersDetails()) {
             loan.addToLendersNameAndAmount(ld.lender.getName(), ld.lendersAmount);
         }
 
@@ -171,43 +156,36 @@ public class ABSsystem implements MainSystem, SystemService
     //system service interface
 
     @Override
-    public void moveMoneyBetweenAccounts(Account accountToSubtract, Account accountToAdd, double amount)
-    {
+    public void moveMoneyBetweenAccounts(Account accountToSubtract, Account accountToAdd, double amount) {
         accountToSubtract.substructFromBalance(this.getCurrYaz(), amount);
         accountToAdd.addToBalance(this.getCurrYaz(), amount);
     }
-    private void initStatusInfo(LoanDTO loanToInit, Loan l)
-    {
-        switch (l.getStatus())
-        {
-            case PENDING:
-            {
+
+    private void initStatusInfo(LoanDTO loanToInit, Loan l) {
+        switch (l.getStatus()) {
+            case PENDING: {
                 int sum = 0;
 
 //               initLendersInfo(loanToInit, l);
-                for(LoanDTO.LenderDetailsDTO le : loanToInit.getLendersNamesAndAmounts())
-                {
+                for (LoanDTO.LenderDetailsDTO le : loanToInit.getLenderDTOS()) {
                     sum += le.lendersInvestAmount.getValue();
                 }
 
                 loanToInit.setTotalMoneyRaised(sum);
                 break;
             }
-            case ACTIVE:
-            {
+            case ACTIVE: {
 //                initLendersInfo(loanToInit, l);
                 loanToInit.setActivationYaz(l.getActivationYaz());
                 loanToInit.setNextPaymentYaz(loanToInit.getUnpaidPayments().firstKey());
                 break;
             }
-            case IN_RISK:
-            {
+            case IN_RISK: {
 //                initLendersInfo(loanToInit, l);
                 break;
             }
 
-            case FINISHED:
-            {
+            case FINISHED: {
 //                initLendersInfo(loanToInit, l);
                 loanToInit.setActivationYaz(l.getActivationYaz());
                 loanToInit.setFinishYaz(l.getFinishYaz());
@@ -216,16 +194,14 @@ public class ABSsystem implements MainSystem, SystemService
         }
     }
 
-    private CustomerDTO createCustomerDTO(Customer c)
-    {
+    private CustomerDTO createCustomerDTO(Customer c) {
         CustomerDTO customerDTO = new CustomerDTO(c.getName(), c.getAccount().getBalance());
         ArrayList<Account.AccountMovement> customerMovements = c.getAccount().getMovements();
         ArrayList<AccountMovementDTO> customerDTOMovements = new ArrayList<>();
         ArrayList<LoanDTO> customerLoansAsLender = new ArrayList<>();
         ArrayList<LoanDTO> customerLoansAsBorrower = new ArrayList<>();
 
-        for (Account.AccountMovement m : customerMovements)
-        {
+        for (Account.AccountMovement m : customerMovements) {
             AccountMovementDTO curr = new AccountMovementDTO(m.getYaz(), m.getAmount(), m.getMovementKind(),
                     m.getBalanceBefore(), m.getBalanceAfter());
 
@@ -233,14 +209,13 @@ public class ABSsystem implements MainSystem, SystemService
         }
         customerDTO.setAccountMovements(customerDTOMovements);
 
-        for (Loan loan:c.getLoansAsLender()){
+        for (Loan loan : c.getLoansAsLender()) {
             LoanDTO newLoanDTO = createLoanDTO(loan);
             customerLoansAsLender.add(newLoanDTO);
         }
         customerDTO.setLoansAsLender(customerLoansAsLender);
 
-        for (Loan loan:c.getLoansAsBorrower())
-        {
+        for (Loan loan : c.getLoansAsBorrower()) {
             LoanDTO newLoanDTO = createLoanDTO(loan);
             customerLoansAsBorrower.add(newLoanDTO);
         }
@@ -249,112 +224,136 @@ public class ABSsystem implements MainSystem, SystemService
         return customerDTO;
     }
 
-    private void takeDataFromDescriptor(AbsDescriptor descriptor) throws XMLFileException
-    {
-       AbsCategories categories = descriptor.getAbsCategories();
-       AbsLoans loans = descriptor.getAbsLoans();
-       AbsCustomers customers = descriptor.getAbsCustomers();
+    private void takeDataFromDescriptor(AbsDescriptor descriptor) throws XMLFileException {
+        AbsCategories categories = descriptor.getAbsCategories();
+        AbsLoans loans = descriptor.getAbsLoans();
+        AbsCustomers customers = descriptor.getAbsCustomers();
 
-       try {
-           XMLFileChecker.isFileLogicallyOK(loans, customers, categories);
-       }
-       catch (XMLFileException ex) {
-           throw ex;
-       }
+        try {
+            XMLFileChecker.isFileLogicallyOK(loans, customers, categories);
+        } catch (XMLFileException ex) {
+            throw ex;
+        }
 
-       resetSystem();
-       takeCategoriesData(categories);
-       takeCustomersData(customers);
-       takeLoansData(loans);
+        resetSystem();
+        takeCategoriesData(categories);
+        takeCustomersData(customers);
+        takeLoansData(loans);
 
     }
 
-    private void takeCategoriesData(AbsCategories categories)
-    {
-        for(String c : categories.getAbsCategory())
-        {
-            String category =  c.trim();
+    private void takeCategoriesData(AbsCategories categories) {
+        for (String c : categories.getAbsCategory()) {
+            String category = c.trim();
             LoanCategories.addCategory(category);
         }
     }
 
-    private void takeCustomersData(AbsCustomers customers)
-    {
-        for(AbsCustomer c : customers.getAbsCustomer())
-        {
+    private void takeCustomersData(AbsCustomers customers) {
+        for (AbsCustomer c : customers.getAbsCustomer()) {
             Customer customer = JAXBConvertor.convertCustomer(c);
             name2customer.put(customer.getName(), customer);
         }
     }
 
-    private void takeLoansData(AbsLoans loans)
-    {
-            for(AbsLoan l : loans.getAbsLoan())
-            {
-                Loan newLoan =  JAXBConvertor.convertLoan(l, systemTimeline.getCurrentYaz());
-                this.status2loan.put(newLoan.getStatus(), newLoan);
-                this.loanId2Loan.put(newLoan.getLoanId(), newLoan);
-                this.loans.add(newLoan);
+    private void takeLoansData(AbsLoans loans) {
+        for (AbsLoan l : loans.getAbsLoan()) {
+            Loan newLoan = JAXBConvertor.convertLoan(l, systemTimeline.getCurrentYaz());
+            this.status2loan.put(newLoan.getStatus(), newLoan);
+            this.loanId2Loan.put(newLoan.getLoanId(), newLoan);
+            this.loans.add(newLoan);
 
-                Customer customer =  name2customer.get(l.getAbsOwner());
-                customer.getLoansAsBorrower().add(newLoan);
-            }
+            Customer customer = name2customer.get(l.getAbsOwner());
+            customer.getLoansAsBorrower().add(newLoan);
+        }
     }
 
-    public void addNotificationToCustomer(Customer customer, Notification notification){
+    public void addNotificationToCustomer(Customer customer, Notification notification) {
         List<Notification> customerNotifications = customer2Notifications.getOrDefault(customer, new ArrayList<Notification>());
         customerNotifications.add(notification);
         customer2Notifications.put(customer, customerNotifications);
     }
 
-    @Override
-    public Customer getCustomerByName(String name) { return name2customer.get(name); }
+    private Loan getLoanByName(String loanName) throws Exception {
+        for (Loan loan : loans) {
+            if (loan.getLoanName().equals(loanName)) {
+                return loan;
+            }
+        }
+
+        throw new Exception("Loan was not found in loans data base in get loan by name");
+    }
+
+
+    private double getLendersPartOfLoanInAmount(Loan loan, Customer lender) throws Exception {
+        for (Loan.LenderDetails lenderDetails : loan.getLendersDetails()) {
+            if (lenderDetails.lender.getName().equals(lender.getName())) {
+                return lenderDetails.lendersAmount;
+            }
+        }
+
+        throw new Exception("Lender was not found in loan while trying to find lenders part of loan");
+    }
+
+    private double getLendersPartOfLoanInPercent(Loan loan, Customer lender) throws Exception {
+        for (Loan.LenderDetails lenderDetails : loan.getLendersDetails()) {
+            if (lenderDetails.lender.getName().equals(lender.getName())) {
+                return lenderDetails.lendersPartOfLoanInPercent;
+            }
+        }
+
+        throw new Exception("Lender was not found in loan while trying to find lenders part of loan");
+    }
 
     @Override
-    public Map<String, Customer> getAllCustomers(){
+    public Customer getCustomerByName(String name) {
+        return name2customer.get(name);
+    }
+
+    @Override
+    public Map<String, Customer> getAllCustomers() {
         return this.name2customer;
     }
 
     @Override
-    public Timeline getTimeLine(){
+    public Timeline getTimeLine() {
         return this.systemTimeline;
     }
 
     @Override
-    public LoanCategorisDTO getSystemLoanCategories()
-    {
+    public LoanCategorisDTO getSystemLoanCategories() {
         return new LoanCategorisDTO(LoanCategories.getCategories());
     }
 
-    //new methods for javafx
 
+    //new methods for javafx
     @Override
-    public CustomerDTO getCustomerDTO(String customerName){
+    public CustomerDTO getCustomerDTO(String customerName) {
         Customer c = name2customer.get(customerName);
 
         return createCustomerDTO(c);
     }
+
     @Override
-    public NotificationsDTO getNotificationsDTO(String customerName){
+    public NotificationsDTO getNotificationsDTO(String customerName) {
         Customer customer = name2customer.get(customerName);
 
         List<Notification> customerNotifications = customer2Notifications.getOrDefault(customer, new ArrayList<Notification>());
         NotificationsDTO newNotificationsDTO = new NotificationsDTO();
 
-        for (Notification n : customerNotifications)
-        {
-           NotificationsDTO.NotificationDTO singleNotificationDTO = newNotificationsDTO.new NotificationDTO(n.yaz, n.loanName, n.amount, n.DateTime);
-           newNotificationsDTO.notifications.add(singleNotificationDTO);
+        for (Notification n : customerNotifications) {
+            NotificationsDTO.NotificationDTO singleNotificationDTO = newNotificationsDTO.new NotificationDTO(n.yaz, n.loanName, n.amount, n.DateTime);
+            newNotificationsDTO.notifications.add(singleNotificationDTO);
         }
 
         return newNotificationsDTO;
     }
 
     @Override
-    public ArrayList<LoanDTO> getLoansByCustomerNameAsBorrower(String customerName){
-        ArrayList<LoanDTO> loansByCustomerAsBorrower= new ArrayList<>();
+    public ArrayList<LoanDTO> getLoansByCustomerNameAsBorrower(String customerName) {
+        ArrayList<LoanDTO> loansByCustomerAsBorrower = new ArrayList<>();
         for (Loan l : loans) {
-            if(l.getBorrowerName().equals(customerName)){
+            if (l.getBorrowerName().equals(customerName)) {
                 LoanDTO curr = createLoanDTO(l);
                 loansByCustomerAsBorrower.add(curr);
             }
@@ -364,11 +363,11 @@ public class ABSsystem implements MainSystem, SystemService
     }
 
     @Override
-    public ArrayList<LoanDTO> getLoansByCustomerNameAsLender(String customerName){
-        ArrayList<LoanDTO> loansByCustomerAsBorrower= new ArrayList<>();
+    public ArrayList<LoanDTO> getLoansByCustomerNameAsLender(String customerName) {
+        ArrayList<LoanDTO> loansByCustomerAsBorrower = new ArrayList<>();
 
         for (Loan l : loans) {
-            if(isCustomerIsLenderInLoan(l,customerName)){
+            if (isCustomerIsLenderInLoan(l, customerName)) {
                 LoanDTO curr = createLoanDTO(l);
                 loansByCustomerAsBorrower.add(curr);
             }
@@ -378,16 +377,17 @@ public class ABSsystem implements MainSystem, SystemService
     }
 
     @Override
-    public void setScrambleController(ScrambleController controller){
+    public void setScrambleController(ScrambleController controller) {
         this.scrambleController = controller;
     }
 
-    private boolean isCustomerIsLenderInLoan(Loan loan, String customerName){
+
+    private boolean isCustomerIsLenderInLoan(Loan loan, String customerName) {
         boolean result = false;
         LinkedList<Loan.LenderDetails> lendersDetails = loan.getLendersDetails();
 
-        for (Loan.LenderDetails lenderDetails:lendersDetails){
-            if (lenderDetails.lender.getName().equals(customerName)){
+        for (Loan.LenderDetails lenderDetails : lendersDetails) {
+            if (lenderDetails.lender.getName().equals(customerName)) {
                 result = true;
                 break;
             }
@@ -397,7 +397,7 @@ public class ABSsystem implements MainSystem, SystemService
     }
 
     @Override
-    public void assignLoansToLenderWithTask(LoanPlacingDTO loanPlacingDTO, Consumer<Integer> numberOfLoansAssigned){
+    public void assignLoansToLenderWithTask(LoanPlacingDTO loanPlacingDTO, Consumer<Integer> numberOfLoansAssigned) {
         //Consumers wiring
         Consumer<Integer> numberOfLoansAssignedToLenderConsumer = number -> {
             this.numberOfLoansAssignedInSinglePlacingAlgorithmRun = number;
@@ -410,39 +410,111 @@ public class ABSsystem implements MainSystem, SystemService
     }
 
 
+    public void makeLoanPaymentFromBorrowerToLender(Loan loan, LoanPaymentsData.Payment payment, Customer borrower, Customer lender) {
+        try {
+            Account borrowerAccount = borrower.getAccount();
+            Account lenderAccount = lender.getAccount();
+            double paymentFullAmount = payment.getBothPartsOfAmountToPay();
+            double lendersPartOfLoanInPercent = getLendersPartOfLoanInPercent(loan, lender);
+            double lendersPartOfPaymentInAmount = (lendersPartOfLoanInPercent / 100) * paymentFullAmount;
 
+            moveMoneyBetweenAccounts(borrowerAccount, lenderAccount, lendersPartOfPaymentInAmount);
+            payment.setPartialPaidInPercents(lendersPartOfLoanInPercent);
+        }
 
+        catch (Exception e) {
+            System.out.println("There was a problem while trying to make loan payment from borrower to lender");
 
-
-//    public void collectMetadata(Consumer<Long> totalWordsDelegate, Consumer<Long> totalLinesDelegate, Runnable onFinish) {
-//
-//        Consumer<Long> totalWordsConsumer = tw -> {
-//            this.totalWords = tw;
-//            totalWordsDelegate.accept(tw);
-//        };
-//
-//        currentRunningTask = new CollectMetadataTask(fileName.get(), totalWordsConsumer, totalLinesDelegate);
-//
-//        controller.bindTaskToUIComponents(currentRunningTask, onFinish);
-//
-//        new Thread(currentRunningTask).start();
+        }
     }
 
+    @Override
+    public void payToLender(LoanDTO.LenderDetailsDTO lenderDTO, LoanDTO loanDTO, int yaz) { //change later to DTO
+        try {
+            Customer lender = name2customer.get(lenderDTO.getLenderName());
+            Customer borrower = name2customer.get(loanDTO.getCustomerName());
+            Loan loan = getLoanByName(loanDTO.getLoanName());
+            LoanPaymentsData.Payment payment = loan.pollPaymentForSpecificYaz(yaz);
 
-//    @Override
-//    public ScrambleQueryFieldsDTO getScrambleQueryFields(){
-//        ScrambleQueryFieldsDTO newScrambleQueryDTO = new ScrambleQueryFieldsDTO();
-//        newScrambleQueryDTO.scrambleQueryFields.addAll(scrambleQueryFields);
-//        newScrambleQueryDTO.loansCategories.addAll(LoanCategories.getCategories());
-//
-//        return newScrambleQueryDTO;
-//    }
+            makeLoanPaymentFromBorrowerToLender(loan, payment, borrower, lender);
+            if (payment.getBothPartsOfAmountToPay() == payment.getBothPartsOfPaymentThatWasPaid()) {
+                payment.setPaymentType(LoanPaymentsData.PaymentType.PAID);
+            }
+            //else, the payment was not fully paid, so its status is still UNPAID
+            loan.addNewPayment(payment);
+            changeLoanStatusIfNeeded(loan);
+        }
 
-//    private void initLoanPlacingQueryFields(){
-//        Path path = Paths.get("/Engine/LoanPlacing/LoanPlacingConfigurations/scrambleQueryFields.txt"); //enter the path here of the text csv file
-//        scrambleQueryFields = loanPlacingConfigurationsHandler.readCSVFile(path);
-//    }
+        catch (Exception e) {
+            System.out.println("There was a problem while trying to pay to lender");
+        }
+    }
+
+    private void changeLoanStatusIfNeeded(Loan loan){
+        if(!loan.isTherePaymentsOfSpecificType(LoanPaymentsData.PaymentType.UNPAID)){
+            loan.setLoanStatus(Loan.LoanStatus.FINISHED, systemTimeline.getCurrentYaz());
+        }
+    }
+
+    @Override
+    public void payToAllLendersForCurrentYaz(LoanDTO loanDTO, int yaz) {
+        for (LoanDTO.LenderDetailsDTO lenderDetailsDTO : loanDTO.getLenderDTOS()) {
+            payToLender(lenderDetailsDTO, loanDTO, yaz);
+        }
+    }
+
+    @Override
+    public void closeLoan(LoanDTO loanDTO, int yaz){
+        try {
+            Loan loan = getLoanByName(loanDTO.getLoanName());
+            PaymentsDB paymentsDb = (PaymentsDB)loan.getPayments(LoanPaymentsData.PaymentType.UNPAID);
+            Customer borrower = name2customer.get(loan.getBorrowerName());
+
+            for (LoanPaymentsData.Payment payment: paymentsDb.getPayments().values()){
+                closePayment(payment,borrower, loan);
+            }
+
+            loan.setLoanStatus(Loan.LoanStatus.FINISHED, yaz);
+        }
+
+        catch (Exception e){
+            System.out.println("There was a problem while trying to close the loan");
+        }
+    }
+
+    private void closePayment(LoanPaymentsData.Payment payment, Customer borrower, Loan loan){
+        double amountToPay = payment.getBothPartsOfAmountToPay();
+        Account loansAccount = loan.getLoanAccount();
+        Account borrowerAccount = borrower.getAccount();
+
+        moveMoneyBetweenAccounts(borrowerAccount, loansAccount, amountToPay);
+        splitLoanMoneyToLenders(loan);
+        payment.setPaymentType(LoanPaymentsData.PaymentType.PAID);
+    }
+
+    private void splitLoanMoneyToLenders(Loan loan){
+        LinkedList<Loan.LenderDetails> lenders = loan.getLendersDetails();
+
+        for (Loan.LenderDetails lenderDetails: lenders){
+            Account lendersAccount = lenderDetails.lender.getAccount();
+            Account loansAccount = loan.getLoanAccount();
+            double amountInLoan = loansAccount.getBalance();
+            double lendersPartOfLoanInPercent = lenderDetails.lendersPartOfLoanInPercent;
+            double amountToTransfer = (lendersPartOfLoanInPercent / 100) * amountInLoan;
+
+            moveMoneyBetweenAccounts(loansAccount, lendersAccount, amountToTransfer);
+        }
 
 
 
+    }
 
+    @Override
+    public boolean hasBorrowerEnoughFundsToPayAmount(Customer customerDTO, double amount){
+        Customer borrower = name2customer.get(customerDTO.getName());
+        double funds = borrower.getAccount().getBalance();
+
+        return funds >= amount;
+    }
+
+}

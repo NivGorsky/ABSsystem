@@ -29,6 +29,11 @@ public interface MainSystem {
 //    public ScrambleQueryFieldsDTO getScrambleQueryFields();
     public void setScrambleController(ScrambleController controller);
     public void assignLoansToLenderWithTask(LoanPlacingDTO loanPlacingDTO, Consumer<Integer> numberOfLoansAssigned);
+    public void closeLoan(LoanDTO loanDTO, int yaz);
+    public void payToAllLendersForCurrentYaz(LoanDTO loan, int yaz);
+    public void payToLender(LoanDTO.LenderDetailsDTO lenderDTO, LoanDTO loanDTO, int yaz);
+    public boolean hasBorrowerEnoughFundsToPayAmount(Customer customerDTO, double amount);
+
 
 
 

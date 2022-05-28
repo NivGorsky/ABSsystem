@@ -196,10 +196,10 @@ public class LoansTableComponentController implements ParentController {
             if(parentController instanceof PaymentController){
                 PaymentController parentControllerAsPaymentController = (PaymentController)parentController;
                 parentControllerAsPaymentController.LoanWasSelectedFromLoansTable(newValue);
+                parentControllerAsPaymentController.setSelectedLoanFromLoansTable(newValue);
             }
         });
     }
-
 }
 
 

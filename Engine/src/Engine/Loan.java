@@ -245,6 +245,8 @@ public class Loan
     private void updateLoanToActive(int yaz){
         this.paymentsData.addYazToAllPayments(yaz);
         makeMoneyTransferBetweenLoanAccountAndBorrower();
+        //
+        this.debt = totalInterestForLoan + initialAmount;
     }
 
     private void makeMoneyTransferBetweenLoanAccountAndBorrower(){

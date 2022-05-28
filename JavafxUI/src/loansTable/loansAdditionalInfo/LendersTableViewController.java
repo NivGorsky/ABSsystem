@@ -20,7 +20,7 @@ public class LendersTableViewController {
         amountCol.setCellValueFactory(cellData -> cellData.getValue().lendersInvestAmountProperty().asObject());
 
         ObservableList<LoanDTO.LenderDetailsDTO> lenders = FXCollections.observableArrayList();
-        lenders.addAll(loan.getLendersNamesAndAmounts());
+        lenders.addAll(loan.getLenderDTOS());
         lendersTableView.setItems(lenders);
     }
 }
