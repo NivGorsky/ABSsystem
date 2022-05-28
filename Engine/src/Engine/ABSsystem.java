@@ -39,29 +39,6 @@ public class ABSsystem implements MainSystem, SystemService {
         numberOfLoansAssignedInSinglePlacingAlgorithmRun = -1;
     }
 
-    @Override
-    public int getCurrYaz() {
-        return systemTimeline.getCurrentYaz();
-    }
-
-    @Override
-    public ArrayList<String> getCustomersNames() {
-        return new ArrayList<>(name2customer.keySet());
-    }
-
-    @Override
-    public void loadXML(String path) throws XMLFileException {
-        try {
-            InputStream loadedXMLFile = SchemaForLAXB.getDescriptorFromXML(path);
-            XMLFileChecker.isFileExists(path);
-            XMLFileChecker.isXMLFile(path);
-            takeDataFromDescriptor(SchemaForLAXB.descriptor);
-            injectSystemServiceInterfaceToLoans();
-        } catch (XMLFileException ex) {
-            throw ex;
-        }
-    }
-
     private void injectSystemServiceInterfaceToLoans() {
         for (Loan loan : loans) {
             loan.setSystemService(this);
@@ -79,86 +56,6 @@ public class ABSsystem implements MainSystem, SystemService {
         loanId2Loan = new TreeMap<>();
         loans = new LinkedList<>();
         status2loan = new TreeMap<>();
-    }
-
-    @Override
-    public ArrayList<LoanDTO> showLoansInfo() {
-        ArrayList<LoanDTO> loansInfo = new ArrayList<>();
-        for (Loan l : loans) {
-            LoanDTO curr = createLoanDTO(l);
-            loansInfo.add(curr);
-        }
-
-        return loansInfo;
-    }
-
-    @Override
-    public ArrayList<CustomerDTO> showCustomersInfo() {
-        ArrayList<CustomerDTO> customersInfo = new ArrayList<>();
-        for (Customer c : name2customer.values()) {
-            CustomerDTO curr = createCustomerDTO(c);
-            customersInfo.add(curr);
-        }
-
-        return customersInfo;
-    }
-
-    @Override
-    public void depositMoney(String customerName, double amount) {
-        Customer chosenCustomer = name2customer.get(customerName);
-        chosenCustomer.depositMoney(systemTimeline.getCurrentYaz(), amount);
-    }
-
-    @Override
-    public void withdrawMoney(String customerName, double amount) throws ValueOutOfRangeException {
-        try {
-            Customer chosenCustomer = name2customer.get(customerName);
-            chosenCustomer.withdrawMoney(systemTimeline.getCurrentYaz(), amount);
-        } catch (ValueOutOfRangeException ex) {
-            throw ex;
-        }
-
-    }
-
-    @Override
-    public void assignLoansToLender(LoanPlacingDTO loanPlacingDTO) throws Exception {
-        LoanPlacing.placeToLoans(loanPlacingDTO, this.loans, this, getCurrYaz());
-    }
-
-    @Override
-    public TimelineDTO moveTimeLine() {
-        TimelineDTO timeline;
-
-        MoveTimeLine.moveTimeLineInOneYaz(this, systemTimeline);
-        timeline = new TimelineDTO(systemTimeline.getCurrentYaz());
-
-        return timeline;
-    }
-
-    private LoanDTO createLoanDTO(Loan l) {
-        LoanDTO loan = new LoanDTO(l.getLoanName(), l.getBorrowerName(), l.getInitialAmount(),
-                l.getMaxYazToPay(), l.getInterestPerPaymentSetByBorrowerInPercents(), l.getTotalInterestForLoan(),
-                l.getPaymentRateInYaz(), l.getStatus().toString(), l.getCategory(), l.getInterestPaid(), l.getAmountPaid(),
-                l.getDebt(), l.getLoanAmountFinancedByLenders());
-
-        for (Loan.LenderDetails ld : l.getLendersDetails()) {
-            loan.addToLendersNameAndAmount(ld.lender.getName(), ld.lendersAmount);
-        }
-
-
-        loan.setUnpaidPayments(l.getPaymentsData().getPaymentsDataBases().get(LoanPaymentsData.PaymentType.UNPAID));
-        loan.setPaidPayments(l.getPaymentsData().getPaymentsDataBases().get(LoanPaymentsData.PaymentType.PAID));
-
-        initStatusInfo(loan, l);
-        return loan;
-    }
-
-    //system service interface
-
-    @Override
-    public void moveMoneyBetweenAccounts(Account accountToSubtract, Account accountToAdd, double amount) {
-        accountToSubtract.substructFromBalance(this.getCurrYaz(), amount);
-        accountToAdd.addToBalance(this.getCurrYaz(), amount);
     }
 
     private void initStatusInfo(LoanDTO loanToInit, Loan l) {
@@ -284,7 +181,6 @@ public class ABSsystem implements MainSystem, SystemService {
         throw new Exception("Loan was not found in loans data base in get loan by name");
     }
 
-
     private double getLendersPartOfLoanInAmount(Loan loan, Customer lender) throws Exception {
         for (Loan.LenderDetails lenderDetails : loan.getLendersDetails()) {
             if (lenderDetails.lender.getName().equals(lender.getName())) {
@@ -303,6 +199,172 @@ public class ABSsystem implements MainSystem, SystemService {
         }
 
         throw new Exception("Lender was not found in loan while trying to find lenders part of loan");
+    }
+
+    private boolean isCustomerIsLenderInLoan(Loan loan, String customerName) {
+        boolean result = false;
+        LinkedList<Loan.LenderDetails> lendersDetails = loan.getLendersDetails();
+
+        for (Loan.LenderDetails lenderDetails : lendersDetails) {
+            if (lenderDetails.lender.getName().equals(customerName)) {
+                result = true;
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    public void makeLoanPaymentFromBorrowerToLender(Loan loan, LoanPaymentsData.Payment payment, Customer borrower, Customer lender) {
+        try {
+            Account borrowerAccount = borrower.getAccount();
+            Account lenderAccount = lender.getAccount();
+            double paymentFullAmount = payment.getBothPartsOfAmountToPay();
+            double lendersPartOfLoanInPercent = getLendersPartOfLoanInPercent(loan, lender);
+            double lendersPartOfPaymentInAmount = (lendersPartOfLoanInPercent / 100) * paymentFullAmount;
+
+            moveMoneyBetweenAccounts(borrowerAccount, lenderAccount, lendersPartOfPaymentInAmount);
+            payment.setPartialPaidInPercents(lendersPartOfLoanInPercent);
+        }
+
+        catch (Exception e) {
+            System.out.println("There was a problem while trying to make loan payment from borrower to lender");
+
+        }
+    }
+
+    private void changeLoanStatusIfNeeded(Loan loan){
+        if(!loan.isTherePaymentsOfSpecificType(LoanPaymentsData.PaymentType.UNPAID)){
+            loan.setLoanStatus(Loan.LoanStatus.FINISHED, systemTimeline.getCurrentYaz());
+        }
+    }
+
+    private void closePayment(LoanPaymentsData.Payment payment, Customer borrower, Loan loan){
+        double amountToPay = payment.getBothPartsOfAmountToPay();
+        Account loansAccount = loan.getLoanAccount();
+        Account borrowerAccount = borrower.getAccount();
+
+        moveMoneyBetweenAccounts(borrowerAccount, loansAccount, amountToPay);
+        splitLoanMoneyToLenders(loan);
+        payment.setPaymentType(LoanPaymentsData.PaymentType.PAID);
+    }
+
+    private void splitLoanMoneyToLenders(Loan loan){
+        LinkedList<Loan.LenderDetails> lenders = loan.getLendersDetails();
+
+        for (Loan.LenderDetails lenderDetails: lenders){
+            Account lendersAccount = lenderDetails.lender.getAccount();
+            Account loansAccount = loan.getLoanAccount();
+            double amountInLoan = loansAccount.getBalance();
+            double lendersPartOfLoanInPercent = lenderDetails.lendersPartOfLoanInPercent;
+            double amountToTransfer = (lendersPartOfLoanInPercent / 100) * amountInLoan;
+
+            moveMoneyBetweenAccounts(loansAccount, lendersAccount, amountToTransfer);
+        }
+
+
+
+    }
+
+    private LoanDTO createLoanDTO(Loan l) {
+        LoanDTO loan = new LoanDTO(l.getLoanName(), l.getBorrowerName(), l.getInitialAmount(),
+                l.getMaxYazToPay(), l.getInterestPerPaymentSetByBorrowerInPercents(), l.getTotalInterestForLoan(),
+                l.getPaymentRateInYaz(), l.getStatus().toString(), l.getCategory(), l.getInterestPaid(), l.getAmountPaid(),
+                l.getDebt(), l.getLoanAmountFinancedByLenders());
+
+        for (Loan.LenderDetails ld : l.getLendersDetails()) {
+            loan.addToLendersNameAndAmount(ld.lender.getName(), ld.lendersAmount);
+        }
+
+
+        loan.setUnpaidPayments(l.getPaymentsData().getPaymentsDataBases().get(LoanPaymentsData.PaymentType.UNPAID));
+        loan.setPaidPayments(l.getPaymentsData().getPaymentsDataBases().get(LoanPaymentsData.PaymentType.PAID));
+
+        initStatusInfo(loan, l);
+        return loan;
+    }
+
+    @Override
+    public int getCurrYaz() {
+        return systemTimeline.getCurrentYaz();
+    }
+
+    @Override
+    public ArrayList<String> getCustomersNames() {
+        return new ArrayList<>(name2customer.keySet());
+    }
+
+    @Override
+    public void loadXML(String path) throws XMLFileException {
+        try {
+            InputStream loadedXMLFile = SchemaForLAXB.getDescriptorFromXML(path);
+            XMLFileChecker.isFileExists(path);
+            XMLFileChecker.isXMLFile(path);
+            takeDataFromDescriptor(SchemaForLAXB.descriptor);
+            injectSystemServiceInterfaceToLoans();
+        } catch (XMLFileException ex) {
+            throw ex;
+        }
+    }
+
+    @Override
+    public ArrayList<LoanDTO> showLoansInfo() {
+        ArrayList<LoanDTO> loansInfo = new ArrayList<>();
+        for (Loan l : loans) {
+            LoanDTO curr = createLoanDTO(l);
+            loansInfo.add(curr);
+        }
+
+        return loansInfo;
+    }
+
+    @Override
+    public ArrayList<CustomerDTO> showCustomersInfo() {
+        ArrayList<CustomerDTO> customersInfo = new ArrayList<>();
+        for (Customer c : name2customer.values()) {
+            CustomerDTO curr = createCustomerDTO(c);
+            customersInfo.add(curr);
+        }
+
+        return customersInfo;
+    }
+
+    @Override
+    public void depositMoney(String customerName, double amount) {
+        Customer chosenCustomer = name2customer.get(customerName);
+        chosenCustomer.depositMoney(systemTimeline.getCurrentYaz(), amount);
+    }
+
+    @Override
+    public void withdrawMoney(String customerName, double amount) throws ValueOutOfRangeException {
+        try {
+            Customer chosenCustomer = name2customer.get(customerName);
+            chosenCustomer.withdrawMoney(systemTimeline.getCurrentYaz(), amount);
+        } catch (ValueOutOfRangeException ex) {
+            throw ex;
+        }
+
+    }
+
+    @Override
+    public void assignLoansToLender(LoanPlacingDTO loanPlacingDTO) throws Exception {
+        LoanPlacing.placeToLoans(loanPlacingDTO, this.loans, this, getCurrYaz());
+    }
+
+    @Override
+    public TimelineDTO moveTimeLine() {
+        TimelineDTO timeline;
+
+        MoveTimeLine.moveTimeLineInOneYaz(this, systemTimeline);
+        timeline = new TimelineDTO(systemTimeline.getCurrentYaz());
+
+        return timeline;
+    }
+
+    @Override
+    public void moveMoneyBetweenAccounts(Account accountToSubtract, Account accountToAdd, double amount) {
+        accountToSubtract.substructFromBalance(this.getCurrYaz(), amount);
+        accountToAdd.addToBalance(this.getCurrYaz(), amount);
     }
 
     @Override
@@ -325,8 +387,6 @@ public class ABSsystem implements MainSystem, SystemService {
         return new LoanCategorisDTO(LoanCategories.getCategories());
     }
 
-
-    //new methods for javafx
     @Override
     public CustomerDTO getCustomerDTO(String customerName) {
         Customer c = name2customer.get(customerName);
@@ -381,21 +441,6 @@ public class ABSsystem implements MainSystem, SystemService {
         this.scrambleController = controller;
     }
 
-
-    private boolean isCustomerIsLenderInLoan(Loan loan, String customerName) {
-        boolean result = false;
-        LinkedList<Loan.LenderDetails> lendersDetails = loan.getLendersDetails();
-
-        for (Loan.LenderDetails lenderDetails : lendersDetails) {
-            if (lenderDetails.lender.getName().equals(customerName)) {
-                result = true;
-                break;
-            }
-        }
-
-        return result;
-    }
-
     @Override
     public void assignLoansToLenderWithTask(LoanPlacingDTO loanPlacingDTO, Consumer<Integer> numberOfLoansAssigned) {
         //Consumers wiring
@@ -407,25 +452,6 @@ public class ABSsystem implements MainSystem, SystemService {
         currentRunningTask = new LoanPlacingAsTask(numberOfLoansAssignedToLenderConsumer, loanPlacingDTO, this.loans, this, getCurrYaz());
         scrambleController.bindTaskToUIComponents(currentRunningTask);
         new Thread(currentRunningTask).start();
-    }
-
-
-    public void makeLoanPaymentFromBorrowerToLender(Loan loan, LoanPaymentsData.Payment payment, Customer borrower, Customer lender) {
-        try {
-            Account borrowerAccount = borrower.getAccount();
-            Account lenderAccount = lender.getAccount();
-            double paymentFullAmount = payment.getBothPartsOfAmountToPay();
-            double lendersPartOfLoanInPercent = getLendersPartOfLoanInPercent(loan, lender);
-            double lendersPartOfPaymentInAmount = (lendersPartOfLoanInPercent / 100) * paymentFullAmount;
-
-            moveMoneyBetweenAccounts(borrowerAccount, lenderAccount, lendersPartOfPaymentInAmount);
-            payment.setPartialPaidInPercents(lendersPartOfLoanInPercent);
-        }
-
-        catch (Exception e) {
-            System.out.println("There was a problem while trying to make loan payment from borrower to lender");
-
-        }
     }
 
     @Override
@@ -447,12 +473,6 @@ public class ABSsystem implements MainSystem, SystemService {
 
         catch (Exception e) {
             System.out.println("There was a problem while trying to pay to lender");
-        }
-    }
-
-    private void changeLoanStatusIfNeeded(Loan loan){
-        if(!loan.isTherePaymentsOfSpecificType(LoanPaymentsData.PaymentType.UNPAID)){
-            loan.setLoanStatus(Loan.LoanStatus.FINISHED, systemTimeline.getCurrentYaz());
         }
     }
 
@@ -480,33 +500,6 @@ public class ABSsystem implements MainSystem, SystemService {
         catch (Exception e){
             System.out.println("There was a problem while trying to close the loan");
         }
-    }
-
-    private void closePayment(LoanPaymentsData.Payment payment, Customer borrower, Loan loan){
-        double amountToPay = payment.getBothPartsOfAmountToPay();
-        Account loansAccount = loan.getLoanAccount();
-        Account borrowerAccount = borrower.getAccount();
-
-        moveMoneyBetweenAccounts(borrowerAccount, loansAccount, amountToPay);
-        splitLoanMoneyToLenders(loan);
-        payment.setPaymentType(LoanPaymentsData.PaymentType.PAID);
-    }
-
-    private void splitLoanMoneyToLenders(Loan loan){
-        LinkedList<Loan.LenderDetails> lenders = loan.getLendersDetails();
-
-        for (Loan.LenderDetails lenderDetails: lenders){
-            Account lendersAccount = lenderDetails.lender.getAccount();
-            Account loansAccount = loan.getLoanAccount();
-            double amountInLoan = loansAccount.getBalance();
-            double lendersPartOfLoanInPercent = lenderDetails.lendersPartOfLoanInPercent;
-            double amountToTransfer = (lendersPartOfLoanInPercent / 100) * amountInLoan;
-
-            moveMoneyBetweenAccounts(loansAccount, lendersAccount, amountToTransfer);
-        }
-
-
-
     }
 
     @Override

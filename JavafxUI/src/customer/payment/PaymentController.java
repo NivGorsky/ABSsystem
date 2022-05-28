@@ -28,7 +28,6 @@ public class PaymentController implements ParentController {
     private LoanDTO selectedLoanFromLoansTable;
 
     @FXML ScrollPane borrowerLoansTableComponent;
-
     @FXML LoansTableComponentController borrowerLoansTableComponentController;
     @FXML private Accordion notificationsBoard;
     @FXML private TableColumn<LoanDTO.LenderDetailsDTO, String> lendersNameTableColumn;
