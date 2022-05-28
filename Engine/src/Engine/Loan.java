@@ -136,6 +136,7 @@ public class Loan
             case ACTIVE:
             {
                 updateLoanToActive(currentYaz + this.paymentRateInYaz);
+                activationYaz = currentYaz;
                 break;
             }
 
