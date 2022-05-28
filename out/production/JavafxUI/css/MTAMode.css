@@ -20,7 +20,6 @@
 .button:hover {-fx-opacity: 0.6}
 
 .combo-box {
-
     -fx-text-align: center;
     -fx-font-size: 12px;
     -fx-background-radius: 10px;
@@ -29,6 +28,10 @@
     -fx-background-color: #FFE69A;
     -fx-border-color: #FFD24C;
  }
+
+.combo-box .arrow-button .arrow{
+    -fx-background-color: #6998E5;
+}
 
  .combo-box .list-cell {
      -fx-text-fill: #6998E5;
@@ -58,6 +61,19 @@
   .tab:selected {
       -fx-font-weight: bold;
  }
+
+.titled-pane .title {
+    -fx-background-color: #FFE69A;
+    -fx-border-color: #FFD24C;
+}
+
+.titled-pane .title .text {
+    -fx-fill: #6998E5;
+}
+
+.titled-pane .title .arrow-button .arrow {
+    -fx-background-color: #6998E5;
+}
 
 .radio-button,
  .label {

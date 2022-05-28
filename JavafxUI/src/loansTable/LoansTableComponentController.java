@@ -2,15 +2,12 @@ package loansTable;
 
 import DTO.LoanDTO;
 import Engine.MainSystem;
-import adminScene.AdminSceneController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import mutualInterfaces.ParentController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -100,24 +97,28 @@ public class LoansTableComponentController implements ParentController {
             switch (loan.getStatus())
             {
                 case "PENDING": {
-                    FXMLLoader loader = loadFile("pendingInfo.fxml");
+                    FXMLLoader loader = loadFile("loansAdditionalInfo/pendingInfo.fxml");
                     this.pendingInfoController = loader.getController();
                     pendingInfoController.setData(loan);
+                    break;
                 }
                 case "ACTIVE": {
-                    FXMLLoader loader = loadFile("activeInfo.fxml");
+                    FXMLLoader loader = loadFile("loansAdditionalInfo/activeInfo.fxml");
                     this.activeInfoController = loader.getController();
                     activeInfoController.setData(loan);
+                    break;
                 }
                 case "IN_RISK": {
-                    FXMLLoader loader = loadFile("inRiskInfo.fxml");
+                    FXMLLoader loader = loadFile("loansAdditionalInfo/inRiskInfo.fxml");
                     this.inRiskInfoController = loader.getController();
                     inRiskInfoController.setData(loan);
+                    break;
                 }
                 case "FINISHED": {
-                    FXMLLoader loader =loadFile("finishedInfo.fxml");
+                    FXMLLoader loader =loadFile("loansAdditionalInfo/finishedInfo.fxml");
                     this.finishedInfoController = loader.getController();
                     finishedInfoController.setData(loan);
+                    break;
                 }
             }
         }
@@ -170,20 +171,18 @@ public class LoansTableComponentController implements ParentController {
 
     private FXMLLoader loadFile(String path)
     {
-        FXMLLoader loader = null;
+        FXMLLoader loader = new FXMLLoader();
         try {
-            loader = new FXMLLoader();
-            URL url = getClass().getResource("inRiskInfo.fxml");
+            URL url = getClass().getResource(path);
             loader.setLocation(url);
             ScrollPane container = loader.load(url.openStream());
             additionalInfoScrollPane.setContent(container);
         }
-        catch (Exception ex)
-        {
-
+        catch (Exception ex) {
+            parentController.createExceptionDialog(ex);
         }
 
-        return null;
+        return loader;
     }
 }
 

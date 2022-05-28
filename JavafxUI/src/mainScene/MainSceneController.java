@@ -10,6 +10,7 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -21,7 +22,7 @@ public class MainSceneController {
 
     @FXML private GridPane header;
     @FXML private HeaderController headerController;
-    @FXML private ScrollPane adminScene;
+    @FXML private BorderPane adminScene;
     @FXML private AdminSceneController adminSceneController;
 
     @FXML private TabPane customerPane;
@@ -65,6 +66,7 @@ public class MainSceneController {
     {
         headerController.setSelectedFilePathProperty(path);
         headerController.setIsFileSelectedProperty(true);
+        headerController.setViewByList(model.getCustomersNames());
     }
 
     public void createExceptionDialog(Exception ex)

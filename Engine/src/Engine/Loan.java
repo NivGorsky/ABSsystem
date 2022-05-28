@@ -182,11 +182,6 @@ public class Loan
         this.loanAmountFinancedByLenders += newLenderDetails.lendersAmount;
     }
 
-    private void addExistLender(Engine.Customer newLender, double lendersPartOfLoanAmount){
-
-
-    }
-
 
     public boolean isLoanReadyToBeActive()
     {

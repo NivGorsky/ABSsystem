@@ -2,14 +2,9 @@ package loansTable.loansAdditionalInfo;
 
 import DTO.LoanDTO;
 import javafx.beans.binding.Bindings;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.ObservableListBase;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import loansTable.LoansTableComponentController;
-
-import java.beans.BeanInfo;
 
 public class PendingInfoController {
 
@@ -26,22 +21,18 @@ public class PendingInfoController {
 
     private LoansTableComponentController parentController;
 
-    public void setParentController(LoansTableComponentController parentController)
-    {
+    public void setParentController(LoansTableComponentController parentController) {
         this.parentController = parentController;
-    }
-
-    @FXML public void initialize()
-    {
-        raisedAmountLabel.textProperty().bind(Bindings.concat("Amount raised so far: " + raisedAmount));
-        amountToRaiseLabel.textProperty().bind(Bindings.concat("Amount remained to raise: " + amountToRaise));
     }
 
     public void setData(LoanDTO loan)
     {
         lendersTableViewController.setLendersData(loan);
 
-        raisedAmount = loan.getAmountRaised();
-        amountToRaise = loan.getInitialAmount() - raisedAmount;
+        this.raisedAmount = loan.getAmountRaised();
+        this.amountToRaise = (loan.getInitialAmount() - this.raisedAmount);
+
+        raisedAmountLabel.setText("Amount raised so far: " + this.raisedAmount);
+        amountToRaiseLabel.setText("Amount remained to raise: " + this.amountToRaise);
     }
 }

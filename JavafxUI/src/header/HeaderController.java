@@ -51,11 +51,6 @@ public class HeaderController {
            parentController.switchBody(viewByCB.getSelectionModel().getSelectedItem());
        });
        currentYazLabel.disableProperty().bind(isFileSelected.not());
-       isFileSelected.addListener(((observable, oldValue, newValue) -> {
-           ArrayList<String> customerNames = parentController.getCustomers();
-           viewByOptions.addAll(FXCollections.observableArrayList(customerNames));
-           viewByCB.setItems(viewByOptions);}));
-
        displayModeCB.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
            parentController.switchStyleSheet(displayModeCB.getSelectionModel().getSelectedItem());
        });
@@ -74,4 +69,9 @@ public class HeaderController {
     public void setIsFileSelectedProperty(Boolean isSelected) { isFileSelected.set(isSelected);}
 
 
+    public void setViewByList(ArrayList<String> customersNames) {
+        viewByOptions.remove(1,viewByOptions.size());
+        viewByOptions.addAll(FXCollections.observableArrayList(customersNames));
+        viewByCB.setItems(viewByOptions);
+    }
 }

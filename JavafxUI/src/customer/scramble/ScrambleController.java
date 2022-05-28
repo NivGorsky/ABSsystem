@@ -55,65 +55,41 @@ public class ScrambleController {
     public void setModel(MainSystem model){
         this.model = model;
     }
-    @FXML
-    private RadioButton minInterestPerYazRatioButton;
+    @FXML private RadioButton minInterestPerYazRatioButton;
+    @FXML private TextField minInterestPerYazTextField;
+    @FXML private GridPane scrambleQueryFieldsGrid;
+    @FXML private TextField maxPercentageOwnershipTextField;
+    @FXML private TextField minYazForLoanTextField;
+    @FXML private TextField maxOpenLoansForBorrowerTextField;
+    @FXML private RadioButton minYazForLoanRadioButton;
+    @FXML private RadioButton maxOpenLoansForBorrowerRadioButton;
+    @FXML private RadioButton maxPercentageOwnershipRadioButton;
+    @FXML private RadioButton amountRadioButton;
+    @FXML private TextField amountTextField;
+    @FXML private RadioButton chooseLoanCategoriesRadioButton;
+    @FXML private TableView<LoanCategoryForTable> loanCategoriesViewTable;
+    @FXML private TableColumn<LoanCategoryForTable, String> loanCategoryViewColumn;
+    @FXML private Button findLoansButton;
+    @FXML private ProgressBar findLoansProgressionBar;
+    @FXML private Label progressBarMessageLabel;
 
-    @FXML
-    private TextField minInterestPerYazTextField;
 
-    @FXML
-    private GridPane scrambleQueryFieldsGrid;
-
-    @FXML
-    private TextField maxPercentageOwnershipTextField;
-
-    @FXML
-    private TextField minYazForLoanTextField;
-
-    @FXML
-    private TextField maxOpenLoansForBorrowerTextField;
-
-    @FXML
-    private RadioButton minYazForLoanRadioButton;
-
-    @FXML
-    private RadioButton maxOpenLoansForBorrowerRadioButton;
-
-    @FXML
-    private RadioButton maxPercentageOwnershipRadioButton;
-
-    @FXML
-    private RadioButton amountRadioButton;
-
-    @FXML
-    private TextField amountTextField;
-
-    @FXML
-    private RadioButton chooseLoanCategoriesRadioButton;
-
-    @FXML
-    private TableView<LoanCategoryForTable> loanCategoriesViewTable;
-
-    @FXML
-    private TableColumn<LoanCategoryForTable, String> loanCategoryViewColumn;
-
-    @FXML
-    private Button findLoansButton;
-
-    @FXML
-    private ProgressBar findLoansProgressionBar;
-
-    @FXML
-    private Label progressBarMessageLabel;
-
-    @FXML
-    void categoriesRadioButtonClicked(ActionEvent event) {
+    @FXML void categoriesRadioButtonClicked(ActionEvent event) {
 
     }
 
     @FXML
     void findLoansButtonClicked(ActionEvent event) {
         placeToLoans();
+        clearTextFields();
+    }
+
+    private void clearTextFields() {
+        amountTextField.clear();
+        minInterestPerYazTextField.clear();
+        minYazForLoanTextField.clear();
+        maxOpenLoansForBorrowerTextField.clear();
+        maxPercentageOwnershipTextField.clear();
     }
 
     @FXML
@@ -159,7 +135,7 @@ public class ScrambleController {
         }
 
         catch (Exception e){
-            //open a message box to user
+            //todo: open a message box to user
             System.out.println("Could not perform place to loans");
         }
     }
@@ -171,8 +147,8 @@ public class ScrambleController {
             value = textField.disableProperty().getValue() ? -1 : Double.parseDouble(textField.getText());
         }
 
-        catch (Exception e){
-            System.out.println("Could not convert text field to value");
+        catch (Exception e) {
+            parentController.createExceptionDialog(new Exception("Could not convert text field to value"));
         }
 
         return value;
@@ -186,7 +162,7 @@ public class ScrambleController {
         }
 
         catch (Exception e){
-            System.out.println("Could not convert text field to value");
+            parentController.createExceptionDialog(new Exception("Could not convert text field to value"));
         }
 
         return value;

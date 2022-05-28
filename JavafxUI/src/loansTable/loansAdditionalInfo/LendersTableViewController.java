@@ -12,8 +12,6 @@ public class LendersTableViewController {
     @FXML private TableColumn<LoanDTO.LenderDetailsDTO, String> nameCol;
     @FXML private TableColumn<LoanDTO.LenderDetailsDTO, Double> amountCol;
 
-
-
     public void setLendersData(LoanDTO loan)
     {
         nameCol.setCellValueFactory(cellData -> cellData.getValue().lenderNameProperty());

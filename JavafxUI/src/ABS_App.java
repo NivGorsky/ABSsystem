@@ -33,12 +33,11 @@ public class ABS_App extends Application
         mainController.setMainStage(primaryStage);
 
         primaryStage.setTitle("ABS System");
-        Scene scene = new Scene(root, 1200, 650);
+        Scene scene = new Scene(root, 1280, 650);
         scene.getStylesheets().add(
                 getClass().getResource("/css/LightMode.css").toExternalForm());
 
         primaryStage.setScene(scene);
-        primaryStage.setFullScreen(true);
         primaryStage.show();
     }
 }

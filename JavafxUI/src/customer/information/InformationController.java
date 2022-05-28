@@ -14,7 +14,17 @@ import loansTable.LoansTableComponentController;
 import mutualInterfaces.ParentController;
 
 
-public class InformationController implements ParentController {
+public class InformationController implements ParentController
+{
+    @FXML private ScrollPane accountTransactions;
+    @FXML private accountTransactionsController accountTransactionsController;
+    @FXML private Button chargeButton;
+    @FXML private TextField amountTextField;
+    @FXML private Button withdrawButton;
+    @FXML private ScrollPane borrowerLoansTableComponent;
+    @FXML private LoansTableComponentController borrowerLoansTableComponentController;
+    @FXML private ScrollPane lenderLoansTableComponent;
+    @FXML private LoansTableComponentController lenderLoansTableComponentController;
 
     private CustomerController parentController;
     private StringProperty customerNameProperty;
@@ -42,18 +52,6 @@ public class InformationController implements ParentController {
     }
 
 
-
-    @FXML private ScrollPane accountTransactions;
-    @FXML private accountTransactionsController accountTransactionsController;
-    @FXML private Button chargeButton;
-    @FXML private TextField amountTextField;
-    @FXML private Button withdrawButton;
-    @FXML private ScrollPane borrowerLoansTableComponent;
-    @FXML private LoansTableComponentController borrowerLoansTableComponentController;
-    @FXML private ScrollPane lenderLoansTableComponent;
-    @FXML private LoansTableComponentController lenderLoansTableComponentController;
-
-
     @FXML
     void chargeButtonClicked(ActionEvent event) {
         String customerName = customerNameProperty.getValue();
@@ -61,6 +59,7 @@ public class InformationController implements ParentController {
 
         try {
             //make the actual deposit
+            amountTextField.clear();
             model.depositMoney(customerName, amount);
             accountTransactionsController.updateAccountMovements();
         }
@@ -77,9 +76,10 @@ public class InformationController implements ParentController {
             if (!amountTextField.getText().isEmpty()){
                 String customerName = customerNameProperty.getValue();
                 double amount = Double.parseDouble(amountTextField.getText());
-
                 model.withdrawMoney(customerName, amount);
                 accountTransactionsController.updateAccountMovements();
+                amountTextField.clear();
+
             }
         }
 

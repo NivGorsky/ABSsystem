@@ -58,6 +58,10 @@
     -fx-text-alignment: center;
 }
 
+.combo-box .arrow-button .arrow{
+    -fx-background-color: #8FD6E1;
+}
+
 .combo-box:hover {-fx-opacity: 0.6}
 
 .radio-button,
@@ -76,6 +80,18 @@
 
 .tab:selected {
    -fx-font-weight: bold;
+}
+
+.titled-pane .title {
+    -fx-background-color: #393E46;
+}
+
+.titled-pane .title .text {
+    -fx-fill: #8FD6E1;
+}
+
+.titled-pane .title .arrow-button .arrow {
+    -fx-background-color: #8FD6E1;
 }
 
 .table-view {
