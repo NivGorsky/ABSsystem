@@ -5,40 +5,56 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="240.0" styleClass="root" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="loansTable.loansAdditionalInfo.FinishedInfoController">
+<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="480.0" styleClass="root" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="loansTable.loansAdditionalInfo.FinishedInfoController">
   <content>
-    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="240.0" styleClass="root">
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="480.0" styleClass="root">
          <children>
-            <Accordion prefHeight="300.0" prefWidth="240.0" styleClass="root" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <Accordion prefHeight="300.0" prefWidth="480.0" styleClass="root" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <panes>
                 <TitledPane fx:id="lendersTP" animated="false" styleClass="root" text="Lenders">
                   <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="240.0">
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="480.0">
                            <children>
                                <fx:include fx:id="lendersTableView" source="lendersTableComponent.fxml" />
                            </children>
                         </AnchorPane>
                   </content>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
                 </TitledPane>
                 <TitledPane fx:id="paymentsTP" animated="false" styleClass="root" text="Payments">
                   <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="480.0" styleClass="root">
                           <children>
                               <fx:include fx:id="paidPaymentsTableView" source="paidPaymentsTableComponent.fxml" />
                           </children>
                     </AnchorPane>
                   </content>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
                 </TitledPane>
                 <TitledPane fx:id="yazInfoTP" animated="false" styleClass="root" text="YAZ Info">
                   <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" styleClass="root">
                            <children>
-                              <Label fx:id="startYazLabel" layoutX="14.0" layoutY="27.0" text="Start YAZ: " />
-                              <Label fx:id="endYAZLabel" layoutX="14.0" layoutY="67.0" text="end YAZ: " />
+                              <Label fx:id="startYazLabel" layoutX="14.0" layoutY="27.0" prefHeight="17.0" prefWidth="243.0" text="Start YAZ: ">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font></Label>
+                              <Label fx:id="endYAZLabel" layoutX="17.0" layoutY="95.0" prefHeight="17.0" prefWidth="151.0" text="end YAZ: ">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font></Label>
                            </children>
                         </AnchorPane>
                   </content>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
                 </TitledPane>
               </panes>
             </Accordion>

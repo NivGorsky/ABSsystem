@@ -1,17 +1,13 @@
 package loansTable.loansAdditionalInfo;
 
-        import DTO.LoanDTO;
-        import javafx.beans.binding.Bindings;
-        import javafx.collections.FXCollections;
-        import javafx.collections.ObservableList;
-        import javafx.fxml.FXML;
-        import javafx.scene.control.Label;
-        import javafx.scene.control.ScrollPane;
-        import javafx.scene.control.TableColumn;
-        import javafx.scene.control.TableView;
-        import javafx.scene.control.TitledPane;
-        import loansTable.LoansTableComponentController;
-        import mutualInterfaces.ParentController;
+import DTO.LoanDTO;
+import javafx.beans.binding.Bindings;
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TitledPane;
+import mutualInterfaces.ParentController;
 
 public class ActiveInfoController {
 
@@ -58,15 +54,18 @@ public class ActiveInfoController {
     public void setData(LoanDTO loan)
     {
         lendersTableViewController.setLendersData(loan);
-        paidPaymentsTableViewController.setPaidPaymentsData(loan);
+       // paidPaymentsTableViewController.setPaidPaymentsData(loan);
 
         paidLoan = loan.getPaidLoan();
+      //  paidLoanLabel.setText("Loan already paid: " + paidLoan);
+
         remainedLoan = loan.getInitialAmount() - paidLoan;
+      //  loanRemainedLabel.setText("Loan remained to pay: "+ remainedLoan);
 
         paidInterest = loan.getPaidInterest();
+     //   paidInterestLabel.setText("Interest already paid: " + paidInterest);
+
         remainedInterest = loan.getTotalInterest() - paidInterest;
+     //   InterestRemainedLabel.setText("Interest remained to pay: " + remainedInterest);
     }
-
-
-
 }

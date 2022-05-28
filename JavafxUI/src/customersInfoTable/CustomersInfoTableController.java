@@ -1,8 +1,6 @@
 package customersInfoTable;
 
 import DTO.CustomerDTO;
-import DTO.LoanDTO;
-import Engine.Customer;
 import adminScene.AdminSceneController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -31,8 +29,7 @@ public class CustomersInfoTableController {
 
     AdminSceneController parentController;
 
-    public void setParentController(AdminSceneController adminSceneController)
-    {
+    public void setParentController(AdminSceneController adminSceneController) {
         parentController = adminSceneController;
     }
 

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.URL?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
@@ -8,13 +7,13 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="275.0" prefWidth="1500.0" styleClass="root" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="loansTable.LoansTableComponentController">
+<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="260.0" prefWidth="1280.0" styleClass="root" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="loansTable.LoansTableComponentController">
   <content>
-    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="275.0" prefWidth="1500.0" styleClass="root">
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="260.0" prefWidth="1280.0" styleClass="root">
          <children>
-            <HBox prefHeight="275.0" prefWidth="1500.0" styleClass="root">
+            <HBox prefHeight="260.0" prefWidth="1280.0" styleClass="root">
                <children>
-                  <TableView fx:id="loansTable" prefHeight="275.0" prefWidth="800.0">
+                  <TableView fx:id="loansTable" prefHeight="260.0" prefWidth="800.0">
                     <columns>
                         <TableColumn fx:id="loanNameCol" prefWidth="115.0" text="Loan Name" />
                         <TableColumn fx:id="loanerNameCol" prefWidth="105.0" text="Loaner Name" />
@@ -26,9 +25,9 @@
                         <TableColumn fx:id="statusCol" prefWidth="105.0" text="Status" />
                     </columns>
                   </TableView>
-                  <ScrollPane fx:id="additionalInfoScrollPane" fitToHeight="true" fitToWidth="true" prefHeight="275.0" prefWidth="450.0" styleClass="root">
+                  <ScrollPane fx:id="additionalInfoScrollPane" fitToHeight="true" fitToWidth="true" prefHeight="260.0" prefWidth="480.0" styleClass="root">
                     <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="275.0" prefWidth="450.0" styleClass="root">
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="260.0" prefWidth="480.0" styleClass="root">
                            <children>
                               <Label fx:id="noContentLabel" layoutX="197.0" layoutY="127.0" text="No content to show" />
                            </children></AnchorPane>
