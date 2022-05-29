@@ -66,6 +66,7 @@ public class MoveTimeLine {
                     if(isThereUnpaidPaymentsForCurrentYaz(loan)){
                         LoanPaymentsData.Payment payment = loan.pollPaymentForSpecificYaz(currentYaz);
                         changePaymentStatus(loan, payment, LoanPaymentsData.PaymentType.EXPIRED);
+//                        loan.setDebt(loan.getDebt() + payment.getBothPartsOfAmountToPay());
                         loan.addNewPayment(payment);
                         loan.setLoanStatus(Loan.LoanStatus.IN_RISK, currentYaz);
                     }

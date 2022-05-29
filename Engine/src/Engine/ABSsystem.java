@@ -250,6 +250,7 @@ public class ABSsystem implements MainSystem, SystemService {
         payment.setActualPaymentYaz(this.getCurrYaz());
         loan.setAmountPaid(payment.getLoanPartOfThePayment());
         loan.setInterestPaid(payment.getInterestPartThatWasPaid());
+        loan.setDebt(loan.getDebt() - amountToPay);
     }
 
     private void splitLoanMoneyToLenders(Loan loan){
@@ -267,21 +268,21 @@ public class ABSsystem implements MainSystem, SystemService {
     }
 
     private LoanDTO createLoanDTO(Loan l) {
-        LoanDTO loan = new LoanDTO(l.getLoanName(), l.getBorrowerName(), l.getInitialAmount(),
+        LoanDTO loanDTO = new LoanDTO(l.getLoanName(), l.getBorrowerName(), l.getInitialAmount(),
                 l.getMaxYazToPay(), l.getInterestPerPaymentSetByBorrowerInPercents(), l.getTotalInterestForLoan(),
                 l.getPaymentRateInYaz(), l.getStatus().toString(), l.getCategory(), l.getInterestPaid(), l.getAmountPaid(),
                 l.getDebt(), l.getLoanAmountFinancedByLenders());
 
         for (Loan.LenderDetails ld : l.getLendersDetails()) {
-            loan.addToLendersNameAndAmount(ld.lender.getName(), ld.lendersAmount);
+            loanDTO.addToLendersNameAndAmount(ld.lender.getName(), ld.lendersAmount);
         }
 
 
-        loan.setUnpaidPayments(l.getPaymentsData().getPaymentsDataBases().get(LoanPaymentsData.PaymentType.UNPAID));
-        loan.setPaidPayments(l.getPaymentsData().getPaymentsDataBases().get(LoanPaymentsData.PaymentType.PAID));
+        loanDTO.setUnpaidPayments(l.getPaymentsData().getPaymentsDataBases().get(LoanPaymentsData.PaymentType.UNPAID));
+        loanDTO.setPaidPayments(l.getPaymentsData().getPaymentsDataBases().get(LoanPaymentsData.PaymentType.PAID));
 
-        initStatusInfo(loan, l);
-        return loan;
+        initStatusInfo(loanDTO, l);
+        return loanDTO;
     }
 
     @Override
@@ -464,10 +465,13 @@ public class ABSsystem implements MainSystem, SystemService {
 
             makeLoanPaymentFromBorrowerToLender(loan, payment, borrower, lender);
             if (payment.getBothPartsOfAmountToPay() == payment.getBothPartsOfPaymentThatWasPaid()) {
+                double loanInterestPaid = loan.getInterestPaid();
+                loan.setInterestPaid(loanInterestPaid + payment.getInterestPartThatWasPaid());
                 payment.setPaymentType(LoanPaymentsData.PaymentType.PAID);
                 payment.setActualPaymentYaz(getCurrYaz());
                 loan.setAmountPaid(payment.getLoanPartOfThePayment());
                 loan.setInterestPaid(payment.getInterestPartOfThePayment());
+                loan.setDebt(loan.getDebt() - payment.getBothPartsOfPaymentThatWasPaid());
             }
             //else, the payment was not fully paid, so its status is still UNPAID
             loan.addNewPayment(payment);
@@ -494,20 +498,57 @@ public class ABSsystem implements MainSystem, SystemService {
 
     @Override
     public void closeLoan(LoanDTO loanDTO, int yaz) throws Exception{
-        try {
-            Loan loan = getLoanByName(loanDTO.getLoanName());
-            PaymentsDB paymentsDb = (PaymentsDB)loan.getPayments(LoanPaymentsData.PaymentType.UNPAID);
+        Loan loan = getLoanByName(loanDTO.getLoanName());
+        closePaymentsByStatus(loan, yaz, LoanPaymentsData.PaymentType.UNPAID);
+        closePaymentsByStatus(loan, yaz, LoanPaymentsData.PaymentType.EXPIRED);
+        loan.setDebt(0);
+        loan.setLoanStatus(Loan.LoanStatus.FINISHED, yaz);
+        loan.setFinishYaz(yaz);
+    }
+
+    private void closePaymentsByStatus(Loan loan, int yaz, LoanPaymentsData.PaymentType paymentType){
+        try{
+            PaymentsDB paymentsDb = (PaymentsDB)loan.getPayments(paymentType);
             Customer borrower = name2customer.get(loan.getBorrowerName());
+            List<Integer> paymentYazs = new ArrayList<>();
 
             for (LoanPaymentsData.Payment payment: paymentsDb.getPayments().values()){
                 closePayment(payment,borrower, loan);
+                paymentYazs.add(payment.getScheduledYaz());
             }
 
-            loan.setLoanStatus(Loan.LoanStatus.FINISHED, yaz);
+            //updating the payments to PAID
+            for (Integer currentYaz:paymentYazs) {
+                LoanPaymentsData.Payment payment = loan.pollPaymentForSpecificYaz(currentYaz);
+                payment.setPaymentType(LoanPaymentsData.PaymentType.PAID);
+                loan.addNewPayment(payment);
+            }
         }
 
         catch (Exception e){
-           throw new Exception("There was a problem while trying to close the loan");
+
+        }
+    }
+
+    @Override
+    public void payDebt(Double amount, LoanDTO loanDTO, int yaz) throws Exception{
+        Customer borrower = name2customer.get(loanDTO.getCustomerName());
+        Loan loan = getLoanByName(loanDTO.getLoanName());
+
+        if(amount >= borrower.getAccount().getBalance()){
+            throw new Exception("The amount is greater than borrower's balance");
+        }
+        loan.setDebt(loan.getDebt() - amount);
+        moveMoneyBetweenAccounts(borrower.getAccount(), loan.getLoanAccount(), amount);
+        splitLoanMoneyToLenders(loan);
+
+        if(loan.getDebt() == 0){
+            loan.setFinishYaz(yaz);
+            loan.setLoanStatus(Loan.LoanStatus.FINISHED, yaz);
+            loan.setAmountPaid(loan.getInitialAmount());
+            loan.setInterestPaid(loan.getTotalInterestForLoan());
+
+
         }
     }
 
@@ -518,5 +559,7 @@ public class ABSsystem implements MainSystem, SystemService {
 
         return funds >= amount;
     }
+
+
 
 }

@@ -22,7 +22,7 @@ public class PayedPaymentsByYaz implements PaymentsDB {
 
     @Override
     public void addNewPayment(LoanPaymentsData.Payment p) {
-        Integer paymentCompletionYaz = p.getActualPaymentYaz();
+        Integer paymentCompletionYaz = p.getScheduledYaz();
         if(db.containsKey(paymentCompletionYaz)){
 //            throw new IllegalAccessException("There was a problem while adding new payment to 'UnpayedPaymentsByYaz' - there is already a payment for this yaz");
         }

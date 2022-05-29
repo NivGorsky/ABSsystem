@@ -46,9 +46,10 @@ public class FinishedInfoController {
     {
         lendersTableViewController.setLendersData(loan);
         paidPaymentsTableViewController.setPaidPaymentsData(loan);
-
         startYAZ = loan.getActivationYAZ();
         endYAZ = loan.getFinishYAZ();
+        startYazLabel.textProperty().bind(Bindings.concat("Started in YAZ: " + startYAZ));
+        endYAZLabel.textProperty().bind(Bindings.concat("Ended in YAZ: " + endYAZ));
     }
 
 }

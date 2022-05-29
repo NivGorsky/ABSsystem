@@ -83,6 +83,8 @@ public class Loan
         this.loanAmountFinancedByLenders = 0;
     }
 
+
+
     //getters
     public int getLoanId() { return loanId; }
     public  String getLoanName() { return loanName; }
@@ -134,10 +136,17 @@ public class Loan
         amountPaid+=paymentAmount;
     }
 
-    public void setInterestPaid(double interestPaid){
-        interestPaid += interestPaid;
+    public void setFinishYaz(int finishYaz){
+        this.finishYaz = finishYaz;
     }
 
+    public void setInterestPaid(double interestPaid){
+        this.interestPaid = interestPaid;
+    }
+
+    public void setDebt(double newDebt){
+        this.debt = newDebt;
+    }
 
     public void setLoanStatus(Loan.LoanStatus newStatus, int currentYaz){
 
@@ -151,8 +160,16 @@ public class Loan
             }
 
             case PENDING:
+                break;
             case IN_RISK:
+
+                break;
             case FINISHED:
+                    setDebt(0);
+                    setFinishYaz(currentYaz);
+
+                    break;
+
             case NEW:
                 break;
         }

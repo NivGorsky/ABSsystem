@@ -33,6 +33,7 @@ public interface MainSystem {
      void payToAllLendersForCurrentYaz(LoanDTO loan, int yaz) throws Exception;
      void payToLender(LoanDTO.LenderDetailsDTO lenderDTO, LoanDTO loanDTO, int yaz) throws Exception;
      boolean hasBorrowerEnoughFundsToPayAmount(Customer customerDTO, double amount);
+     void payDebt(Double amount, LoanDTO loanDTO, int yaz) throws Exception;
 
 
 

@@ -32,6 +32,9 @@ public class PaymentController implements ParentController {
     @FXML private Button payToLenderButton;
     @FXML private Button payToAllLendersButton;
     @FXML private Button closeLoanButton;
+    @FXML private TextField payDebtTextField;
+    @FXML private Button payDebtButton;
+    @FXML private Label debtLabel;
 
     public void initialize(){
         borrowerLoansTableComponentController.setParentController(this);
@@ -40,6 +43,22 @@ public class PaymentController implements ParentController {
         borrowerLoansTableComponentController.setLoanSelectionListener();
         initLendersTable();
         initPaymentButtons();
+        payDebtButton.setDisable(true);
+        payDebtTextField.setDisable(true);
+        debtLabel.setText("Debt: ");
+    }
+
+    @FXML
+    void payDebtButtonClicked(ActionEvent event){
+        double amount = Double.parseDouble(payDebtTextField.getText());
+
+        try{
+            parentController.getModel().payDebt(amount, selectedLoanFromLoansTable, parentController.getModel().getCurrYaz());
+        }
+
+        catch (Exception e){
+            parentController.createExceptionDialog(e);
+        }
     }
 
     @FXML
@@ -184,19 +203,20 @@ public class PaymentController implements ParentController {
 
     public void LoanWasSelectedFromLoansTable(LoanDTO loanDTO){
         ObservableList<LoanDTO.LenderDetailsDTO> lendersForTable = FXCollections.observableArrayList();
+
         if(loanDTO.getStatus() != "FINISHED") {
             lendersForTable.addAll((loanDTO).getLenderDTOS());
             lendersTableView.getItems().clear();
             lendersTableView.setItems(lendersForTable);
             closeLoanButton.setDisable(false);
         }
-
-        if(lendersForTable.isEmpty()){
-            payToAllLendersButton.setDisable(true);
+        if(loanDTO.getStatus().equals("IN_RISK")){
+            payDebtTextField.setDisable(false);
+            payDebtButton.setDisable(false);
         }
 
-        else{
-            payToAllLendersButton.setDisable(false);
-        }
+        debtLabel.setText("");
+        debtLabel.setText("Debt: " + Double.toString(loanDTO.getDebt()));
+        payToAllLendersButton.setDisable(lendersForTable.isEmpty());
     }
 }
