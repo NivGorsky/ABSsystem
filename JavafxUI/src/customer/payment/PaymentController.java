@@ -18,10 +18,6 @@ import mutualInterfaces.ParentController;
 import java.util.*;
 
 public class PaymentController implements ParentController {
-
-    //TODO: decided which properties this controller should hold
-    //TODO: Maybe create a new component for notification
-    //TODO: create the make payment API call
     private CustomerController parentController;
     private StringProperty customerNameProperty;
     private final ObservableList<NotificationsDTO.NotificationDTO> notifications;
@@ -36,6 +32,15 @@ public class PaymentController implements ParentController {
     @FXML private Button payToLenderButton;
     @FXML private Button payToAllLendersButton;
     @FXML private Button closeLoanButton;
+
+    public void initialize(){
+        borrowerLoansTableComponentController.setParentController(this);
+        initNotifications();
+        borrowerLoansTableComponentController.changeTableSelectionModelToSingle();
+        borrowerLoansTableComponentController.setLoanSelectionListener();
+        initLendersTable();
+        initPaymentButtons();
+    }
 
     @FXML
     void closeLoanButtonClicked(ActionEvent event) {
@@ -98,15 +103,6 @@ public class PaymentController implements ParentController {
 
     public void setParentController(CustomerController parentController){
         this.parentController = parentController;
-    }
-
-    public void initialize(){
-        borrowerLoansTableComponentController.setParentController(this);
-        initNotifications();
-        borrowerLoansTableComponentController.changeTableSelectionModelToSingle();
-        borrowerLoansTableComponentController.setLoanSelectionListener();
-        initLendersTable();
-        initPaymentButtons();
     }
 
     private void initNotifications(){

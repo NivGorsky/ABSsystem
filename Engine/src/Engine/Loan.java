@@ -60,7 +60,7 @@ public class Loan
         this.initialAmount = originalLoanAmount;
         this.borrowerName = borrowerName;
         this.interestPerPaymentSetByBorrowerInPercents = interestPercentPerPayment;
-        this.totalInterestForLoan = (1+(interestPerPaymentSetByBorrowerInPercents/100))*initialAmount;
+        this.totalInterestForLoan = ((interestPerPaymentSetByBorrowerInPercents*initialAmount)/100);
         this.setLoanStatus(LoanStatus.NEW, currentYaz);
         this.account = new Account(0);
 

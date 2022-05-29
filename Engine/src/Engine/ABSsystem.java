@@ -215,7 +215,7 @@ public class ABSsystem implements MainSystem, SystemService {
         return result;
     }
 
-    public void makeLoanPaymentFromBorrowerToLender(Loan loan, LoanPaymentsData.Payment payment, Customer borrower, Customer lender) {
+    public void makeLoanPaymentFromBorrowerToLender(Loan loan, LoanPaymentsData.Payment payment, Customer borrower, Customer lender) throws Exception{
         try {
             Account borrowerAccount = borrower.getAccount();
             Account lenderAccount = lender.getAccount();
@@ -228,7 +228,7 @@ public class ABSsystem implements MainSystem, SystemService {
         }
 
         catch (Exception e) {
-            System.out.println("There was a problem while trying to make loan payment from borrower to lender");
+            throw new Exception("There was a problem while trying to make loan payment from borrower to lender");
 
         }
     }
@@ -249,7 +249,7 @@ public class ABSsystem implements MainSystem, SystemService {
         payment.setPaymentType(LoanPaymentsData.PaymentType.PAID);
         payment.setActualPaymentYaz(this.getCurrYaz());
         loan.setAmountPaid(payment.getLoanPartOfThePayment());
-        loan.setAmountPaid(payment.getInterestPartOfThePayment());
+        loan.setInterestPaid(payment.getInterestPartThatWasPaid());
     }
 
     private void splitLoanMoneyToLenders(Loan loan){
@@ -465,6 +465,9 @@ public class ABSsystem implements MainSystem, SystemService {
             makeLoanPaymentFromBorrowerToLender(loan, payment, borrower, lender);
             if (payment.getBothPartsOfAmountToPay() == payment.getBothPartsOfPaymentThatWasPaid()) {
                 payment.setPaymentType(LoanPaymentsData.PaymentType.PAID);
+                payment.setActualPaymentYaz(getCurrYaz());
+                loan.setAmountPaid(payment.getLoanPartOfThePayment());
+                loan.setInterestPaid(payment.getInterestPartOfThePayment());
             }
             //else, the payment was not fully paid, so its status is still UNPAID
             loan.addNewPayment(payment);

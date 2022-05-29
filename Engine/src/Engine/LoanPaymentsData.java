@@ -39,9 +39,8 @@ public class LoanPaymentsData {
         public double getLoanPartOfThePayment() {
             return loanPartOfThePayment;
         }
-        public double getInterestPartOfThePayment() {
-            return interestPartOfThePayment;
-        }
+        public double getInterestPartOfThePayment() {return interestPartOfThePayment;}
+        public double getInterestPartThatWasPaid() { return interestPartThatWasPaid; }
         public boolean isPaid() {
             return this.paymentType == PaymentType.PAID;
         }
