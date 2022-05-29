@@ -199,6 +199,7 @@ public class PaymentController implements ParentController {
         payToAllLendersButton.setDisable(true);
         payToLenderButton.setDisable(true);
         closeLoanButton.setDisable(true);
+        debtLabel.setText("Debt: ");
     }
 
     public void LoanWasSelectedFromLoansTable(LoanDTO loanDTO){
