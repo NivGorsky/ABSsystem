@@ -1,12 +1,12 @@
 <component name="ArtifactManager">
-  <artifact build-on-make="true" name="DTO:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/DTO_jar</output-path>
+  <artifact build-on-make="true" name="JavafxUI:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/JavafxUI_jar</output-path>
     <root id="root">
-      <element id="archive" name="DTO.jar">
-        <element id="module-output" name="DTO" />
-        <element id="module-output" name="Engine" />
-        <element id="module-output" name="Exceptions" />
+      <element id="archive" name="JavafxUI.jar">
         <element id="module-output" name="JavafxUI" />
+        <element id="module-output" name="Engine" />
+        <element id="module-output" name="DTO" />
+        <element id="module-output" name="Exceptions" />
       </element>
       <element id="library" level="project" name="controlsfx-8.40.14" />
     </root>
