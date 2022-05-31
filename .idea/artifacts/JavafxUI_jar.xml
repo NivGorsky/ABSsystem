@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
-  <artifact build-on-make="true" name="JavafxUI:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/JavafxUI_jar</output-path>
+  <artifact name="JavafxUI:jar">
+    <output-path>$PROJECT_DIR$/out/ForSubmission</output-path>
     <root id="root">
       <element id="archive" name="JavafxUI.jar">
         <element id="module-output" name="JavafxUI" />

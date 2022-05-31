@@ -1,14 +1,12 @@
 <component name="ArtifactManager">
-  <artifact build-on-make="true" name="Engine:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/Engine_jar</output-path>
+  <artifact name="Engine:jar">
+    <output-path>$PROJECT_DIR$/out/ForSubmission</output-path>
     <root id="root">
       <element id="archive" name="Engine.jar">
         <element id="module-output" name="Engine" />
         <element id="module-output" name="DTO" />
         <element id="module-output" name="Exceptions" />
-        <element id="module-output" name="JavafxUI" />
       </element>
-      <element id="library" level="project" name="controlsfx-8.40.14" />
     </root>
   </artifact>
 </component>

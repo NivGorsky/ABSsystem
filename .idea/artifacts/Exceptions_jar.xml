@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
-  <artifact build-on-make="true" name="Exceptions:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/Exceptions_jar</output-path>
+  <artifact name="Exceptions:jar">
+    <output-path>$PROJECT_DIR$/out/ForSubmission</output-path>
     <root id="root">
       <element id="archive" name="Exceptions.jar">
         <element id="module-output" name="Exceptions" />

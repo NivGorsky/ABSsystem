@@ -1,10 +1,8 @@
 package DTO;
 
-import Engine.LoanPaymentsData;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-
 import java.util.ArrayList;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -237,28 +235,26 @@ public class LoanDTO {
         this.nextPaymentYaz.set(nextPaymentYaz);
     }
     public void setFinishYaz(int finishYaz) { this.finishYaz.set(finishYaz); }
+//    public void setUnpaidPayments(Engine.PaymentsDB.PaymentsDB payments)
+//    {
+//        for(LoanPaymentsData.Payment p : payments.getPayments().values())
+//        {
+//            LoanDTO.PaymentDTO payment = new LoanDTO.PaymentDTO(p.getScheduledYaz(), p.getLoanPartOfThePayment(),
+//                    p.getInterestPartOfThePayment(), p.getActualPaymentYaz(), p.getPaymentType().toString());
+//
+//            unpaidPayments.put(payment.originalYazToPay.getValue(), payment);
+//        }
+//    }
 
-
-    public void setUnpaidPayments(Engine.PaymentsDB.PaymentsDB payments)
-    {
-        for(LoanPaymentsData.Payment p : payments.getPayments().values())
-        {
-            LoanDTO.PaymentDTO payment = new LoanDTO.PaymentDTO(p.getScheduledYaz(), p.getLoanPartOfThePayment(),
-                    p.getInterestPartOfThePayment(), p.getActualPaymentYaz(), p.getPaymentType().toString());
-
-            unpaidPayments.put(payment.originalYazToPay.getValue(), payment);
-        }
-    }
-
-    public void setPaidPayments(Engine.PaymentsDB.PaymentsDB payments)
-    {
-        for(LoanPaymentsData.Payment p : payments.getPayments().values())
-        {
-            LoanDTO.PaymentDTO payment = new LoanDTO.PaymentDTO(p.getScheduledYaz(), p.getLoanPartOfThePayment(),
-                    p.getInterestPartOfThePayment(), p.getActualPaymentYaz(), p.getPaymentType().toString());
-
-            paidPayments.put(payment.actualPaymentYaz.getValue(), payment);
-        }
-    }
+//    public void setPaidPayments(Engine.PaymentsDB.PaymentsDB payments)
+//    {
+//        for(LoanPaymentsData.Payment p : payments.getPayments().values())
+//        {
+//            LoanDTO.PaymentDTO payment = new LoanDTO.PaymentDTO(p.getScheduledYaz(), p.getLoanPartOfThePayment(),
+//                    p.getInterestPartOfThePayment(), p.getActualPaymentYaz(), p.getPaymentType().toString());
+//
+//            paidPayments.put(payment.actualPaymentYaz.getValue(), payment);
+//        }
+//    }
 
 }

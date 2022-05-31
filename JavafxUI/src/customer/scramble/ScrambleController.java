@@ -1,6 +1,7 @@
 package customer.scramble;
 import DTO.LoanCategorisDTO;
 import DTO.LoanPlacingDTO;
+import DTO.UIController;
 import Engine.MainSystem;
 import customer.CustomerController;
 import customer.scramble.scrambleFields.simpleField.SimpleField;
@@ -19,7 +20,7 @@ import mutualInterfaces.ParentController;
 import java.util.regex.*;
 import java.util.*;
 
-public class ScrambleController {
+public class ScrambleController implements UIController {
 
     private ParentController parentController;
     private ArrayList<SimpleField> scrambleQueryFields;

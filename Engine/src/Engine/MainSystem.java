@@ -1,12 +1,10 @@
 package Engine;
-
 import DTO.*;
 import Exceptions.XMLFileException;
 import javax.xml.bind.JAXBException;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-import customer.scramble.ScrambleController;
 
 public interface MainSystem {
 
@@ -27,7 +25,7 @@ public interface MainSystem {
      ArrayList<LoanDTO> getLoansByCustomerNameAsBorrower(String customerName);
      ArrayList<LoanDTO> getLoansByCustomerNameAsLender(String customerName);
 //    public ScrambleQueryFieldsDTO getScrambleQueryFields();
-     void setScrambleController(ScrambleController controller);
+     void setScrambleController(UIController controller);
      void assignLoansToLenderWithTask(LoanPlacingDTO loanPlacingDTO, Consumer<Integer> numberOfLoansAssigned);
      void closeLoan(LoanDTO loanDTO, int yaz) throws Exception;
      void payToAllLendersForCurrentYaz(LoanDTO loan, int yaz) throws Exception;

@@ -23,7 +23,7 @@ public class ABS_App extends Application
     {
         FXMLLoader loader = new FXMLLoader();
 
-        URL mainFXML = getClass().getResource("/mainScene/mainScene.FXML");
+        URL mainFXML = getClass().getResource("/mainScene/mainScene.fxml");
         loader.setLocation(mainFXML);
         ScrollPane root = loader.load();
 

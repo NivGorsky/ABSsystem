@@ -12,7 +12,6 @@ import Engine.TimeLineMoving.MoveTimeLine;
 import DTO.*;
 import Engine.XML_Handler.*;
 import Exceptions.XMLFileException;
-import customer.scramble.ScrambleController;
 import javafx.concurrent.Task;
 
 public class ABSsystem implements MainSystem, SystemService {
@@ -23,7 +22,7 @@ public class ABSsystem implements MainSystem, SystemService {
     private Map<Integer, Loan> loanId2Loan;
     private Map<Customer, List<Notification>> customer2Notifications;
     private ArrayList<ArrayList<String>> scrambleQueryFields;
-    private ScrambleController scrambleController;
+    private UIController scrambleController;
     private Integer numberOfLoansAssignedInSinglePlacingAlgorithmRun;
     private Task<Boolean> currentRunningTask;
 
@@ -277,13 +276,36 @@ public class ABSsystem implements MainSystem, SystemService {
             loanDTO.addToLendersNameAndAmount(ld.lender.getName(), ld.lendersAmount);
         }
 
-
-        loanDTO.setUnpaidPayments(l.getPaymentsData().getPaymentsDataBases().get(LoanPaymentsData.PaymentType.UNPAID));
-        loanDTO.setPaidPayments(l.getPaymentsData().getPaymentsDataBases().get(LoanPaymentsData.PaymentType.PAID));
+        setLoanDTOUnpaidPayments(l.getPaymentsData().getPaymentsDataBases().get(LoanPaymentsData.PaymentType.UNPAID), loanDTO);
+        setLoanDTOPaidPayments(l.getPaymentsData().getPaymentsDataBases().get(LoanPaymentsData.PaymentType.PAID), loanDTO);
 
         initStatusInfo(loanDTO, l);
         return loanDTO;
     }
+
+    private void setLoanDTOUnpaidPayments(Engine.PaymentsDB.PaymentsDB payments, LoanDTO loanDTO){
+
+        for(LoanPaymentsData.Payment p : payments.getPayments().values())
+        {
+
+            LoanDTO.PaymentDTO payment = loanDTO. new PaymentDTO(p.getScheduledYaz(), p.getLoanPartOfThePayment(),
+                    p.getInterestPartOfThePayment(), p.getActualPaymentYaz(), p.getPaymentType().toString());
+
+            loanDTO.getUnpaidPayments().put(payment.getOriginalYazToPayProperty().getValue(), payment);
+        }
+    }
+
+    private void setLoanDTOPaidPayments(Engine.PaymentsDB.PaymentsDB payments, LoanDTO loanDTO)
+    {
+        for(LoanPaymentsData.Payment p : payments.getPayments().values())
+        {
+            LoanDTO.PaymentDTO payment = loanDTO.new PaymentDTO(p.getScheduledYaz(), p.getLoanPartOfThePayment(),
+                    p.getInterestPartOfThePayment(), p.getActualPaymentYaz(), p.getPaymentType().toString());
+
+            loanDTO.getPaidPayments().put(payment.getActualPaymentYazProperty().getValue(), payment);
+        }
+    }
+
 
     @Override
     public int getCurrYaz() {
@@ -438,7 +460,7 @@ public class ABSsystem implements MainSystem, SystemService {
     }
 
     @Override
-    public void setScrambleController(ScrambleController controller) {
+    public void setScrambleController(UIController controller) {
         this.scrambleController = controller;
     }
 

@@ -211,11 +211,9 @@ public class PaymentController implements ParentController {
             lendersTableView.setItems(lendersForTable);
             closeLoanButton.setDisable(false);
         }
-        if(loanDTO.getStatus().equals("IN_RISK")){
-            payDebtTextField.setDisable(false);
-            payDebtButton.setDisable(false);
-        }
 
+        payDebtTextField.setDisable(!loanDTO.getStatus().equals("IN_RISK"));
+        payDebtButton.setDisable(!loanDTO.getStatus().equals("IN_RISK"));
         debtLabel.setText("");
         debtLabel.setText("Debt: " + Double.toString(loanDTO.getDebt()));
         payToAllLendersButton.setDisable(lendersForTable.isEmpty());
