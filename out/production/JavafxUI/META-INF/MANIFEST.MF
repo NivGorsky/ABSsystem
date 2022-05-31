@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
-Main-Class: main.ABS_App
-Class-Path: Engine.jar DTO.jar Exceptions.jar
+Main-Class: main.AbsApp
+Class-Path: Exceptions.jar DTO.jar Engine.jar
 

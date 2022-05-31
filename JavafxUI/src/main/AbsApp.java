@@ -11,7 +11,7 @@ import mainScene.MainSceneController;
 
 import java.net.URL;
 
-public class ABS_App extends Application
+public class AbsApp extends Application
 {
     public static void main(String[] args)
     {
@@ -22,6 +22,7 @@ public class ABS_App extends Application
     public void start(Stage primaryStage) throws Exception
     {
         FXMLLoader loader = new FXMLLoader();
+        System.out.println("test");
 
         URL mainFXML = getClass().getResource("/mainScene/mainScene.fxml");
         loader.setLocation(mainFXML);
