@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+
+<TableView fx:id="paidPaymentsTableView" prefHeight="250.0" prefWidth="480.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="loansTable.loansAdditionalInfo.PaidPaymentsTableViewController">
+   <columns>
+      <TableColumn fx:id="paidInYazCol" prefWidth="120.0" text="Paid In YAZ" />
+      <TableColumn fx:id="loanPartCol" prefWidth="120.0" text="Loan Part" />
+      <TableColumn fx:id="interestPartCol" prefWidth="120.0" text="Interest Part" />
+      <TableColumn fx:id="totalCol" prefWidth="120.0" text="Total" />
+   </columns>
+</TableView>

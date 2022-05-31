@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+
+<TableView fx:id="lendersTableView" prefHeight="250.0" prefWidth="480.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="loansTable.loansAdditionalInfo.LendersTableViewController">
+   <columns>
+      <TableColumn fx:id="nameCol" prefWidth="240.0" text="Name" />
+      <TableColumn fx:id="amountCol" prefWidth="240.0" text="Amount" />
+   </columns>
+</TableView>
