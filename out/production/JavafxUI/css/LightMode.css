@@ -61,7 +61,7 @@
 }
 
 .table-view {
-    -fx-background-color: transperent;
+    -fx-background-color: #F7F7F7;
 }
 
 .table-view .column-header-background{
@@ -74,7 +74,7 @@
 }
 
 .table-view .column-header {
-    -fx-background-color: transparent;
+    -fx-background-color: #F7F7F7;
 }
 
 
@@ -86,7 +86,7 @@
 
 
 .table-view .table-cell {
-    -fx-border-color: transparent;
+    -fx-border-color: #F7F7F7;
 }
 
 .table-row-cell:hover {
