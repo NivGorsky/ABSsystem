@@ -61,8 +61,6 @@ public class ABSsystem implements MainSystem, SystemService {
         switch (l.getStatus()) {
             case PENDING: {
                 int sum = 0;
-
-//               initLendersInfo(loanToInit, l);
                 for (LoanDTO.LenderDetailsDTO le : loanToInit.getLenderDTOS()) {
                     sum += le.lendersInvestAmount.getValue();
                 }
@@ -71,18 +69,15 @@ public class ABSsystem implements MainSystem, SystemService {
                 break;
             }
             case ACTIVE: {
-//                initLendersInfo(loanToInit, l);
                 loanToInit.setActivationYaz(l.getActivationYaz());
                 loanToInit.setNextPaymentYaz(loanToInit.getUnpaidPayments().firstKey());
                 break;
             }
             case IN_RISK: {
-//                initLendersInfo(loanToInit, l);
                 break;
             }
 
             case FINISHED: {
-//                initLendersInfo(loanToInit, l);
                 loanToInit.setActivationYaz(l.getActivationYaz());
                 loanToInit.setFinishYaz(l.getFinishYaz());
                 break;
@@ -123,32 +118,32 @@ public class ABSsystem implements MainSystem, SystemService {
     private void takeDataFromDescriptor(AbsDescriptor descriptor) throws XMLFileException {
         AbsCategories categories = descriptor.getAbsCategories();
         AbsLoans loans = descriptor.getAbsLoans();
-        AbsCustomers customers = descriptor.getAbsCustomers();
+        //AbsCustomers customers = descriptor.getAbsCustomers(); //TODO:delete customers from scheme
 
         try {
-            XMLFileChecker.isFileLogicallyOK(loans, customers, categories);
+            XMLFileChecker.isFileLogicallyOK(loans, categories);
         } catch (XMLFileException ex) {
             throw ex;
         }
 
         resetSystem();
         takeCategoriesData(categories);
-        takeCustomersData(customers);
+        //takeCustomersData(customers); //TODO:delete customers from scheme
         takeLoansData(loans);
 
-    }
-
-    private void takeCategoriesData(AbsCategories categories) {
-        for (String c : categories.getAbsCategory()) {
-            String category = c.trim();
-            LoanCategories.addCategory(category);
-        }
     }
 
     private void takeCustomersData(AbsCustomers customers) {
         for (AbsCustomer c : customers.getAbsCustomer()) {
             Customer customer = JAXBConvertor.convertCustomer(c);
             name2customer.put(customer.getName(), customer);
+        }
+    } //TODO:delete customers from scheme
+
+    private void takeCategoriesData(AbsCategories categories) {
+        for (String c : categories.getAbsCategory()) {
+            String category = c.trim();
+            LoanCategories.addCategory(category);
         }
     }
 
@@ -159,8 +154,8 @@ public class ABSsystem implements MainSystem, SystemService {
             this.loanId2Loan.put(newLoan.getLoanId(), newLoan);
             this.loans.add(newLoan);
 
-            Customer customer = name2customer.get(l.getAbsOwner());
-            customer.getLoansAsBorrower().add(newLoan);
+            //Customer customer = name2customer.get(l.getAbsOwner());
+            //customer.getLoansAsBorrower().add(newLoan); TODO: delete customers from scheme
         }
     }
 
@@ -582,6 +577,13 @@ public class ABSsystem implements MainSystem, SystemService {
         return funds >= amount;
     }
 
-
+    public void addNewCustomer(String name) throws Exception {
+        if (name2customer.containsKey(name)) {
+            throw new Exception("Customer's name already exists!");
+        }
+        else {
+            name2customer.values().add(new Customer(name, 0));
+        }
+    } //TODO: new, maybe should be a servlet?
 
 }

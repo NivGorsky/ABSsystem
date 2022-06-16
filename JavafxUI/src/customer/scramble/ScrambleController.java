@@ -2,7 +2,6 @@ package customer.scramble;
 import DTO.LoanCategorisDTO;
 import DTO.LoanPlacingDTO;
 import DTO.UIController;
-import Engine.MainSystem;
 import customer.CustomerController;
 import customer.scramble.scrambleFields.simpleField.SimpleField;
 import javafx.beans.binding.Bindings;
@@ -149,7 +148,7 @@ public class ScrambleController implements UIController {
         }
 
         catch (Exception e){
-            //todo: open a message box to user
+            //todo: open a message box to user !!!!!
             System.out.println("Could not perform place to loans");
         }
     }

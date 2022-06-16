@@ -1,7 +1,4 @@
 package customer;
-import DTO.CustomerDTO;
-import Engine.ABSsystem;
-import Engine.Customer;
 import Engine.MainSystem;
 import customer.information.InformationController;
 import customer.payment.PaymentController;
@@ -10,7 +7,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import mainScene.MainSceneController;
 import mutualInterfaces.ParentController;
@@ -50,11 +46,9 @@ public class CustomerController implements ParentController {
     @FXML private PaymentController paymentController;
 //    @FXML private Tab paymentTab;
 
-    @FXML private TabPane tabPane;
+    @FXML private TabPane customerTabPane;
 
-    @FXML
-    public void initialize(){
-
+    public void initializeTabs() {
         //init information
         informationController.setParentController(this);
         informationController.getCustomerNameProperty().bind(customerNameProperty);
@@ -67,7 +61,7 @@ public class CustomerController implements ParentController {
         paymentController.getCustomerNameProperty().bind(customerNameProperty);
 
         if (areControllersInitialized(informationController, scrambleController, paymentController)){
-            tabPane.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
+            customerTabPane.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
                 switch (newValue.getText()){
                     case "Information":
                         informationController.onShow();
@@ -84,13 +78,13 @@ public class CustomerController implements ParentController {
         }
     }
 
-    public TabPane getTabPane() {
-        return tabPane;
+    public TabPane getCustomerTabPane() {
+        return customerTabPane;
     }
 
     public void chooseTab(int tabIndex){
-        tabPane.getSelectionModel().select(1);
-        tabPane.getSelectionModel().select(0);
+        customerTabPane.getSelectionModel().select(1);
+        customerTabPane.getSelectionModel().select(0);
     }
 
     @Override

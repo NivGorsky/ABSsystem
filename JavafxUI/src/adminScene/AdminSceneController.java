@@ -20,6 +20,7 @@ import java.io.File;
 public class AdminSceneController implements ParentController {
 
     @FXML private Button increaseYazButton;
+    @FXML private Button decreaseYazButton;
     @FXML private Button loadFileButton;
 
     @FXML private ScrollPane loansTableComponent;
@@ -32,11 +33,15 @@ public class AdminSceneController implements ParentController {
 
     @FXML public void initialize()
     {
-        if(loansTableComponentController != null)
+        if(loansTableComponentController != null && customersInfoTableController != null)
         {
             loansTableComponentController.setParentController(this);
             customersInfoTableController.setParentController(this);
+
+            loansTableComponentController.loadLoansData();
+            customersInfoTableController.loadCustomersInfo();
         }
+        
     }
 
     public void setIncreaseYAZButtonDisable(SimpleBooleanProperty isFileSelected)
@@ -50,6 +55,10 @@ public class AdminSceneController implements ParentController {
         int yaz = parentController.getModel().getCurrYaz();
         parentController.getHeaderController().setCurrentYAZProperty(yaz);
         this.onShow();
+    }
+
+    @FXML public void decreaseYAZButtonClicked() {
+
     }
 
     @FXML public void loadFileButtonClicked()

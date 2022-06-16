@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<ScrollPane fx:id="loansTrade" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1280.0" styleClass="root" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171">
+  <content>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="650.0" prefWidth="1280.0" styleClass="root">
+         <children>
+            <BorderPane layoutX="8.0" layoutY="-2.0" prefHeight="650.0" prefWidth="1280.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="-8.0" AnchorPane.topAnchor="-2.0">
+               <left>
+                  <GridPane prefHeight="650.0" prefWidth="555.0" BorderPane.alignment="CENTER">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints maxHeight="70.0" minHeight="10.0" prefHeight="70.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="400.0" minHeight="10.0" prefHeight="400.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Label prefHeight="59.0" prefWidth="265.0" text="Loans for sale:">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets left="10.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <Label prefHeight="45.0" prefWidth="328.0" text="Loan price:" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                           <GridPane.margin>
+                              <Insets left="50.0" top="10.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <AnchorPane fx:id="loansForSaleAP" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="1" >
+                            <children>
+                                <fx:include fx:id="loansForSale" source="/loansTable/loansTableComponent.fxml" />
+                            </children>
+                         </AnchorPane>
+                        <Button fx:id="buyLoanButton" mnemonicParsing="false" onAction="#buyLoanButtonClicked" prefHeight="34.0" prefWidth="90.0" text="Buy Loan" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+                     </children>
+                  </GridPane>
+               </left>
+               <right>
+                  <GridPane prefHeight="513.0" prefWidth="466.0" BorderPane.alignment="CENTER">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints maxHeight="100.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="400.0" minHeight="10.0" prefHeight="400.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="100.0" minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Label prefHeight="49.0" prefWidth="211.0" text="My loans as lender:">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets left="20.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <AnchorPane fx:id="loansAsLenderAP" prefHeight="245.0" prefWidth="466.0" GridPane.columnSpan="2" GridPane.rowIndex="1" >
+                            <children>
+                                <fx:include fx:id="loansAsLender" source="/loansTable/loansTableComponent.fxml" />
+                            </children>
+                        </AnchorPane>
+                        <Button fx:id="sellLoanButton" mnemonicParsing="false" onAction="#sellLoanButtonClicked" prefHeight="34.0" prefWidth="90.0" text="Sell Loan" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                           <GridPane.margin>
+                              <Insets top="15.0" />
+                           </GridPane.margin>
+                        </Button>
+                     </children>
+                  </GridPane>
+               </right>
+            </BorderPane>
+         </children></AnchorPane>
+  </content>
+</ScrollPane>

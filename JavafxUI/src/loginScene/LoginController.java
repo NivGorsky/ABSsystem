@@ -8,7 +8,7 @@ import javafx.scene.control.TextField;
 
 public class LoginController {
 
-    @FXML private ScrollPane Login;
+    @FXML private ScrollPane login;
     @FXML private Label loginLabel;
     @FXML private Label nameLabel;
     @FXML private TextField nameTextField;

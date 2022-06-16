@@ -18,6 +18,7 @@ import mutualInterfaces.ParentController;
 import java.util.*;
 
 public class PaymentController implements ParentController {
+
     private CustomerController parentController;
     private StringProperty customerNameProperty;
     private final ObservableList<NotificationsDTO.NotificationDTO> notifications;
@@ -46,6 +47,12 @@ public class PaymentController implements ParentController {
         payDebtButton.setDisable(true);
         payDebtTextField.setDisable(true);
         debtLabel.setText("Debt: ");
+    }
+
+    public PaymentController(){
+        notifications = FXCollections.observableArrayList();
+        customerNameProperty = new SimpleStringProperty();
+        selectedLoanFromLoansTable = null;
     }
 
     @FXML
@@ -106,12 +113,6 @@ public class PaymentController implements ParentController {
     @Override
     public MainSystem getModel(){
         return parentController.getModel();
-    }
-
-    public PaymentController(){
-        notifications = FXCollections.observableArrayList();
-        customerNameProperty = new SimpleStringProperty();
-        selectedLoanFromLoansTable = null;
     }
 
     public void setSelectedLoanFromLoansTable(LoanDTO selectedLoan){
