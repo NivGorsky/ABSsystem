@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.stage.Stage;
 import mutualInterfaces.ParentController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -72,6 +73,16 @@ public class LoansTableComponentController implements ParentController {
     @Override
     public void createExceptionDialog(Exception ex) {
         parentController.createExceptionDialog(ex);
+    }
+
+    @Override
+    public Stage getPrimaryStage() {
+        return parentController.getPrimaryStage();
+    }
+
+    @Override
+    public void switchStyleSheet(String selectedItem) {
+        parentController.switchStyleSheet(selectedItem);
     }
 
     public void setParentController(ParentController adminSceneController) {

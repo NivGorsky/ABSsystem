@@ -100,7 +100,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <fx:include fx:id="borrowerLoansTableComponent" source="../../loansTable/loansTableComponent.fxml" GridPane.columnSpan="2" GridPane.rowSpan="2" />
+                  <fx:include fx:id="borrowerLoansTableComponent" source="../../../../JavafxUI/src/loansTable/loansTableComponent.fxml"  GridPane.columnSpan="2" GridPane.rowSpan="2" />
                </children>
             </GridPane>
             <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">

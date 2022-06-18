@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+
+<BorderPane fx:id="customerScene" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="customer.CustomerController">
+   <center>
+      <TabPane fx:id="customerTabPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="580.0" prefWidth="1280.0" styleClass="root" tabClosingPolicy="UNAVAILABLE">
+       <tabs>
+         <Tab fx:id="informationTab" styleClass="root" text="Information">
+               <content>
+         </content>
+             <fx:include fx:id="information" source="../../../CustomerApp/src/customer/information/Information.fxml" />
+         </Tab>
+         <Tab fx:id="scrambleTab" styleClass="root" text="Scramble">
+              <content>
+                 <fx:include fx:id="scramble" source="../../../CustomerApp/src/customer/scramble/Scramble.fxml" />
+              </content>
+            </Tab>
+           <Tab fx:id="paymentTab" styleClass="root" text="Payment">
+              <content>
+                 <fx:include fx:id="payment" source="../../../CustomerApp/src/customer/payment/Payment.fxml" />
+              </content>
+            </Tab>
+            <Tab fx:id="createNewLoanTab" text="Create new loan">
+              <content>
+                  <fx:include fx:id="createNewLoan" source="../../../CustomerApp/src/customer/createLoanScene/createLoanScene.fxml" />
+              </content>
+            </Tab>
+            <Tab fx:id="loanTradingTab" text="Loans trading">
+                <content>
+                    <fx:include fx:id="loansTrading" source="../../../CustomerApp/src/customer/loanTrading/loanTradingScene.fxml" />
+                </content>
+            </Tab>
+      
+       </tabs>
+      </TabPane>
+   </center>
+   <top>
+      <GridPane fx:id="header" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="70.0" prefWidth="1280.0" styleClass="root">
+         <columnConstraints>
+            <ColumnConstraints hgrow="NEVER" maxWidth="170.0" minWidth="128.0" prefWidth="170.0" />
+            <ColumnConstraints hgrow="NEVER" maxWidth="180.0" minWidth="10.0" prefWidth="180.0" />
+            <ColumnConstraints hgrow="NEVER" maxWidth="750.0" minWidth="643.0" prefWidth="750.0" />
+            <ColumnConstraints hgrow="NEVER" maxWidth="180.0" minWidth="43.3333740234375" prefWidth="180.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints maxHeight="60" prefHeight="70.0" vgrow="NEVER" />
+         </rowConstraints>
+         <children>
+            <Label fx:id="currentYazLabel" prefHeight="36.0" prefWidth="150.0" text="Current YAZ" GridPane.columnIndex="3">
+               <GridPane.margin>
+                  <Insets left="20.0" right="5.0" />
+               </GridPane.margin>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="displayModeCB" prefHeight="50.0" prefWidth="131.0" promptText="Display Mode" styleClass="combo-box" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin>
+            </ComboBox>
+            <Label fx:id="heyCustomerLabel" prefHeight="44.0" prefWidth="140.0">
+               <GridPane.margin>
+                  <Insets left="5.0" />
+               </GridPane.margin>
+            </Label>
+            <Button fx:id="loadFileButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="119.0" text="Load File" GridPane.columnIndex="2" GridPane.valignment="CENTER">
+               <GridPane.margin>
+                  <Insets left="10.0" />
+               </GridPane.margin>
+            </Button>
+         </children>
+      </GridPane>
+   </top>
+</BorderPane>

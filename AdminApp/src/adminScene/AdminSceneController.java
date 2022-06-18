@@ -1,15 +1,19 @@
 package adminScene;
-import Engine.Customer;
+import DTO.CustomerDTO;
 import Engine.MainSystem;
 import Exceptions.XMLFileException;
 import customersInfoTable.CustomersInfoTableController;
 import exceptionDialog.ExceptionDialogCreator;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.scene.control.ScrollPane;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.*;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableView;
+import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import loansTable.LoansTableComponentController;
 import mainScene.MainSceneController;
 import mutualInterfaces.ParentController;
@@ -19,20 +23,36 @@ import java.io.File;
 
 public class AdminSceneController implements ParentController {
 
+    @FXML private GridPane header;
+    @FXML private Label currentYazLabel;
+    @FXML private ComboBox<String> displayModeCB;
+    @FXML private Label heyAdminLabel;
+
     @FXML private Button increaseYazButton;
     @FXML private Button decreaseYazButton;
     @FXML private Button loadFileButton;
 
+    @FXML private Label loansLabel;
     @FXML private ScrollPane loansTableComponent;
     @FXML private LoansTableComponentController loansTableComponentController;
 
-    @FXML private TableView<Customer> customersInfoTableView;
+    @FXML private Label customersInfoLabel;
+    @FXML private TableView<CustomerDTO> customersInfoTableView;
     @FXML private CustomersInfoTableController customersInfoTableController;
 
-    private MainSceneController parentController;
+    private SimpleIntegerProperty currentYAZ = new SimpleIntegerProperty(1);
+    private ParentController parentController;
+
+    ObservableList<String> displayModeOptions =  FXCollections.observableArrayList("Light Mode", "Dark Mode", "MTA Mode", "Barbi Mode");
 
     @FXML public void initialize()
     {
+        displayModeCB.setItems(displayModeOptions);
+        currentYazLabel.textProperty().bind(Bindings.concat("Current YAZ: ", currentYAZ));
+        displayModeCB.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            parentController.switchStyleSheet(displayModeCB.getSelectionModel().getSelectedItem());
+        });
+
         if(loansTableComponentController != null && customersInfoTableController != null)
         {
             loansTableComponentController.setParentController(this);
@@ -41,7 +61,7 @@ public class AdminSceneController implements ParentController {
             loansTableComponentController.loadLoansData();
             customersInfoTableController.loadCustomersInfo();
         }
-        
+
     }
 
     public void setIncreaseYAZButtonDisable(SimpleBooleanProperty isFileSelected)
@@ -49,36 +69,18 @@ public class AdminSceneController implements ParentController {
         increaseYazButton.disableProperty().bind(isFileSelected.not());
     }
 
-    @FXML public void increaseYazButtonClicked()
-    {
+    @FXML public void increaseYazButtonClicked() {
         parentController.getModel().moveTimeLine();
         int yaz = parentController.getModel().getCurrYaz();
-        parentController.getHeaderController().setCurrentYAZProperty(yaz);
+        currentYAZ.set(yaz);
         this.onShow();
     }
 
     @FXML public void decreaseYAZButtonClicked() {
-
+        //TODO
     }
 
-    @FXML public void loadFileButtonClicked()
-    {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select a file");
-        File selectedFile = fileChooser.showOpenDialog(parentController.getPrimaryStage());
-
-        try {
-            parentController.getModel().loadXML(selectedFile.getPath());
-            parentController.setFileInfo(selectedFile.getPath());
-            loansTableComponentController.loadLoansData();
-            customersInfoTableController.loadCustomersInfo();
-        }
-        catch (XMLFileException | JAXBException ex) {
-            ExceptionDialogCreator.createExceptionDialog(ex);
-        }
-    }
-
-    public void setParentController(MainSceneController parentController)
+    public void setParentController(ParentController parentController)
     {
         this.parentController = parentController;
     }
@@ -89,11 +91,20 @@ public class AdminSceneController implements ParentController {
         parentController.createExceptionDialog(ex);
     }
 
-    public void onShow(){
-        //need to add methods for on show for the customer information
+    @Override
+    public Stage getPrimaryStage() {
+        return parentController.getPrimaryStage();
+    }
 
-        //reloading the loans data
+    @Override
+    public void switchStyleSheet(String selectedItem) {
+        parentController.switchStyleSheet(selectedItem);
+    }
+
+    public void onShow(){
         loansTableComponentController.clearTable();
         loansTableComponentController.loadLoansData();
     }
 }
+
+
