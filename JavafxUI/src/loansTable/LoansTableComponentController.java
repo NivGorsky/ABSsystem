@@ -2,7 +2,6 @@ package loansTable;
 
 import DTO.LoanDTO;
 import Engine.MainSystem;
-import customer.payment.PaymentController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;

@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 
 public interface MainSystem {
 
-     void loadXML(String path) throws XMLFileException, JAXBException;
+     void loadXML(String path, String customer) throws XMLFileException, JAXBException;
      ArrayList<LoanDTO> showLoansInfo();
      ArrayList<CustomerDTO> showCustomersInfo();
      void depositMoney(String customerName, double amount);

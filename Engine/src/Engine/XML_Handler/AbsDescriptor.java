@@ -40,7 +40,6 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "", propOrder = {
     "absCategories",
     "absLoans",
-    "absCustomers"
 })
 @XmlRootElement(name = "abs-descriptor")
 public class AbsDescriptor {
@@ -49,8 +48,6 @@ public class AbsDescriptor {
     protected AbsCategories absCategories;
     @XmlElement(name = "abs-loans", required = true)
     protected AbsLoans absLoans;
-    @XmlElement(name = "abs-customers", required = true)
-    protected AbsCustomers absCustomers;
 
     /**
      * Gets the value of the absCategories property.
@@ -99,29 +96,4 @@ public class AbsDescriptor {
     public void setAbsLoans(AbsLoans value) {
         this.absLoans = value;
     }
-
-    /**
-     * Gets the value of the absCustomers property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link AbsCustomers }
-     *     
-     */
-    public AbsCustomers getAbsCustomers() {
-        return absCustomers;
-    }
-
-    /**
-     * Sets the value of the absCustomers property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link AbsCustomers }
-     *     
-     */
-    public void setAbsCustomers(AbsCustomers value) {
-        this.absCustomers = value;
-    }
-
 }

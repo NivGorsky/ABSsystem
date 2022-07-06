@@ -160,7 +160,7 @@ public class CustomerController implements ParentController {
         File selectedFile = fileChooser.showOpenDialog(parentController.getPrimaryStage());
 
         try {
-            parentController.getModel().loadXML(selectedFile.getPath());
+            parentController.getModel().loadXML(selectedFile.getPath(), customerNameProperty.get());
             initializeTabs();
             isFileSelected.set(true);
 

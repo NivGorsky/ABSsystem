@@ -115,10 +115,9 @@ public class ABSsystem implements MainSystem, SystemService {
         return customerDTO;
     }
 
-    private void takeDataFromDescriptor(AbsDescriptor descriptor) throws XMLFileException {
+    private void takeDataFromDescriptor(AbsDescriptor descriptor, String customer) throws XMLFileException {
         AbsCategories categories = descriptor.getAbsCategories();
         AbsLoans loans = descriptor.getAbsLoans();
-        //AbsCustomers customers = descriptor.getAbsCustomers(); //TODO:delete customers from scheme
 
         try {
             XMLFileChecker.isFileLogicallyOK(loans, categories);
@@ -128,17 +127,8 @@ public class ABSsystem implements MainSystem, SystemService {
 
         resetSystem();
         takeCategoriesData(categories);
-        //takeCustomersData(customers); //TODO:delete customers from scheme
-        takeLoansData(loans);
-
+        takeLoansData(loans, customer);
     }
-
-    private void takeCustomersData(AbsCustomers customers) {
-        for (AbsCustomer c : customers.getAbsCustomer()) {
-            Customer customer = JAXBConvertor.convertCustomer(c);
-            name2customer.put(customer.getName(), customer);
-        }
-    } //TODO:delete customers from scheme
 
     private void takeCategoriesData(AbsCategories categories) {
         for (String c : categories.getAbsCategory()) {
@@ -147,15 +137,12 @@ public class ABSsystem implements MainSystem, SystemService {
         }
     }
 
-    private void takeLoansData(AbsLoans loans) {
+    private void takeLoansData(AbsLoans loans, String customer) {
         for (AbsLoan l : loans.getAbsLoan()) {
-            Loan newLoan = JAXBConvertor.convertLoan(l, systemTimeline.getCurrentYaz());
+            Loan newLoan = JAXBConvertor.convertLoan(l, systemTimeline.getCurrentYaz(), customer);
             this.status2loan.put(newLoan.getStatus(), newLoan);
             this.loanId2Loan.put(newLoan.getLoanId(), newLoan);
             this.loans.add(newLoan);
-
-            //Customer customer = name2customer.get(l.getAbsOwner());
-            //customer.getLoansAsBorrower().add(newLoan); TODO: delete customers from scheme
         }
     }
 
@@ -313,12 +300,12 @@ public class ABSsystem implements MainSystem, SystemService {
     }
 
     @Override
-    public void loadXML(String path) throws XMLFileException {
+    public void loadXML(String path, String customer) throws XMLFileException {
         try {
             InputStream loadedXMLFile = SchemaForLAXB.getDescriptorFromXML(path);
             XMLFileChecker.isFileExists(path);
             XMLFileChecker.isXMLFile(path);
-            takeDataFromDescriptor(SchemaForLAXB.descriptor);
+            takeDataFromDescriptor(SchemaForLAXB.descriptor, customer);
             injectSystemServiceInterfaceToLoans();
         } catch (XMLFileException ex) {
             throw ex;

@@ -47,22 +47,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link AbsCustomers }
-     * 
-     */
-    public AbsCustomers createAbsCustomers() {
-        return new AbsCustomers();
-    }
-
-    /**
-     * Create an instance of {@link AbsCustomer }
-     * 
-     */
-    public AbsCustomer createAbsCustomer() {
-        return new AbsCustomer();
-    }
-
-    /**
      * Create an instance of {@link AbsCategories }
      * 
      */

@@ -12,6 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 import loansTable.LoansTableComponentController;
 import mutualInterfaces.ParentController;
 
@@ -108,6 +109,16 @@ public class PaymentController implements ParentController {
     @Override
     public void createExceptionDialog(Exception ex) {
         parentController.createExceptionDialog(ex);
+    }
+
+    @Override
+    public Stage getPrimaryStage() {
+        return parentController.getPrimaryStage();
+    }
+
+    @Override
+    public void switchStyleSheet(String selectedItem) {
+        parentController.switchStyleSheet(selectedItem);
     }
 
     @Override
