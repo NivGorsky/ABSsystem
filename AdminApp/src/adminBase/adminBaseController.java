@@ -92,4 +92,20 @@ public class adminBaseController implements ParentController {
     public void setRoot(ScrollPane root){
         this.adminMain = root;
     }
+
+//    public void switchBody(String selectedItemInComboBox) {
+//        switch (selectedItemInComboBox) {
+//            case "Admin":
+//                adminSceneController.onShow();
+//                centerAnchorPane.getChildren().clear();
+//                centerAnchorPane.getChildren().add(adminScene);
+//                break;
+//
+//            //customer
+//            default:
+//                centerAnchorPane.getChildren().clear();
+//                customerPaneController.chooseTab(0);
+//                centerAnchorPane.getChildren().add(customerPane);
+//        }
+//    }
 }
