@@ -1,7 +1,7 @@
 package main;
 import Engine.ABSsystem;
 import Engine.MainSystem;
-import admin.adminController;
+import adminBase.adminBaseController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -17,11 +17,11 @@ public class App extends Application {
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader();
 
-        URL mainFXML = getClass().getResource("../admin/admin.fxml");
+        URL mainFXML = getClass().getResource("../adminBase/adminBase.fxml");
         loader.setLocation(mainFXML);
         ScrollPane root = loader.load();
 
-        adminController adminAppController = loader.getController();
+        adminBaseController adminAppController = loader.getController();
         MainSystem engine = new ABSsystem();
         adminAppController.setPrimaryStage(primaryStage);
         adminAppController.setModel(engine);

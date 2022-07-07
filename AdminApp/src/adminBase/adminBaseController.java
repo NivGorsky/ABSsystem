@@ -1,4 +1,4 @@
-package admin;
+package adminBase;
 
 import Engine.MainSystem;
 import adminScene.AdminSceneController;
@@ -10,13 +10,11 @@ import javafx.stage.Stage;
 import loginScene.LoginController;
 import mutualInterfaces.ParentController;
 
-public class adminController implements ParentController {
+public class adminBaseController implements ParentController {
 
     @FXML private ScrollPane adminMain;
-
     @FXML private BorderPane adminScene;
     @FXML private AdminSceneController adminSceneController;
-
     @FXML private ScrollPane login;
     @FXML private LoginController loginController;
 
@@ -84,7 +82,6 @@ public class adminController implements ParentController {
             }
         }
     }
-
     public void setPrimaryStage(Stage primaryStage)
     {
         this.primaryStage = primaryStage;
