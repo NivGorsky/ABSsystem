@@ -2,6 +2,7 @@ package loansTable;
 
 import DTO.LoanDTO;
 import Engine.MainSystem;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -196,14 +197,8 @@ public class LoansTableComponentController implements ParentController {
         loansTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
     }
 
-    public void setLoanSelectionListener(){
-        loansTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if(parentController instanceof PaymentController){
-                PaymentController parentControllerAsPaymentController = (PaymentController)parentController;
-                parentControllerAsPaymentController.LoanWasSelectedFromLoansTable(newValue);
-                parentControllerAsPaymentController.setSelectedLoanFromLoansTable(newValue);
-            }
-        });
+    public void setLoanSelectionListener(ChangeListener<LoanDTO> changeListener){
+        loansTable.getSelectionModel().selectedItemProperty().addListener(changeListener);
     }
 }
 

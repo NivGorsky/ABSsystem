@@ -42,7 +42,10 @@ public class PaymentController implements ParentController {
         borrowerLoansTableComponentController.setParentController(this);
         initNotifications();
         borrowerLoansTableComponentController.changeTableSelectionModelToSingle();
-        borrowerLoansTableComponentController.setLoanSelectionListener();
+        borrowerLoansTableComponentController.setLoanSelectionListener((observable, oldValue, newValue) -> {
+            LoanWasSelectedFromLoansTable(newValue);
+            setSelectedLoanFromLoansTable(newValue);
+        });
         initLendersTable();
         initPaymentButtons();
         payDebtButton.setDisable(true);
