@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<ScrollPane fitToWidth="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="260.0" prefWidth="1280.0" styleClass="root" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="customersInfoTable.CustomersInfoTableController">
+  <content>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="260.0" prefWidth="1280.0" styleClass="root">
+         <children>
+            <TableView fx:id="customersInfoTable" layoutX="-1.0" layoutY="-3.0" prefHeight="260.0" prefWidth="1280.0">
+              <columns>
+                  <TableColumn fx:id="customerNameColumn" prefWidth="128.0" text="Name" />
+                  <TableColumn fx:id="loansAsLenderColumn" prefWidth="540.0" text="Loans As Lender">
+                     <columns>
+                        <TableColumn fx:id="newLoansColumn" prefWidth="115.0" text="New Loans" />
+                        <TableColumn fx:id="pendingLoansColumn" prefWidth="115.0" text="Pending Loans" />
+                        <TableColumn fx:id="activeLoansColumn" prefWidth="115.0" text="Active Loans" />
+                        <TableColumn fx:id="loansInRiskColumn" prefWidth="115.0" text="Loans In Risk" />
+                        <TableColumn fx:id="finishedLoansColumn" prefWidth="115.0" text="Finished Loans" />
+                     </columns></TableColumn>
+                  <TableColumn fx:id="loansAsLoanerColumn" prefWidth="698.333251953125" text="Loans As Loaner">
+                     <columns>
+                        <TableColumn fx:id="newLoansLoanerColumn" prefWidth="115.0" text="New Loans" />
+                        <TableColumn fx:id="pendingLoansLoanerColumn" prefWidth="115.0" text="Pending Loans" />
+                        <TableColumn fx:id="activeLoansLoanerColumn" prefWidth="115.0" text="Active Loans" />
+                        <TableColumn fx:id="loansInRiskLoanerColumn" prefWidth="115.0" text="Loans In Risk" />
+                        <TableColumn fx:id="finishedLoansLoanerColumn" prefWidth="115.0" text="Finished Loans" />
+                     </columns>
+                  </TableColumn>
+              </columns>
+            </TableView>
+         </children></AnchorPane>
+  </content>
+</ScrollPane>

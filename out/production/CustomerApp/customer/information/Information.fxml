@@ -85,12 +85,12 @@
             </Pane>
             <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="275.0" prefWidth="200.0" styleClass="root" GridPane.rowIndex="1">
                <children>
-                  <fx:include fx:id="borrowerLoansTableComponent" source="../../../JavafxUI/loansTable/loansTableComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <fx:include fx:id="borrowerLoansTableComponent" source="../../../../JavafxUI/src/loansTable/loansTableComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
             </AnchorPane>
             <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="270.0" prefWidth="802.0" styleClass="root" GridPane.rowIndex="2" GridPane.rowSpan="2">
                <children>
-                  <fx:include fx:id="lenderLoansTableComponent" source="../../../JavafxUI/loansTable/loansTableComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <fx:include fx:id="lenderLoansTableComponent" source="../../../../JavafxUI/src/loansTable/loansTableComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
             </AnchorPane>
          </children>
