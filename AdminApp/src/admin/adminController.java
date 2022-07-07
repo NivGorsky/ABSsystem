@@ -1,4 +1,4 @@
-package adminMain;
+package admin;
 
 import Engine.MainSystem;
 import adminScene.AdminSceneController;
@@ -10,9 +10,9 @@ import javafx.stage.Stage;
 import loginScene.LoginController;
 import mutualInterfaces.ParentController;
 
-public class AdminAppController implements ParentController {
+public class adminController implements ParentController {
 
-    @FXML private ScrollPane root;
+    @FXML private ScrollPane adminMain;
 
     @FXML private BorderPane adminScene;
     @FXML private AdminSceneController adminSceneController;
@@ -93,6 +93,6 @@ public class AdminAppController implements ParentController {
         this.model = model;
     }
     public void setRoot(ScrollPane root){
-        this.root = root;
+        this.adminMain = root;
     }
 }

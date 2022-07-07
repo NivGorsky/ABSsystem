@@ -15,7 +15,6 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import loansTable.LoansTableComponentController;
-import mainScene.MainSceneController;
 import mutualInterfaces.ParentController;
 
 import javax.xml.bind.JAXBException;

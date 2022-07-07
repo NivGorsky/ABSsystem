@@ -57,8 +57,8 @@
                         <Insets left="10.0" />
                      </GridPane.margin>
                   </Label>
-                  <fx:include source="../../../AdminApp/src/customersInfoTable/customersInfoTable.fxml" GridPane.rowIndex="3" />
-                  <fx:include source="../../../JavafxUI/src/loansTable/loansTableComponent.fxml" GridPane.rowIndex="1" />
+                  <fx:include source="../../AdminApp/customersInfoTable/customersInfoTable.fxml" GridPane.rowIndex="3" />
+                  <fx:include source="../../JavafxUI/loansTable/loansTableComponent.fxml" GridPane.rowIndex="1" />
                </children>
             </GridPane>
          </center>
