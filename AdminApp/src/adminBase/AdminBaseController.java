@@ -1,17 +1,21 @@
 package adminBase;
 
+import Engine.ABSsystem;
 import Engine.MainSystem;
 import adminScene.AdminSceneController;
 import exceptionDialog.ExceptionDialogCreator;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import loginScene.LoginController;
 import mutualInterfaces.BaseController;
 import mutualInterfaces.ParentController;
+
+import java.net.URL;
 
 public class AdminBaseController implements ParentController, BaseController {
 
@@ -22,6 +26,7 @@ public class AdminBaseController implements ParentController, BaseController {
     @FXML private LoginController loginSceneController;
 
     @FXML public void initialize() {
+        loadAdminScene();
         if(adminSceneController != null && loginSceneController != null) {
             adminSceneController.setParentController(this);
             loginSceneController.setParentController(this);
@@ -110,9 +115,35 @@ public class AdminBaseController implements ParentController, BaseController {
     public void setRoot(ScrollPane root){
         this.root = root;
     }
-
     public void setIsLoggedInProperty(Boolean newValue){
         isLoggedIn.set(newValue);
+    }
+    private void loadAdminScene(){
+        try{
+            FXMLLoader loader = new FXMLLoader();
+            URL mainFXML = getClass().getResource("../adminScene/adminScene.fxml");
+            loader.setLocation(mainFXML);
+            adminScene = loader.load();
+            adminSceneController = loader.getController();
+        }
+
+        catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+
+//        FXMLLoader loader = new FXMLLoader();
+//
+//        URL mainFXML = getClass().getResource("../adminBase/adminBase.fxml");
+//        loader.setLocation(mainFXML);
+//        ScrollPane root = loader.load();
+//
+//        AdminBaseController adminAppController = loader.getController();
+//        MainSystem engine = new ABSsystem();
+//        adminAppController.setPrimaryStage(primaryStage);
+//        adminAppController.setModel(engine);
+//        adminAppController.setRoot(root);
+//        adminAppController.setPrimaryStage(primaryStage);
+//
     }
 
 
