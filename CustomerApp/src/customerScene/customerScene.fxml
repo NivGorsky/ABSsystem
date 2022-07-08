@@ -20,26 +20,26 @@
          <Tab fx:id="informationTab" styleClass="root" text="Information">
                <content>
          </content>
-             <fx:include fx:id="information" source="/information/Information.fxml" />
+             <fx:include fx:id="information" source="information/Information.fxml" />
          </Tab>
          <Tab fx:id="scrambleTab" styleClass="root" text="Scramble">
               <content>
-                 <fx:include fx:id="scramble" source="/scramble/Scramble.fxml" />
+                 <fx:include fx:id="scramble" source="scramble/scramble.fxml" />
               </content>
             </Tab>
            <Tab fx:id="paymentTab" styleClass="root" text="Payment">
               <content>
-                 <fx:include fx:id="payment" source="/payment/Payment.fxml" />
+                 <fx:include fx:id="payment" source="payment/Payment.fxml" />
               </content>
             </Tab>
             <Tab fx:id="createNewLoanTab" text="Create new loan">
               <content>
-                  <fx:include fx:id="createNewLoan" source="/createLoanScene/createLoanScene.fxml" />
+                  <fx:include fx:id="createNewLoan" source="createLoanScene/createLoanScene.fxml" />
               </content>
             </Tab>
             <Tab fx:id="loanTradingTab" text="Loans trading">
                 <content>
-                    <fx:include fx:id="loansTrading" source="/loanTrading/loanTradingScene.fxml" />
+                    <fx:include fx:id="loansTrading" source="loanTrading/loanTradingScene.fxml" />
                 </content>
             </Tab>
       
