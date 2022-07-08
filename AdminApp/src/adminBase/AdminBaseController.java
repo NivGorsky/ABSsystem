@@ -3,29 +3,49 @@ package adminBase;
 import Engine.MainSystem;
 import adminScene.AdminSceneController;
 import exceptionDialog.ExceptionDialogCreator;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import loginScene.LoginController;
+import mutualInterfaces.BaseController;
 import mutualInterfaces.ParentController;
 
-public class adminBaseController implements ParentController {
+public class AdminBaseController implements ParentController, BaseController {
 
-    @FXML private ScrollPane adminMain;
+    @FXML private ScrollPane root;
     @FXML private BorderPane adminScene;
     @FXML private AdminSceneController adminSceneController;
     @FXML private ScrollPane login;
     @FXML private LoginController loginController;
-
-    private MainSystem model;
-    private Stage primaryStage;
 
     @FXML public void initialize() {
         if(adminSceneController != null && loginController != null) {
             adminSceneController.setParentController(this);
             loginController.setParentController(this);
         }
+    }
+
+    private BooleanProperty isLoggedIn;
+    private MainSystem model;
+    private Stage primaryStage;
+
+    public AdminBaseController(){
+        isLoggedIn = new SimpleBooleanProperty();
+        isLoggedIn.addListener(((observable, oldValue, newValue) -> {
+
+            if(newValue == true){
+                root.setContent(adminScene);
+            }
+
+            else{
+                root.setContent(login);
+            }
+        }));
     }
 
     @Override
@@ -90,10 +110,16 @@ public class adminBaseController implements ParentController {
         this.model = model;
     }
     public void setRoot(ScrollPane root){
-        this.adminMain = root;
+        this.root = root;
     }
 
-//    public void switchBody(String selectedItemInComboBox) {
+    public void setIsLoggedInProperty(Boolean newValue){
+        isLoggedIn.set(newValue);
+    }
+
+
+
+    //    public void switchBody(String selectedItemInComboBox) {
 //        switch (selectedItemInComboBox) {
 //            case "Admin":
 //                adminSceneController.onShow();

@@ -1,7 +1,7 @@
 package main;
 import Engine.ABSsystem;
 import Engine.MainSystem;
-import adminBase.adminBaseController;
+import adminBase.AdminBaseController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -21,7 +21,7 @@ public class App extends Application {
         loader.setLocation(mainFXML);
         ScrollPane root = loader.load();
 
-        adminBaseController adminAppController = loader.getController();
+        AdminBaseController adminAppController = loader.getController();
         MainSystem engine = new ABSsystem();
         adminAppController.setPrimaryStage(primaryStage);
         adminAppController.setModel(engine);
