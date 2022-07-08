@@ -115,6 +115,7 @@ public class AdminBaseController implements ParentController, BaseController {
     public void setRoot(ScrollPane root){
         this.root = root;
     }
+    @Override
     public void setIsLoggedInProperty(Boolean newValue){
         isLoggedIn.set(newValue);
     }
