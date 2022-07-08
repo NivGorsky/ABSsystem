@@ -5,8 +5,6 @@ import adminScene.AdminSceneController;
 import exceptionDialog.ExceptionDialogCreator;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
@@ -20,13 +18,13 @@ public class AdminBaseController implements ParentController, BaseController {
     @FXML private ScrollPane root;
     @FXML private BorderPane adminScene;
     @FXML private AdminSceneController adminSceneController;
-    @FXML private ScrollPane login;
-    @FXML private LoginController loginController;
+    @FXML private ScrollPane loginScene;
+    @FXML private LoginController loginSceneController;
 
     @FXML public void initialize() {
-        if(adminSceneController != null && loginController != null) {
+        if(adminSceneController != null && loginSceneController != null) {
             adminSceneController.setParentController(this);
-            loginController.setParentController(this);
+            loginSceneController.setParentController(this);
         }
     }
 
@@ -43,7 +41,7 @@ public class AdminBaseController implements ParentController, BaseController {
             }
 
             else{
-                root.setContent(login);
+                root.setContent(loginScene);
             }
         }));
     }
