@@ -33,6 +33,12 @@ public interface MainSystem {
      boolean hasBorrowerEnoughFundsToPayAmount(Customer customerDTO, double amount);
      void payDebt(Double amount, LoanDTO loanDTO, int yaz) throws Exception;
 
+    /*services:
+    void registerAsCustomer(String name) throws Exception
+    void registerAsAdmin(String name) throws Exception
+    List<String> getCategories();
+
+     */
 
 
 

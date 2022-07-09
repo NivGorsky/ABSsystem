@@ -148,8 +148,7 @@ public class ScrambleController implements UIController {
         }
 
         catch (Exception e){
-            //todo: open a message box to user !!!!!
-            System.out.println("Could not perform place to loans");
+            parentController.createExceptionDialog(new Exception("Could not perform place to loans"));
         }
     }
 
@@ -389,23 +388,6 @@ public class ScrambleController implements UIController {
                                         100)),
                         " %"));
 
-//        // task message
-//        taskMessageLabel.textProperty().bind(aTask.messageProperty());
-//
-//        // task progress bar
-//        taskProgressBar.progressProperty().bind(aTask.progressProperty());
-//
-//        // task percent label
-//        progressPercentLabel.textProperty().bind(
-//                Bindings.concat(
-//                        Bindings.format(
-//                                "%.0f",
-//                                Bindings.multiply(
-//                                        aTask.progressProperty(),
-//                                        100)),
-//                        " %"));
-//
-//        // task cleanup upon finish
         task.valueProperty().addListener((observable, oldValue, newValue) -> {
             onTaskFinished();
         });

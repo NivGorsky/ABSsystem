@@ -35,6 +35,8 @@ public class CustomerBaseController implements ParentController, BaseController 
         {
             loginSceneController.setParentController(this);
             customerSceneController.setParentController(this);
+            loginSceneController.setParentController(this);
+            loginSceneController.setLoginType(LoginController.LoginType.CUSTOMER);
         }
     }
 

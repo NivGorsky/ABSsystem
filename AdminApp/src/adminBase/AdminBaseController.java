@@ -30,6 +30,7 @@ public class AdminBaseController implements ParentController, BaseController {
         if(adminSceneController != null && loginSceneController != null) {
             adminSceneController.setParentController(this);
             loginSceneController.setParentController(this);
+            loginSceneController.setLoginType(LoginController.LoginType.ADMIN);
         }
     }
 
