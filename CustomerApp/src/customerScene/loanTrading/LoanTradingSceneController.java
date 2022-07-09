@@ -12,7 +12,7 @@ import javafx.scene.layout.AnchorPane;
 import loansTable.LoansTableComponentController;
 import mutualInterfaces.ParentController;
 
-public class LoanTradingController {
+public class LoanTradingSceneController {
 
     @FXML private ScrollPane loansTrade;
     @FXML private AnchorPane loansForSaleAP;
@@ -30,7 +30,7 @@ public class LoanTradingController {
 
     private ParentController parentController;
 
-    public LoanTradingController () {
+    public LoanTradingSceneController() {
         selectedLoanFromLoansTable = null;
         isLoanSelected = new SimpleBooleanProperty(false);
     }

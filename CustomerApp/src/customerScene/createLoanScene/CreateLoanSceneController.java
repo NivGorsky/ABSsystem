@@ -6,7 +6,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import mutualInterfaces.ParentController;
 
-public class CreateLoanController {
+public class CreateLoanSceneController {
 
     @FXML private ScrollPane createLoan;
     @FXML private TextField loanNameTF;
@@ -20,6 +20,7 @@ public class CreateLoanController {
     ParentController parentController;
 
     @FXML public void initialize() {
+
     }
 
     public void setParentController(ParentController parentController) {
