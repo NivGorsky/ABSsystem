@@ -27,11 +27,9 @@ public class FileUploadServlet extends HttpServlet {
         Collection<Part> parts = request.getParts();
         MainSystem AbsSystem = ServletUtils.getAbsSystem(getServletContext());
         try {
-            synchronized (this) {
-                for (Part part : parts) {
-                    AbsSystem.loadXML(part.getContentType(), part.getInputStream(), custName);
-                    response.setStatus(200);
-                }
+            for (Part part : parts) {
+                AbsSystem.loadXML(part.getContentType(), part.getInputStream(), custName);
+                response.setStatus(200);
             }
         }
         catch (XMLFileException | JAXBException ex) {

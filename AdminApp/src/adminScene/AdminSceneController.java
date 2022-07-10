@@ -71,7 +71,10 @@ public class AdminSceneController implements ParentController {
     }
 
     @FXML public void increaseYazButtonClicked() {
+
         parentController.getModel().moveTimeLine();
+
+
         int yaz = parentController.getModel().getCurrYaz();
         currentYAZ.set(yaz);
         this.onShow();

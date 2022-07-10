@@ -3,6 +3,7 @@
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/../../java/controlsfx-8.40.14.jar!/" />
       <root url="file://$PROJECT_DIR$/../../../../../okHttp" />
+      <root url="jar://$PROJECT_DIR$/../../gson-2.8.2.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

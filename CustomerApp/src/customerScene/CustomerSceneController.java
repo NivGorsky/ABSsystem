@@ -166,7 +166,7 @@ public class CustomerSceneController implements ParentController {
 
 
             HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/load-file").newBuilder();
-            urlBuilder.addQueryParameter("customer-name", customerNameProperty.getName());
+            urlBuilder.addQueryParameter("customer-name", customerNameProperty.getValue());
             String finalUrl = urlBuilder.build().toString();
 
             RequestBody body =
