@@ -2,6 +2,7 @@ package loansTable;
 
 import DTO.LoanDTO;
 import Engine.MainSystem;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
+import main.Configurations;
 import mutualInterfaces.ParentController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -16,6 +18,10 @@ import loansTable.loansAdditionalInfo.ActiveInfoController;
 import loansTable.loansAdditionalInfo.FinishedInfoController;
 import loansTable.loansAdditionalInfo.InRiskInfoController;
 import loansTable.loansAdditionalInfo.PendingInfoController;
+import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -133,12 +139,63 @@ public class LoansTableComponentController implements ParentController {
             }
         }
     }
-    public void loadLoansData()
-    {
+    public void loadLoansData() {
         createTableLoanColumns();
-        ArrayList<LoanDTO> loans = parentController.getModel().showLoansInfo();
-        putLoansInTable(loans);
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/showLoansInfo").newBuilder();
+        String finalUrl = urlBuilder.build().toString();
+        Request request = new Request.Builder().url(finalUrl).get().build();
+        Call call = Configurations.HTTP_CLIENT.newCall(request);
+
+        Callback showLoansInfoCallBack = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                parentController.createExceptionDialog(e);
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+//                ArrayList<LoanDTO> loans = parseJson(response);
+////                ArrayList<LoanDTO> loans = parentController.getModel().showLoansInfo();
+//                putLoansInTable(loans);
+            }
+        };
+
+        call.enqueue(showLoansInfoCallBack);
     }
+
+//        HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/login").newBuilder();
+//        urlBuilder.addQueryParameter("Login-type", loginType.toString());
+//        String finalUrl = urlBuilder.build().toString();
+//
+//        Request request = new Request.Builder()
+//                .url(finalUrl)
+//                .post(RequestBody.create(name.getBytes()))
+//                .build();
+//
+//        Call call = Configurations.HTTP_CLIENT.newCall(request);
+//        Callback loginCallBack = new Callback() {
+//            @Override
+//            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+//                parentController.createExceptionDialog(e);
+//            }
+//
+//            @Override
+//            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+//                if (response.code() != 200) {
+//                    String responseBody = response.body().string();
+//                    Platform.runLater(() ->
+//                            parentController.createExceptionDialog(new Exception(responseBody)));
+//                }
+//                else {
+//                    Platform.runLater(() -> {
+//                        baseController.setLoggedInDetails(name);
+//                    });
+//                }
+//            }
+//        };
+//
+//        call.enqueue(loginCallBack);
+//
     public void loadSpecificCustomerLoansAsLender(String customerName){
         createTableLoanColumns();
         ArrayList<LoanDTO> loans = parentController.getModel().getLoansByCustomerNameAsLender(customerName);
