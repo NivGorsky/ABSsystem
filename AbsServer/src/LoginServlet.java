@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet(name = "Login", urlPatterns = "login")
+@WebServlet(name = "Login", urlPatterns = "/login")
 public class LoginServlet extends HttpServlet
 {
     @Override
