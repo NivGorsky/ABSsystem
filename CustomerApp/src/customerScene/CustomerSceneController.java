@@ -84,6 +84,8 @@ public class CustomerSceneController implements ParentController {
         });
     }
 
+    public void setHeyCustomerLabel(String text) { heyCustomerLabel.setText(text); }
+
     private boolean areControllersInitialized(InformationController customerController, ScrambleController scrambleController, PaymentController paymentController){
 
         return customerController != null && scrambleController != null && paymentController != null;

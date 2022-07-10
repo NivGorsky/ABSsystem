@@ -2,8 +2,10 @@
   <library name="controlsfx-8.40.14">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/../../java/controlsfx-8.40.14.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../../../../okHttp" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
+    <jarDirectory url="file://$PROJECT_DIR$/../../../../../okHttp" recursive="false" />
   </library>
 </component>

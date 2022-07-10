@@ -11,5 +11,15 @@
     <orderEntry type="module" module-name="DTO" />
     <orderEntry type="module" module-name="Engine" />
     <orderEntry type="module" module-name="Exceptions" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MAVEN_REPOSITORY$/org/jetbrains/annotations/20.1.0/annotations-20.1.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="controlsfx-8.40.14" level="project" />
   </component>
 </module>

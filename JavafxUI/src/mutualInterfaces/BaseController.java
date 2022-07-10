@@ -1,5 +1,6 @@
 package mutualInterfaces;
 
 public interface BaseController{
-    void setIsLoggedInProperty(Boolean newValue);
+    void setLoggedInDetails(String name);
+
 }

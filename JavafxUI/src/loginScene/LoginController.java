@@ -1,16 +1,18 @@
 package loginScene;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import main.Configurations;
 import mutualInterfaces.BaseController;
 import mutualInterfaces.ParentController;
-
+import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
+import java.io.IOException;
 
 
 public class LoginController {
@@ -56,23 +58,39 @@ public class LoginController {
 
     private void tryLogIn() {
         String name = nameTextField.getText();
-        try {
-            switch (loginType) {
-                case ADMIN: {
-                    //registerAsAdmin(name)
-                    break;
+
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "login").newBuilder();
+        urlBuilder.addQueryParameter("Login-type", loginType.toString());
+        String finalUrl = urlBuilder.build().toString();
+
+        Request request = new Request.Builder()
+                .url(finalUrl)
+                .post(RequestBody.create(name.getBytes()))
+                .build();
+
+        Call call = Configurations.HTTP_CLIENT.newCall(request);
+        Callback loginCallBack = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                parentController.createExceptionDialog(e);
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.code() != 200) {
+                    String responseBody = response.body().string();
+                    Platform.runLater(() ->
+                            parentController.createExceptionDialog(new Exception(responseBody)));
                 }
-                case CUSTOMER: {
-                    //registerAsCustomer(name)
-                    break;
+                else {
+                    Platform.runLater(() -> {
+                        baseController.setLoggedInDetails(name);
+                    });
                 }
             }
-        }
-        catch (Exception ex) {
-            parentController.createExceptionDialog(ex);
-        }
+        };
 
-        baseController.setIsLoggedInProperty(true);
+        call.enqueue(loginCallBack);
     }
 
 

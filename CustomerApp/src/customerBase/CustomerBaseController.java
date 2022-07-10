@@ -134,7 +134,9 @@ public class CustomerBaseController implements ParentController, BaseController 
     }
 
     @Override
-    public void setIsLoggedInProperty(Boolean newValue){
-        isLoggedIn.set(newValue);
+    public void setLoggedInDetails(String name) {
+        customerSceneController.setHeyCustomerLabel(name);
+        isLoggedIn.set(true);
     }
+
 }

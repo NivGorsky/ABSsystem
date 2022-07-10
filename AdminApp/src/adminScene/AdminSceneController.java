@@ -63,6 +63,8 @@ public class AdminSceneController implements ParentController {
 
     }
 
+    public void setHeyAdminLabel(String text) { heyAdminLabel.setText(text); }
+
     public void setIncreaseYAZButtonDisable(SimpleBooleanProperty isFileSelected)
     {
         increaseYazButton.disableProperty().bind(isFileSelected.not());

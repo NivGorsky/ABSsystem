@@ -25,6 +25,8 @@ public class ABSsystem implements MainSystem, SystemService {
     private UIController scrambleController;
     private Integer numberOfLoansAssignedInSinglePlacingAlgorithmRun;
     private Task<Boolean> currentRunningTask;
+    private ArrayList<String> admins;
+    private boolean isAdminLoggedIn;
 
     public ABSsystem() {
 
@@ -36,6 +38,8 @@ public class ABSsystem implements MainSystem, SystemService {
         customer2Notifications = new TreeMap<Customer, List<Notification>>();
 //        initLoanPlacingQueryFields();
         numberOfLoansAssignedInSinglePlacingAlgorithmRun = -1;
+        admins = new ArrayList<>();
+        isAdminLoggedIn = false;
     }
 
     private void injectSystemServiceInterfaceToLoans() {
@@ -288,6 +292,32 @@ public class ABSsystem implements MainSystem, SystemService {
         }
     }
 
+
+    @Override
+    public boolean isCustomerExists(String name) {
+        return name2customer.containsKey(name);
+    }
+
+    @Override
+    public void addCustomer(String name) {
+        Customer newCustomer = new Customer(name, 0);
+        name2customer.put(name, newCustomer);
+    }
+
+    @Override
+    public boolean isAdminExists(String name) {
+        return admins.contains(name);
+    }
+
+    @Override
+    public boolean isAdminLoggedIn(String name) {
+        return isAdminLoggedIn;
+    }
+
+    @Override
+    public void addAdmin(String name) {
+       admins.add(name);
+    }
 
     @Override
     public int getCurrYaz() {

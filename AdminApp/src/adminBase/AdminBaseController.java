@@ -116,53 +116,22 @@ public class AdminBaseController implements ParentController, BaseController {
     public void setRoot(ScrollPane root){
         this.root = root;
     }
+
     @Override
-    public void setIsLoggedInProperty(Boolean newValue){
-        isLoggedIn.set(newValue);
+    public void setLoggedInDetails(String name){
+        adminSceneController.setHeyAdminLabel(name);
+        isLoggedIn.set(true);
     }
-    private void loadAdminScene(){
-        try{
+    private void loadAdminScene() {
+        try {
             FXMLLoader loader = new FXMLLoader();
             URL mainFXML = getClass().getResource("../adminScene/adminScene.fxml");
             loader.setLocation(mainFXML);
             adminScene = loader.load();
             adminSceneController = loader.getController();
-        }
 
-        catch (Exception e){
-            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            createExceptionDialog(e);
         }
-
-//        FXMLLoader loader = new FXMLLoader();
-//
-//        URL mainFXML = getClass().getResource("../adminBase/adminBase.fxml");
-//        loader.setLocation(mainFXML);
-//        ScrollPane root = loader.load();
-//
-//        AdminBaseController adminAppController = loader.getController();
-//        MainSystem engine = new ABSsystem();
-//        adminAppController.setPrimaryStage(primaryStage);
-//        adminAppController.setModel(engine);
-//        adminAppController.setRoot(root);
-//        adminAppController.setPrimaryStage(primaryStage);
-//
     }
-
-
-
-    //    public void switchBody(String selectedItemInComboBox) {
-//        switch (selectedItemInComboBox) {
-//            case "Admin":
-//                adminSceneController.onShow();
-//                centerAnchorPane.getChildren().clear();
-//                centerAnchorPane.getChildren().add(adminScene);
-//                break;
-//
-//            //customer
-//            default:
-//                centerAnchorPane.getChildren().clear();
-//                customerPaneController.chooseTab(0);
-//                centerAnchorPane.getChildren().add(customerPane);
-//        }
-//    }
 }

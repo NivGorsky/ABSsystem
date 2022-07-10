@@ -1,0 +1,16 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="AbsServer">
+    <output-path>$PROJECT_DIR$/out/artifacts/AbsServer</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="AbsServer" />
+          <element id="module-output" name="Engine" />
+          <element id="module-output" name="DTO" />
+          <element id="module-output" name="Exceptions" />
+        </element>
+      </element>
+      <element id="javaee-facet-resources" facet="AbsServer/web/Web" />
+    </root>
+  </artifact>
+</component>

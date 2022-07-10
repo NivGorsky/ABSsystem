@@ -36,9 +36,13 @@ public interface MainSystem {
     /*services:
     void registerAsCustomer(String name) throws Exception
     void registerAsAdmin(String name) throws Exception
-    List<String> getCategories();
+    List<String> getCategories(); */
 
-     */
+    boolean isCustomerExists(String name);
+    void addCustomer(String name);
+    boolean isAdminExists(String name);
+    boolean isAdminLoggedIn(String name);
+    void addAdmin(String name);
 
 
 
