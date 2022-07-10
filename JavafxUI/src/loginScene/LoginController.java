@@ -1,5 +1,4 @@
 package loginScene;
-
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -59,7 +58,7 @@ public class LoginController {
     private void tryLogIn() {
         String name = nameTextField.getText();
 
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "login").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/login").newBuilder();
         urlBuilder.addQueryParameter("Login-type", loginType.toString());
         String finalUrl = urlBuilder.build().toString();
 
