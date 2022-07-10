@@ -44,6 +44,7 @@ public class AdminBaseController implements ParentController, BaseController {
 
             if(newValue == true){
                 root.setContent(adminScene);
+                adminSceneController.onShow();
             }
 
             else{

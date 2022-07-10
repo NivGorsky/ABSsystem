@@ -56,9 +56,6 @@ public class AdminSceneController implements ParentController {
         {
             loansTableComponentController.setParentController(this);
             customersInfoTableController.setParentController(this);
-
-            loansTableComponentController.loadLoansData();
-            customersInfoTableController.loadCustomersInfo();
         }
 
     }

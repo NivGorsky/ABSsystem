@@ -44,11 +44,9 @@ public class LoginController {
 
     }
 
-
     public LoginController(){
 
     }
-
 
     public void setParentController(ParentController parentController) {
         this.parentController = parentController;
@@ -81,7 +79,7 @@ public class LoginController {
                 if (response.code() != 200) {
                     String responseBody = response.body().string();
                     Platform.runLater(() ->
-                            parentController.createExceptionDialog(new Exception(responseBody)));
+                            parentController.createExceptionDialog(new Exception(Integer.toString(response.code()))));
                 }
                 else {
                     Platform.runLater(() -> {

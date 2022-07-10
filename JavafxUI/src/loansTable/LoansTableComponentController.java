@@ -143,6 +143,7 @@ public class LoansTableComponentController implements ParentController {
             }
         }
     }
+
     public void loadLoansData() {
         createTableLoanColumns();
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/showLoansInfo").newBuilder();
@@ -160,12 +161,14 @@ public class LoansTableComponentController implements ParentController {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if(response.isSuccessful()){
                     String rawBody = response.body().string();
-//                    Type foosmapType = new TypeToken<Map<String, Foo<Bar>>>() { }.getType();
                     Type arrayListLoanDtoType = new TypeToken<ArrayList<LoanDTO>>(){}.getType();
-                    ArrayList<LoanDTO> loansInfo = Configurations.GSON.fromJson(rawBody, arrayListLoanDtoType);
-                    
+                    ArrayList<LoanDTO> loans = Configurations.GSON.fromJson(rawBody, arrayListLoanDtoType);
+                    putLoansInTable(loans);
                 }
 
+                else{
+                    parentController.createExceptionDialog(new Exception(Integer.toString(response.code())));
+                }
             }
         };
 
