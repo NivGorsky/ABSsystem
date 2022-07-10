@@ -11,7 +11,7 @@ public class ServletUtils {
 
     public static MainSystem getAbsSystem(ServletContext servletContext) {
 
-        synchronized (mainSystemLock) {
+        synchronized(mainSystemLock) {
             if (servletContext.getAttribute(MAIN_SYSTEM_ATTRIBUTE_NAME) == null) {
                 servletContext.setAttribute(MAIN_SYSTEM_ATTRIBUTE_NAME, new ABSsystem());
             }

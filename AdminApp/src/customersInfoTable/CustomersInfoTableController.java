@@ -91,7 +91,7 @@ public class CustomersInfoTableController {
 
                 else{
                     Platform.runLater(() ->{
-                        parentController.createExceptionDialog(new Exception("Error: " + Integer.toString(response.code())));
+                        parentController.createExceptionDialog(new Exception(response.message()));
                     });
                 }
             }
