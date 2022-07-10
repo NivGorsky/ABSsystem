@@ -62,9 +62,11 @@ public class LoginController {
         urlBuilder.addQueryParameter("Login-type", loginType.toString());
         String finalUrl = urlBuilder.build().toString();
 
+        //test
+        String nameAsJson = Configurations.GSON.toJson(name);
         Request request = new Request.Builder()
                 .url(finalUrl)
-                .post(RequestBody.create(name.getBytes()))
+                .post(RequestBody.create(nameAsJson.getBytes()))
                 .build();
 
         Call call = Configurations.HTTP_CLIENT.newCall(request);

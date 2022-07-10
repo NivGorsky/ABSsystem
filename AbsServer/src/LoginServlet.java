@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import javax.security.auth.login.Configuration;
 import java.io.IOException;
 
 @WebServlet(name = "Login", urlPatterns = "/login")
@@ -15,7 +16,7 @@ public class LoginServlet extends HttpServlet
 
         MainSystem AbsSystem = ServletUtils.getAbsSystem(getServletContext());
         String loginType = request.getParameter("Login-type");
-        String name = request.getReader().readLine();
+        String name = ServletUtils.GSON.fromJson(request.getReader().readLine(), String.class);
         name = name.trim();
 
         switch (loginType) {

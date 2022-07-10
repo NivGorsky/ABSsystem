@@ -2,6 +2,7 @@ package loansTable;
 
 import DTO.LoanDTO;
 import Engine.MainSystem;
+import com.google.gson.reflect.TypeToken;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -20,10 +21,13 @@ import loansTable.loansAdditionalInfo.InRiskInfoController;
 import loansTable.loansAdditionalInfo.PendingInfoController;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
-
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class LoansTableComponentController implements ParentController {
 
@@ -154,9 +158,14 @@ public class LoansTableComponentController implements ParentController {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-//                ArrayList<LoanDTO> loans = parseJson(response);
-////                ArrayList<LoanDTO> loans = parentController.getModel().showLoansInfo();
-//                putLoansInTable(loans);
+                if(response.isSuccessful()){
+                    String rawBody = response.body().string();
+//                    Type foosmapType = new TypeToken<Map<String, Foo<Bar>>>() { }.getType();
+                    Type arrayListLoanDtoType = new TypeToken<ArrayList<LoanDTO>>(){}.getType();
+                    ArrayList<LoanDTO> loansInfo = Configurations.GSON.fromJson(rawBody, arrayListLoanDtoType);
+                    
+                }
+
             }
         };
 
