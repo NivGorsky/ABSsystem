@@ -2,13 +2,14 @@ package Engine;
 import DTO.*;
 import Exceptions.XMLFileException;
 import javax.xml.bind.JAXBException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
 
 public interface MainSystem {
 
-     void loadXML(String path, String customer) throws XMLFileException, JAXBException;
+     void loadXML(String contentType, InputStream inputStream, String customer) throws XMLFileException, JAXBException;
      ArrayList<LoanDTO> showLoansInfo();
      ArrayList<CustomerDTO> showCustomersInfo();
      void depositMoney(String customerName, double amount);

@@ -5,6 +5,7 @@ import customerScene.information.InformationController;
 import customerScene.payment.PaymentController;
 import customerScene.scramble.ScrambleController;
 import exceptionDialog.ExceptionDialogCreator;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -17,10 +18,14 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import main.Configurations;
 import mutualInterfaces.ParentController;
+import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
+import java.io.IOException;
 
 
 public class CustomerSceneController implements ParentController {
@@ -83,8 +88,6 @@ public class CustomerSceneController implements ParentController {
             parentController.switchStyleSheet(displayModeCB.getSelectionModel().getSelectedItem());
         });
     }
-
-    public void setHeyCustomerLabel(String text) { heyCustomerLabel.setText(text); }
 
     private boolean areControllersInitialized(InformationController customerController, ScrambleController scrambleController, PaymentController paymentController){
 
@@ -161,15 +164,52 @@ public class CustomerSceneController implements ParentController {
         fileChooser.setTitle("Select a file");
         File selectedFile = fileChooser.showOpenDialog(parentController.getPrimaryStage());
 
-        try {
-            parentController.getModel().loadXML(selectedFile.getPath(), customerNameProperty.get());
-            initializeTabs();
-            isFileSelected.set(true);
+
+            HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/load-file").newBuilder();
+            urlBuilder.addQueryParameter("customer-name", customerNameProperty.getName());
+            String finalUrl = urlBuilder.build().toString();
+
+            RequestBody body =
+                    new MultipartBody.Builder()
+                            .addFormDataPart("file", selectedFile.getName(), RequestBody.create(selectedFile, MediaType.parse("text/plain")))
+                            .build();
+
+
+            Request request = new Request.Builder()
+                    .url(finalUrl)
+                    .post(body)
+                    .build();
+
+
+            Call call = Configurations.HTTP_CLIENT.newCall(request);
+            Callback fileCallBack = new Callback() {
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    parentController.createExceptionDialog(e);
+                }
+
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    if (response.code() != 200) {
+                        String responseBody = response.body().string();
+                        Platform.runLater(() ->
+                                parentController.createExceptionDialog(new Exception(responseBody)));
+                    }
+                    else {
+                        Platform.runLater(() -> {
+                            initializeTabs();
+                            isFileSelected.set(true);
+                        });
+                    }
+                }
+            };
+
+            call.enqueue(fileCallBack);
 
         }
-        catch (XMLFileException | JAXBException ex) {
-            ExceptionDialogCreator.createExceptionDialog(ex);
-        }
+
+    public void setCustomer(String name) {
+        customerNameProperty.set(name);
+        heyCustomerLabel.setText("Hey " + name + "!");
     }
-
 }

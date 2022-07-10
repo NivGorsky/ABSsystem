@@ -14,6 +14,8 @@ import Engine.XML_Handler.*;
 import Exceptions.XMLFileException;
 import javafx.concurrent.Task;
 
+import javax.xml.bind.JAXBException;
+
 public class ABSsystem implements MainSystem, SystemService {
     private final Timeline systemTimeline;
     private Map<String, Customer> name2customer;
@@ -330,15 +332,19 @@ public class ABSsystem implements MainSystem, SystemService {
     }
 
     @Override
-    public void loadXML(String path, String customer) throws XMLFileException {
+    public void loadXML(String contentType, InputStream inputStream, String customer) throws XMLFileException, JAXBException {
+
         try {
-            InputStream loadedXMLFile = SchemaForLAXB.getDescriptorFromXML(path);
-            XMLFileChecker.isFileExists(path);
-            XMLFileChecker.isXMLFile(path);
-            takeDataFromDescriptor(SchemaForLAXB.descriptor, customer);
+            AbsDescriptor descriptor = SchemaForLAXB.getDescriptorFromXML(inputStream);
+            //XMLFileChecker.isFileExists(path);
+            XMLFileChecker.isXMLFile(contentType);
+            takeDataFromDescriptor(descriptor, customer);
             injectSystemServiceInterfaceToLoans();
-        } catch (XMLFileException ex) {
+        }
+        catch (XMLFileException ex) {
             throw ex;
+        } catch (JAXBException ex) {
+           throw ex;
         }
     }
 
