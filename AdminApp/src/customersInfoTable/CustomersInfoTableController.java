@@ -1,13 +1,22 @@
 package customersInfoTable;
 
 import DTO.CustomerDTO;
+import DTO.LoanDTO;
 import adminScene.AdminSceneController;
+import com.google.gson.reflect.TypeToken;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import main.Configurations;
+import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
+import sun.net.www.http.HttpClient;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class CustomersInfoTableController {
@@ -51,9 +60,47 @@ public class CustomersInfoTableController {
         loansInRiskLoanerColumn.setCellValueFactory(cellData -> cellData.getValue().getAmountOfLoansPropertyPerStatusAsLoaner("IN_RISK").asObject());
         finishedLoansLoanerColumn.setCellValueFactory(cellData -> cellData.getValue().getAmountOfLoansPropertyPerStatusAsLoaner("FINISHED").asObject());
 
-        ArrayList<CustomerDTO> customers = parentController.getModel().showCustomersInfo();
-        ObservableList<CustomerDTO> customersForTable = FXCollections.observableArrayList();
-        customersForTable.addAll(customers);
-        customersInfoTable.setItems(customersForTable);
+        getCustomers();
+    }
+
+    private void getCustomers(){
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/showCustomersInfo").newBuilder();
+        String finalUrl = urlBuilder.build().toString();
+        Request request = new Request.Builder().url(finalUrl).get().build();
+        Call call = Configurations.HTTP_CLIENT.newCall(request);
+
+        Callback showCustomersInfoCallBack = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                parentController.createExceptionDialog(e);
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if(response.isSuccessful()){
+                    String rawBody = response.body().string();
+                    Type arrayListCustomerDtoType = new TypeToken<ArrayList<CustomerDTO>>(){}.getType();
+                    ArrayList<CustomerDTO> customers = Configurations.GSON.fromJson(rawBody, arrayListCustomerDtoType);
+
+                    Platform.runLater(() -> {
+                        ObservableList<CustomerDTO> customersForTable = FXCollections.observableArrayList();
+                        customersForTable.addAll(customers);
+                        customersInfoTable.setItems(customersForTable);
+                    });
+                }
+
+                else{
+                    Platform.runLater(() ->{
+                        parentController.createExceptionDialog(new Exception("Error: " + Integer.toString(response.code())));
+                    });
+                }
+            }
+        };
+
+        call.enqueue(showCustomersInfoCallBack);
+    }
+
+    public void clearTable(){
+        customersInfoTable.getItems().clear();
     }
 }

@@ -27,6 +27,7 @@ public class AdminBaseController implements ParentController, BaseController {
 
     @FXML public void initialize() {
         loadAdminScene();
+        adminSceneController.setParentController(this);
         if(adminSceneController != null && loginSceneController != null) {
             adminSceneController.setParentController(this);
             loginSceneController.setParentController(this);

@@ -154,7 +154,9 @@ public class LoansTableComponentController implements ParentController {
         Callback showLoansInfoCallBack = new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                parentController.createExceptionDialog(e);
+                Platform.runLater(() -> {
+                    parentController.createExceptionDialog(e);
+                });
             }
 
             @Override
@@ -163,7 +165,10 @@ public class LoansTableComponentController implements ParentController {
                     String rawBody = response.body().string();
                     Type arrayListLoanDtoType = new TypeToken<ArrayList<LoanDTO>>(){}.getType();
                     ArrayList<LoanDTO> loans = Configurations.GSON.fromJson(rawBody, arrayListLoanDtoType);
-                    putLoansInTable(loans);
+
+                    Platform.runLater(() -> {
+                        putLoansInTable(loans);
+                    });
                 }
 
                 else{

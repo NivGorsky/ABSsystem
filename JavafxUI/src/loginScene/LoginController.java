@@ -60,7 +60,6 @@ public class LoginController {
         urlBuilder.addQueryParameter("Login-type", loginType.toString());
         String finalUrl = urlBuilder.build().toString();
 
-        //test
         String nameAsJson = Configurations.GSON.toJson(name);
         Request request = new Request.Builder()
                 .url(finalUrl)
