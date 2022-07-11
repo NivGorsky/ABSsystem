@@ -19,4 +19,8 @@ public class ServletUtils {
         return (MainSystem) servletContext.getAttribute(MAIN_SYSTEM_ATTRIBUTE_NAME);
     }
 
+    public static Gson getGson(){
+        return GSON;
+    }
+
 }
