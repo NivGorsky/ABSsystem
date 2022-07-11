@@ -336,8 +336,6 @@ public class ABSsystem implements MainSystem, SystemService {
 
         try {
             AbsDescriptor descriptor = SchemaForLAXB.getDescriptorFromXML(inputStream);
-            //XMLFileChecker.isFileExists(path);
-            XMLFileChecker.isXMLFile(contentType);
             takeDataFromDescriptor(descriptor, customer);
             injectSystemServiceInterfaceToLoans();
         }

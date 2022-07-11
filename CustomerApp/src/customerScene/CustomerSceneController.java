@@ -162,7 +162,9 @@ public class CustomerSceneController implements ParentController {
     public void loadFileButtonClicked() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select a file");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("xml files", "*.xml"));
         File selectedFile = fileChooser.showOpenDialog(parentController.getPrimaryStage());
+
 
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/upload-file").newBuilder();
         urlBuilder.addQueryParameter("customer-name", customerNameProperty.getValue());

@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 
-import javax.jws.WebService;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.util.Collection;
