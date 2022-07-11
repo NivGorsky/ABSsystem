@@ -56,9 +56,6 @@ public class AdminSceneController implements ParentController {
         {
             loansTableComponentController.setParentController(this);
             customersInfoTableController.setParentController(this);
-
-            loansTableComponentController.loadLoansData();
-            customersInfoTableController.loadCustomersInfo();
         }
 
     }
@@ -108,6 +105,8 @@ public class AdminSceneController implements ParentController {
     public void onShow(){
         loansTableComponentController.clearTable();
         loansTableComponentController.loadLoansData();
+        customersInfoTableController.clearTable();
+        customersInfoTableController.loadCustomersInfo();
     }
 }
 
