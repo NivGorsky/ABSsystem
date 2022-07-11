@@ -77,8 +77,8 @@ public class CustomerBaseController implements ParentController, BaseController 
             customerSceneController = loader.getController();
         }
 
-        catch (Exception e){
-            System.out.println(e.getMessage());
+        catch (Exception ex){
+            createExceptionDialog(ex);
         }
     }
 

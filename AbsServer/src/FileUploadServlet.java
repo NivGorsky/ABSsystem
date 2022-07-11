@@ -11,11 +11,9 @@ import jakarta.servlet.http.Part;
 import javax.jws.WebService;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collection;
-import java.util.Scanner;
 
-@WebServlet("/load-file")
+@WebServlet("/upload-file")
 @MultipartConfig
 public class FileUploadServlet extends HttpServlet {
 

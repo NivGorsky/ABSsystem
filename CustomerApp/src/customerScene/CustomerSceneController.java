@@ -164,52 +164,52 @@ public class CustomerSceneController implements ParentController {
         fileChooser.setTitle("Select a file");
         File selectedFile = fileChooser.showOpenDialog(parentController.getPrimaryStage());
 
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/upload-file").newBuilder();
+        urlBuilder.addQueryParameter("customer-name", customerNameProperty.getValue());
+        String finalUrl = urlBuilder.build().toString();
 
-            HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/load-file").newBuilder();
-            urlBuilder.addQueryParameter("customer-name", customerNameProperty.getValue());
-            String finalUrl = urlBuilder.build().toString();
+        RequestBody body =
+                new MultipartBody.Builder()
+                        .addFormDataPart("file1", selectedFile.getName(), RequestBody.create(selectedFile, MediaType.parse("text/plain")))
+                        .build();
 
-            RequestBody body =
-                    new MultipartBody.Builder()
-                            .addFormDataPart("file", selectedFile.getName(), RequestBody.create(selectedFile, MediaType.parse("text/plain")))
-                            .build();
+        Request request = new Request.Builder()
+                .url(finalUrl)
+                .post(body)
+                .build();
 
+        Call call = Configurations.HTTP_CLIENT.newCall(request);
 
-            Request request = new Request.Builder()
-                    .url(finalUrl)
-                    .post(body)
-                    .build();
+        Callback fileCallBack = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                parentController.createExceptionDialog(e);
+            }
 
-
-            Call call = Configurations.HTTP_CLIENT.newCall(request);
-            Callback fileCallBack = new Callback() {
-                @Override
-                public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                    parentController.createExceptionDialog(e);
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.code() != 200) {
+                    String responseBody = response.body().string();
+                    Platform.runLater(() ->
+                            parentController.createExceptionDialog(new Exception(responseBody)));
                 }
-
-                @Override
-                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                    if (response.code() != 200) {
-                        String responseBody = response.body().string();
-                        Platform.runLater(() ->
-                                parentController.createExceptionDialog(new Exception(responseBody)));
-                    }
-                    else {
-                        Platform.runLater(() -> {
-                            initializeTabs();
-                            isFileSelected.set(true);
-                        });
-                    }
+                else {
+                    Platform.runLater(() -> {
+                        initializeTabs();
+                        isFileSelected.set(true);
+                    });
                 }
-            };
+           }
+        };
 
-            call.enqueue(fileCallBack);
+        call.enqueue(fileCallBack);
 
-        }
+    }
 
     public void setCustomer(String name) {
         customerNameProperty.set(name);
         heyCustomerLabel.setText("Hey " + name + "!");
     }
 }
+
+
