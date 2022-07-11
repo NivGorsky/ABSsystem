@@ -215,14 +215,80 @@ public class LoansTableComponentController implements ParentController {
 //
     public void loadSpecificCustomerLoansAsLender(String customerName){
         createTableLoanColumns();
-        ArrayList<LoanDTO> loans = parentController.getModel().getLoansByCustomerNameAsLender(customerName);
-        putLoansInTable(loans);
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/showLoansInfo").newBuilder();
+        urlBuilder.addQueryParameter("customer-name", customerName);
+        urlBuilder.addQueryParameter("loans-type", "lender");
+        String finalUrl = urlBuilder.build().toString();
+        Request request = new Request.Builder().url(finalUrl).get().build();
+        Call call = Configurations.HTTP_CLIENT.newCall(request);
+
+        Callback showLoansInfoCallBack = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> {
+                    parentController.createExceptionDialog(e);
+                });
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if(response.isSuccessful()){
+                    String rawBody = response.body().string();
+                    Type arrayListLoanDtoType = new TypeToken<ArrayList<LoanDTO>>(){}.getType();
+                    ArrayList<LoanDTO> loans = Configurations.GSON.fromJson(rawBody, arrayListLoanDtoType);
+
+                    Platform.runLater(() -> {
+                        putLoansInTable(loans);
+                    });
+                }
+
+                else{
+                    parentController.createExceptionDialog(new Exception(Integer.toString(response.code())));
+                }
+            }
+        };
+
+        call.enqueue(showLoansInfoCallBack);
+
     }
 
     public void loadSpecificCustomerLoansAsBorrower(String customerName){
         createTableLoanColumns();
-        ArrayList<LoanDTO> loans = parentController.getModel().getLoansByCustomerNameAsBorrower(customerName);
-        putLoansInTable(loans);
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/showLoansInfo").newBuilder();
+        urlBuilder.addQueryParameter("customer-name", customerName);
+        urlBuilder.addQueryParameter("loans-type", "borrower");
+
+        String finalUrl = urlBuilder.build().toString();
+        Request request = new Request.Builder().url(finalUrl).get().build();
+        Call call = Configurations.HTTP_CLIENT.newCall(request);
+
+        Callback showLoansInfoCallBack = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> {
+                    parentController.createExceptionDialog(e);
+                });
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if(response.isSuccessful()){
+                    String rawBody = response.body().string();
+                    Type arrayListLoanDtoType = new TypeToken<ArrayList<LoanDTO>>(){}.getType();
+                    ArrayList<LoanDTO> loans = Configurations.GSON.fromJson(rawBody, arrayListLoanDtoType);
+
+                    Platform.runLater(() -> {
+                        putLoansInTable(loans);
+                    });
+                }
+
+                else{
+                    parentController.createExceptionDialog(new Exception(Integer.toString(response.code())));
+                }
+            }
+        };
+
+        call.enqueue(showLoansInfoCallBack);
     }
 
     private void putLoansInTable( ArrayList<LoanDTO> loans){
