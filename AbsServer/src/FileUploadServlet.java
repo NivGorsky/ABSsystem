@@ -14,11 +14,11 @@ import java.io.IOException;
 import java.util.Collection;
 
 @WebServlet("/upload-file")
-@MultipartConfig
+@MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 5, maxRequestSize = 1024 * 1024 * 5 * 5)
 public class FileUploadServlet extends HttpServlet {
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/plain;charset=UTF-8");
 
         String custName = request.getParameter("customer-name");
@@ -33,7 +33,10 @@ public class FileUploadServlet extends HttpServlet {
             }
         }
         catch (XMLFileException | JAXBException ex) {
-          response.setStatus(400);
+          String errorMessage = ex.getMessage();
+          response.getWriter().println(errorMessage);
+          response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
         }
 
     }
