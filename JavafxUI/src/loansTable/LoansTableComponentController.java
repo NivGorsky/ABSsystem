@@ -348,16 +348,6 @@ public class LoansTableComponentController implements ParentController {
 
         //test
 
-    private static String toPrettyJsonFormat(String jsonString)
-    {
-        JsonParser parser = new JsonParser();
-        JsonElement json = parser.parse(jsonString);
-
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String prettyJson = gson.toJson(json);
-
-        return prettyJson;
-    }
 }
 
 
