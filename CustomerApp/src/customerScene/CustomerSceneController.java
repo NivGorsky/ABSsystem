@@ -199,6 +199,7 @@ public class CustomerSceneController implements ParentController {
                     Platform.runLater(() -> {
                         initializeTabs();
                         isFileSelected.set(true);
+                        informationController.onShow(); //need to change to this.onShow
                     });
                 }
            }
