@@ -21,13 +21,10 @@ import loansTable.loansAdditionalInfo.InRiskInfoController;
 import loansTable.loansAdditionalInfo.PendingInfoController;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
-import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Map;
 
 public class LoansTableComponentController implements ParentController {
 
@@ -180,39 +177,6 @@ public class LoansTableComponentController implements ParentController {
         call.enqueue(showLoansInfoCallBack);
     }
 
-//        HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/login").newBuilder();
-//        urlBuilder.addQueryParameter("Login-type", loginType.toString());
-//        String finalUrl = urlBuilder.build().toString();
-//
-//        Request request = new Request.Builder()
-//                .url(finalUrl)
-//                .post(RequestBody.create(name.getBytes()))
-//                .build();
-//
-//        Call call = Configurations.HTTP_CLIENT.newCall(request);
-//        Callback loginCallBack = new Callback() {
-//            @Override
-//            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-//                parentController.createExceptionDialog(e);
-//            }
-//
-//            @Override
-//            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-//                if (response.code() != 200) {
-//                    String responseBody = response.body().string();
-//                    Platform.runLater(() ->
-//                            parentController.createExceptionDialog(new Exception(responseBody)));
-//                }
-//                else {
-//                    Platform.runLater(() -> {
-//                        baseController.setLoggedInDetails(name);
-//                    });
-//                }
-//            }
-//        };
-//
-//        call.enqueue(loginCallBack);
-//
     public void loadSpecificCustomerLoansAsLender(String customerName){
         createTableLoanColumns();
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/showLoansInfo").newBuilder();
@@ -306,12 +270,6 @@ public class LoansTableComponentController implements ParentController {
         totalInterestCol.setCellValueFactory(cellData -> cellData.getValue().getTotalInterestProperty().asObject());
         PaymentRateCol.setCellValueFactory(cellData -> cellData.getValue().getYazPerPaymentProperty().asObject());
         statusCol.setCellValueFactory(cellData -> cellData.getValue().getStatusProperty());
-
-        this.loans = parentController.getModel().showLoansInfo();
-        ObservableList<LoanDTO> loansForTable = FXCollections.observableArrayList();
-        loansForTable.addAll(loans);
-
-        loansTable.setItems(loansForTable);
     }
 
     public void clearTable(){

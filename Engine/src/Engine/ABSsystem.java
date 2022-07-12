@@ -139,7 +139,9 @@ public class ABSsystem implements MainSystem, SystemService {
     private void takeCategoriesData(AbsCategories categories) {
         for (String c : categories.getAbsCategory()) {
             String category = c.trim();
-            LoanCategories.addCategory(category);
+            if(LoanCategories.getCategories().contains(category) == false) {
+                LoanCategories.addCategory(category);
+            }
         }
     }
 

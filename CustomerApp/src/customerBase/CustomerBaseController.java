@@ -75,6 +75,7 @@ public class CustomerBaseController implements ParentController, BaseController 
             loader.setLocation(mainFXML);
             customerScene = loader.load();
             customerSceneController = loader.getController();
+            customerSceneController.startRefresher();
         }
 
         catch (Exception ex){

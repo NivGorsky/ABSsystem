@@ -10,7 +10,7 @@ import javax.security.auth.login.Configuration;
 import java.io.IOException;
 import java.util.ArrayList;
 
-@WebServlet(name = "ShowLoansInfo", urlPatterns = "/showLoansInfo")
+@WebServlet("/showLoansInfo")
 public class ShowLoansInfoServlet extends HttpServlet
 {
 

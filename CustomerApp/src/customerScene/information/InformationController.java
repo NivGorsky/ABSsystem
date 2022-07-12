@@ -66,14 +66,13 @@ public class InformationController implements ParentController
 
         try {
             //make the actual deposit
-
             amountTextField.clear();
             parentController.getModel().depositMoney(customerName, amount);
             accountTransactionsController.updateAccountMovements();
         }
 
-        catch (Exception e){
-            //present an error window to the user
+        catch (Exception ex){
+            parentController.createExceptionDialog(ex);
         }
     }
 
@@ -92,8 +91,8 @@ public class InformationController implements ParentController
             }
         }
 
-        catch (Exception e){
-
+        catch (Exception ex){
+            parentController.createExceptionDialog(ex);
         }
 
         //make the actual withdraw
@@ -111,7 +110,7 @@ public class InformationController implements ParentController
         }
 
         catch (Exception e){
-            System.out.println("Failed to init information controller");
+            parentController.createExceptionDialog(new Exception("Failed to init information controller"));
         }
     }
 

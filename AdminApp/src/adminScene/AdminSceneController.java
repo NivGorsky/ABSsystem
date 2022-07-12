@@ -4,6 +4,7 @@ import Engine.MainSystem;
 import Exceptions.XMLFileException;
 import customersInfoTable.CustomersInfoTableController;
 import exceptionDialog.ExceptionDialogCreator;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -15,10 +16,16 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import loansTable.LoansTableComponentController;
+import main.AdminComponentsRefresher;
+import main.Configurations;
 import mutualInterfaces.ParentController;
+import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
+import java.io.IOException;
+import java.util.Timer;
 
 public class AdminSceneController implements ParentController {
 
@@ -39,6 +46,9 @@ public class AdminSceneController implements ParentController {
     @FXML private TableView<CustomerDTO> customersInfoTableView;
     @FXML private CustomersInfoTableController customersInfoTableController;
 
+    private Timer timer;
+    private final int REFRESH_RATE = 2;
+
     private SimpleIntegerProperty currentYAZ = new SimpleIntegerProperty(1);
     private ParentController parentController;
 
@@ -58,6 +68,7 @@ public class AdminSceneController implements ParentController {
             customersInfoTableController.setParentController(this);
         }
 
+        startRefresher();
     }
 
     public void setHeyAdminLabel(String text) { heyAdminLabel.setText(text); }
@@ -69,16 +80,63 @@ public class AdminSceneController implements ParentController {
 
     @FXML public void increaseYazButtonClicked() {
 
-        parentController.getModel().moveTimeLine();
+        Request request = createCurrentYazRequest("+");
+        Call call = Configurations.HTTP_CLIENT.newCall(request);
+        Callback currentYazCallBack = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                parentController.createExceptionDialog(e);
+            }
 
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.code() != 200) {
+                    String responseBody = response.body().string();
+                    Platform.runLater(() ->
+                            parentController.createExceptionDialog(new Exception(responseBody)));
+                }
+                else {
+                    Platform.runLater(() -> {
+                        String body = response.body().toString();
+                        currentYAZ.set(Integer.parseInt(body));
+                        //payments??
+                    });
+                }
+            }
+        };
 
-        int yaz = parentController.getModel().getCurrYaz();
-        currentYAZ.set(yaz);
-        this.onShow();
+        call.enqueue(currentYazCallBack);
     }
 
     @FXML public void decreaseYAZButtonClicked() {
-        //TODO
+
+        Request request = createCurrentYazRequest("-");
+        Call call = Configurations.HTTP_CLIENT.newCall(request);
+        Callback currentYazCallBack = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                parentController.createExceptionDialog(e);
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.code() != 200) {
+                    String responseBody = response.body().string();
+                    Platform.runLater(() ->
+                            parentController.createExceptionDialog(new Exception(responseBody)));
+                }
+                else {
+                    Platform.runLater(() -> {
+                        String body = response.body().toString();
+                        currentYAZ.set(Integer.parseInt(body));
+                        //TODO-move timeline back
+                    });
+                }
+            }
+        };
+
+        call.enqueue(currentYazCallBack);
+
     }
 
     public void setParentController(ParentController parentController)
@@ -108,6 +166,21 @@ public class AdminSceneController implements ParentController {
         customersInfoTableController.clearTable();
         customersInfoTableController.loadCustomersInfo();
     }
+
+    public void startRefresher() {
+        AdminComponentsRefresher refresher = new AdminComponentsRefresher(this);
+        timer = new Timer();
+        timer.schedule(refresher, REFRESH_RATE, REFRESH_RATE);
+    }
+
+    public Request createCurrentYazRequest(String moveDirection) {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/currentYaz").newBuilder();
+        urlBuilder.addQueryParameter("move-direction", moveDirection);
+        String finalUrl = urlBuilder.build().toString();
+
+        return new Request.Builder().url(finalUrl).build();
+    }
+
 }
 
 

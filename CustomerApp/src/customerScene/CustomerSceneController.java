@@ -1,10 +1,8 @@
 package customerScene;
 import Engine.MainSystem;
-import Exceptions.XMLFileException;
 import customerScene.information.InformationController;
 import customerScene.payment.PaymentController;
 import customerScene.scramble.ScrambleController;
-import exceptionDialog.ExceptionDialogCreator;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -22,13 +20,15 @@ import main.Configurations;
 import mutualInterfaces.ParentController;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
-
-import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
+import java.util.Timer;
+
+import main.CustomerComponentsRefresher;
 
 
 public class CustomerSceneController implements ParentController {
+
 
     //header//
     @FXML private GridPane header;
@@ -71,6 +71,9 @@ public class CustomerSceneController implements ParentController {
     private ParentController parentController;
     private StringProperty customerNameProperty;
 
+    private Timer timer;
+    private final int REFRESH_RATE = 2;
+
     //.............................................................................................//
 
 
@@ -106,6 +109,7 @@ public class CustomerSceneController implements ParentController {
         //init information
         informationController.setParentController(this);
         informationController.getCustomerNameProperty().bind(customerNameProperty);
+        informationController.onShow();
 
         //init scramble
         scrambleController.setParentController(this);
@@ -175,10 +179,7 @@ public class CustomerSceneController implements ParentController {
                         .addFormDataPart("file1", selectedFile.getName(), RequestBody.create(selectedFile, MediaType.parse("text/plain")))
                         .build();
 
-        Request request = new Request.Builder()
-                .url(finalUrl)
-                .post(body)
-                .build();
+        Request request = new Request.Builder().url(finalUrl).post(body).build();
 
         Call call = Configurations.HTTP_CLIENT.newCall(request);
 
@@ -197,7 +198,7 @@ public class CustomerSceneController implements ParentController {
                 }
                 else {
                     Platform.runLater(() -> {
-                        initializeTabs();
+                        onShow();
                         isFileSelected.set(true);
                     });
                 }
@@ -211,6 +212,55 @@ public class CustomerSceneController implements ParentController {
     public void setCustomer(String name) {
         customerNameProperty.set(name);
         heyCustomerLabel.setText("Hey " + name + "!");
+    }
+
+    public void updateCurrentYaz() {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/currentYaz").newBuilder();
+        urlBuilder.addQueryParameter("move-direction", "=");
+        String finalUrl = urlBuilder.build().toString();
+
+        Request request = new Request.Builder().url(finalUrl).build();
+
+        Call call = Configurations.HTTP_CLIENT.newCall(request);
+        Callback currentYazCallBack = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                parentController.createExceptionDialog(e);
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.code() != 200) {
+                    String responseBody = response.body().string();
+                    Platform.runLater(() ->
+                            parentController.createExceptionDialog(new Exception(responseBody)));
+                }
+                else {
+                    Platform.runLater(() -> {
+                        try {
+                            currentYAZ.set(Integer.parseInt(response.body().string()));
+                        }
+                        catch (IOException e) {
+                            parentController.createExceptionDialog(e);
+                        }
+                    });
+                }
+            }
+        };
+
+        call.enqueue(currentYazCallBack);
+    }
+
+    public void onShow() {
+        updateCurrentYaz();
+        informationController.onShow();
+        paymentController.onShow();
+    }
+
+    public void startRefresher() {
+        CustomerComponentsRefresher refresher = new CustomerComponentsRefresher(this);
+        timer = new Timer();
+        timer.schedule(refresher, REFRESH_RATE, REFRESH_RATE);
     }
 }
 

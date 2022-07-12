@@ -21,9 +21,4 @@ public class SchemaForLAXB {
         return descriptor;
     }
 
-//    private static AbsDescriptor deserializeFrom(InputStream in) throws JAXBException {
-//        JAXBContext jc = JAXBContext.newInstance(JAXB_XML_GAME_PACKAGE_NAME);
-//        Unmarshaller u = jc.createUnmarshaller();
-//        return (AbsDescriptor) u.unmarshal(in);
-//    } //TODO:delete
 }

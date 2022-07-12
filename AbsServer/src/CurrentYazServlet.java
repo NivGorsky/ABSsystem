@@ -7,15 +7,30 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet("/current-yaz")
-public class ShowCurrentYazServlet extends HttpServlet {
+@WebServlet("/currentYaz")
+public class CurrentYazServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
         response.setContentType("text/plain;charset=UTF-8");
-
+        String moveDirection = request.getParameter("move-direction");
         MainSystem AbsSystem = ServletUtils.getAbsSystem(getServletContext());
-        response.getWriter().println("Current Yaz: " + AbsSystem.getCurrYaz());
+
+        switch (moveDirection) {
+            case "+": {
+                //increase yaz
+                break;
+            }
+            case "-": {
+                //decrease yaz
+                break;
+            }
+            case "=": {
+                break;
+            }
+        }
+
+        response.getWriter().println(AbsSystem.getCurrYaz());
     }
 }
