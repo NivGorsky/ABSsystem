@@ -648,5 +648,6 @@ public class ABSsystem implements MainSystem, SystemService {
 
         seller.getLoansAsLender().remove(loanToSell);
         buyer.getLoansAsLender().add(loanToSell);
+        seller2loansForSale.remove(loanToSell);
     }
 }

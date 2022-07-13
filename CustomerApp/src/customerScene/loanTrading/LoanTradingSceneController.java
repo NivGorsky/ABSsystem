@@ -2,6 +2,7 @@ package customerScene.loanTrading;
 
 import DTO.LoanDTO;
 import DTO.LoanForSaleDTO;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -13,7 +14,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import loansTable.LoansTableComponentController;
+import main.Configurations;
 import mutualInterfaces.ParentController;
+import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
 
 public class LoanTradingSceneController {
 
@@ -56,12 +62,48 @@ public class LoanTradingSceneController {
 
     @FXML
     void buyLoanButtonClicked(ActionEvent event) {
-      //  LoanForSaleDTO loanToBuy = new LoanForSaleDTO(parentController.getLoggedInUser(), )
+        sendHttpRequest("BUY");
     }
 
     @FXML
     void sellLoanButtonClicked(ActionEvent event) {
+        sendHttpRequest("SELL");
+    }
 
+    private void sendHttpRequest(String action) {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/LoanTrading").newBuilder();
+        urlBuilder.addQueryParameter("Action", action);
+        String finalUrl = urlBuilder.build().toString();
+        Request request = new Request.Builder().url(finalUrl).build();
+
+        Call call = Configurations.HTTP_CLIENT.newCall(request);
+        Callback tradeLoanCallBack = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                parentController.createExceptionDialog(e);
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.code() != 200) {
+                    String responseBody = response.body().string();
+                    Platform.runLater(() ->
+                            parentController.createExceptionDialog(new Exception(Integer.toString(response.code()))));
+                }
+
+                else {
+                    Platform.runLater(() -> {
+                        loadLoansToTables(); //TODO!!!
+                    });
+                }
+            }
+        };
+
+        call.enqueue(tradeLoanCallBack);
+    }
+
+    public void loadLoansToTables() {
+        //TODO!!!!
     }
 
 }

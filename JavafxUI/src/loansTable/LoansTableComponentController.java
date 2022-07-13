@@ -303,6 +303,7 @@ public class LoansTableComponentController implements ParentController {
     public void setLoanSelectionListener(ChangeListener<LoanDTO> changeListener){
         loansTable.getSelectionModel().selectedItemProperty().addListener(changeListener);
     }
+
 }
 
 
