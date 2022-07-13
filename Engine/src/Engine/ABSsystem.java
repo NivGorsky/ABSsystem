@@ -294,7 +294,6 @@ public class ABSsystem implements MainSystem, SystemService {
         }
     }
 
-
     @Override
     public boolean isCustomerExists(String name) {
         return name2customer.containsKey(name);
@@ -338,6 +337,7 @@ public class ABSsystem implements MainSystem, SystemService {
             AbsDescriptor descriptor = SchemaForLAXB.getDescriptorFromXML(inputStream);
             takeDataFromDescriptor(descriptor, customer);
             injectSystemServiceInterfaceToLoans();
+
         }
         catch (XMLFileException ex) {
             throw ex;

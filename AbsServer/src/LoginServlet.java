@@ -17,7 +17,7 @@ public class LoginServlet extends HttpServlet
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/plain;charset=UTF-8");
 
-        MainSystem AbsSystem = ServletUtils.getAbsSystem(getServletContext());
+        MainSystem absSystem = ServletUtils.getAbsSystem(getServletContext());
         String loginType = request.getParameter("Login-type");
         String name = ServletUtils.GSON.fromJson(request.getReader().readLine(), String.class);
         name = name.trim();
@@ -25,28 +25,33 @@ public class LoginServlet extends HttpServlet
         switch (loginType) {
             case "ADMIN": {
                 synchronized (this) {
-                    if(AbsSystem.isAdminLoggedIn(name)) {
+                    if(absSystem.isAdminLoggedIn(name)) {
                         String errorMessage = "Admin is already logged-in";
                         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     }
-                    else if (AbsSystem.isAdminExists(name)) {
+                    else if (absSystem.isAdminExists(name)) {
                         String errorMessage = "Admin " + name + " already exists. Please enter a different admin name.";
                         response.getWriter().println(errorMessage);
                         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     }
                     else {
-                            AbsSystem.addAdmin(name);
+                            absSystem.addAdmin(name);
+                            getServletContext().setAttribute(ServletUtils.MAIN_SYSTEM_ATTRIBUTE_NAME, absSystem);
                         }
                     }
             }
             case "CUSTOMER": {
                 synchronized (this) {
-                    if (AbsSystem.isCustomerExists(name)) {
+                    if (absSystem.isCustomerExists(name)) {
                         String errorMessage = "Username " + name + " already exists. Please enter a different username.";
                         response.getWriter().println(errorMessage);
                         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    } else {
-                        AbsSystem.addCustomer(name);
+                    }
+                    else{
+                        synchronized (this){
+                            absSystem.addCustomer(name);
+                            getServletContext().setAttribute(ServletUtils.MAIN_SYSTEM_ATTRIBUTE_NAME, absSystem);
+                        }
                     }
                 }
             }

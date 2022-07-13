@@ -5,7 +5,7 @@ import jakarta.servlet.ServletContext;
 
 public class ServletUtils {
 
-    private static final String MAIN_SYSTEM_ATTRIBUTE_NAME = "mainSystem";
+    public static final String MAIN_SYSTEM_ATTRIBUTE_NAME = "mainSystem";
     private static final Object mainSystemLock = new Object();
     public final static Gson GSON = new Gson();
 
