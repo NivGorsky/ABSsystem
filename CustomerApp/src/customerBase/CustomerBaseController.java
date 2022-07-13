@@ -27,8 +27,7 @@ public class CustomerBaseController implements ParentController, BaseController 
     private MainSystem model;
     private Stage primaryStage;
     private BooleanProperty isLoggedIn;
-    protected static String customerLoggedInName; //TODO:IS THIS CORRECT??
-
+    private String customerLoggedInName; //TODO:IS THIS CORRECT??
 
 
     @FXML public void initialize()
@@ -141,6 +140,11 @@ public class CustomerBaseController implements ParentController, BaseController 
     public void setLoggedInDetails(String name) {
         customerSceneController.setCustomer(name);
         isLoggedIn.set(true);
+    }
+
+    @Override
+    public String getLoggedInUser() {
+        return customerLoggedInName;
     }
 
 

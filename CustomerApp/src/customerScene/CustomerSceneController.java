@@ -17,9 +17,12 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import main.Configurations;
+import mutualInterfaces.BaseController;
 import mutualInterfaces.ParentController;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
+
+import java.awt.image.BandCombineOp;
 import java.io.File;
 import java.io.IOException;
 import java.util.Timer;
@@ -70,6 +73,8 @@ public class CustomerSceneController implements ParentController {
 
     private ParentController parentController;
     private StringProperty customerNameProperty;
+
+    //.............................................................................................//
 
     private Timer timer;
     private final int REFRESH_RATE = 2;
@@ -161,6 +166,12 @@ public class CustomerSceneController implements ParentController {
     public void switchStyleSheet(String selectedItem) {
         parentController.switchStyleSheet(selectedItem);
     }
+
+    @Override
+    public String getLoggedInUser() {
+        return customerNameProperty.get();
+    }
+
 
     @FXML
     public void loadFileButtonClicked() {

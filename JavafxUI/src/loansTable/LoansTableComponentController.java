@@ -92,6 +92,11 @@ public class LoansTableComponentController implements ParentController {
         parentController.switchStyleSheet(selectedItem);
     }
 
+    @Override
+    public String getLoggedInUser() {
+       return parentController.getLoggedInUser();
+    }
+
     public void setParentController(ParentController adminSceneController) {
         parentController = adminSceneController;
     }

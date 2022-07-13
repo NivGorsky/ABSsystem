@@ -67,7 +67,7 @@
                                 <Insets left="10.0" />
                             </GridPane.margin>
                         </Label>
-                        <Label prefHeight="30.0" prefWidth="205.0" text="Interest amount paid every payment: " GridPane.columnIndex="1" GridPane.rowIndex="7">
+                        <Label prefHeight="30.0" prefWidth="205.0" text="Interest percent paid every payment: " GridPane.columnIndex="1" GridPane.rowIndex="7">
                             <GridPane.margin>
                                 <Insets left="10.0" />
                             </GridPane.margin>
