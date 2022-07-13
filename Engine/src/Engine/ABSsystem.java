@@ -573,4 +573,13 @@ public class ABSsystem implements MainSystem, SystemService {
         }
     } //TODO: new, maybe should be a servlet?
 
+    @Override
+    public void createNewLoan(String customerName, String loanName, String category, int amount,
+                              int totalYazToPay, int paymentsRate, int interestPerPayment) {
+        Loan loan = new Loan(loanName, customerName, amount, totalYazToPay, paymentsRate, interestPerPayment, category, getCurrYaz());
+        status2loan.put(Loan.LoanStatus.NEW, loan);
+        //TODO: loanId2loan.put()??
+
+        name2customer.get(customerName).addLoanAsLender(loan);
+    }
 }

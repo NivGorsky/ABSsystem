@@ -63,7 +63,8 @@ public class LoginController {
                     break;
                 }
                 case CUSTOMER: {
-                    //registerAsCustomer(name)
+
+
                     break;
                 }
             }

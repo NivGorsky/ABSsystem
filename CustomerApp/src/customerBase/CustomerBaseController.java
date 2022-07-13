@@ -29,6 +29,8 @@ public class CustomerBaseController implements ParentController, BaseController 
     private BooleanProperty isLoggedIn;
     private String customerLoggedInName;
 
+
+
     @FXML public void initialize()
     {
         loadCustomerScene();
@@ -141,6 +143,6 @@ public class CustomerBaseController implements ParentController, BaseController 
 
     @Override
     public String getUserLoggedIn() {
-        return c;
+        return customerLoggedInName;
     }
 }

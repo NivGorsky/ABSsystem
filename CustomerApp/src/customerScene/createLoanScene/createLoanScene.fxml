@@ -26,7 +26,6 @@
                   <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="85.0" minHeight="10.0" prefHeight="85.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="40.0" minHeight="0.0" prefHeight="40.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="40.0" minHeight="0.0" prefHeight="40.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="35.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
@@ -48,44 +47,38 @@
                                 <Insets left="10.0" />
                             </GridPane.margin>
                         </Label>
-                        <Label prefHeight="30.0" prefWidth="90.0" text="Loaner name:" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                        <Label prefHeight="30.0" prefWidth="90.0" text="Category: " GridPane.columnIndex="1" GridPane.rowIndex="3">
                             <GridPane.margin>
                                 <Insets left="10.0" />
                             </GridPane.margin>
                         </Label>
-                        <Label prefHeight="30.0" prefWidth="90.0" text="Category: " GridPane.columnIndex="1" GridPane.rowIndex="4">
+                        <Label prefHeight="30.0" prefWidth="70.0" text="Amount:" GridPane.columnIndex="1" GridPane.rowIndex="4">
                             <GridPane.margin>
                                 <Insets left="10.0" />
                             </GridPane.margin>
                         </Label>
-                        <Label prefHeight="30.0" prefWidth="70.0" text="Amount:" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                        <Label prefHeight="30.0" prefWidth="170.0" text="Total time to pay the loan: " GridPane.columnIndex="1" GridPane.rowIndex="5">
                             <GridPane.margin>
                                 <Insets left="10.0" />
                             </GridPane.margin>
                         </Label>
-                        <Label prefHeight="30.0" prefWidth="170.0" text="Total time to pay the loan: " GridPane.columnIndex="1" GridPane.rowIndex="6">
+                        <Label prefHeight="30.0" prefWidth="100.0" text="Payments rate:" GridPane.columnIndex="1" GridPane.rowIndex="6">
                             <GridPane.margin>
                                 <Insets left="10.0" />
                             </GridPane.margin>
                         </Label>
-                        <Label prefHeight="30.0" prefWidth="100.0" text="Payments rate:" GridPane.columnIndex="1" GridPane.rowIndex="7">
-                            <GridPane.margin>
-                                <Insets left="10.0" />
-                            </GridPane.margin>
-                        </Label>
-                        <Label prefHeight="30.0" prefWidth="205.0" text="Interest amount paid every payment: " GridPane.columnIndex="1" GridPane.rowIndex="8">
+                        <Label prefHeight="30.0" prefWidth="205.0" text="Interest percent paid every payment: " GridPane.columnIndex="1" GridPane.rowIndex="7">
                             <GridPane.margin>
                                 <Insets left="10.0" />
                             </GridPane.margin>
                         </Label>
                         <TextField fx:id="loanNameTF" maxWidth="220.0" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-                        <TextField fx:id="loanerNameTF1" maxWidth="220.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                        <TextField fx:id="amountTF" maxWidth="220.0" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-                        <TextField fx:id="totalYazToPayTF" maxWidth="220.0" GridPane.columnIndex="2" GridPane.rowIndex="6" />
-                        <TextField fx:id="interestPerPaymentTF" maxWidth="220.0" GridPane.columnIndex="2" GridPane.rowIndex="8" />
-                        <TextField fx:id="paymentsRateTF" maxWidth="220.0" GridPane.columnIndex="2" GridPane.rowIndex="7" />
-                        <ComboBox fx:id="categoriesCB" prefHeight="25.0" prefWidth="220.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-                  <Button fx:id="createLoanButton" maxHeight="55.0" maxWidth="170.0" mnemonicParsing="false" onAction="#createLoanButtonClicked" prefHeight="55.0" text="Create New Loan" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="9">
+                        <TextField fx:id="amountTF" maxWidth="220.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                        <TextField fx:id="totalYazToPayTF" maxWidth="220.0" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                        <TextField fx:id="interestPerPaymentTF" maxWidth="220.0" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+                        <TextField fx:id="paymentsRateTF" maxWidth="220.0" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+                        <ComboBox fx:id="categoriesCB" prefHeight="25.0" prefWidth="220.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                  <Button fx:id="createLoanButton" maxHeight="55.0" maxWidth="170.0" mnemonicParsing="false" onAction="#createLoanButtonClicked" prefHeight="55.0" text="Create New Loan" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="8">
                      <font>
                         <Font size="16.0" />
                      </font>

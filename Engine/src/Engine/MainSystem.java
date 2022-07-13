@@ -40,6 +40,8 @@ public interface MainSystem {
 
      */
 
+    void createNewLoan(String customerName, String loanName, String category, int amount,
+                       int totalYazToPay, int paymentsRate, int interestPerPayment);
 
 
 

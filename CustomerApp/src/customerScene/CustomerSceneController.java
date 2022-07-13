@@ -170,4 +170,8 @@ public class CustomerSceneController implements ParentController {
         }
     }
 
+    public void setCustomer(String name) {
+        customerNameProperty.set(name);
+        heyCustomerLabel.setText("Hey " + name + "!");
+    }
 }

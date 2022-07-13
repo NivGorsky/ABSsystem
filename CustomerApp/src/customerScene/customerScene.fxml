@@ -76,7 +76,7 @@
                   <Insets left="5.0" />
                </GridPane.margin>
             </Label>
-            <Button fx:id="loadFileButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="119.0" text="Load File" GridPane.columnIndex="2" GridPane.valignment="CENTER">
+            <Button fx:id="loadFileButton" mnemonicParsing="false" onAction="#loadFileButtonClicked" prefHeight="50.0" prefWidth="119.0" text="Load File" GridPane.columnIndex="2" GridPane.valignment="CENTER">
                <GridPane.margin>
                   <Insets left="10.0" />
                </GridPane.margin>
