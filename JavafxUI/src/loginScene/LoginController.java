@@ -81,6 +81,7 @@ public class LoginController {
                     Platform.runLater(() ->
                             parentController.createExceptionDialog(new Exception(Integer.toString(response.code()))));
                 }
+
                 else {
                     Platform.runLater(() -> {
                         baseController.setLoggedInDetails(name);

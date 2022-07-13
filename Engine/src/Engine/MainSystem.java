@@ -45,6 +45,8 @@ public interface MainSystem {
     boolean isAdminLoggedIn(String name);
     void addAdmin(String name);
 
+    void createNewLoan(String customerName, String loanName, String category, int amount,
+                       int totalYazToPay, int paymentsRate, int interestPerPayment);
 
 
 
