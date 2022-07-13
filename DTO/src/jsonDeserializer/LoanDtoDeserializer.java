@@ -6,6 +6,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javax.security.auth.login.Configuration;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.SortedMap;
 
 public class LoanDtoDeserializer implements JsonDeserializer<LoanDTO> {
@@ -36,19 +38,23 @@ public class LoanDtoDeserializer implements JsonDeserializer<LoanDTO> {
                 status, category, paidInterest, paidLoan, debt, amountRaised);
 
         //init unpaid payments
-        Type unpaidPaymentsType = new TypeToken<SortedMap<Integer, LoanDTO.PaymentDTO>>(){}.getType();
+        Type unpaidPaymentsType = new TypeToken<HashMap<Integer, LoanDTO.PaymentDTO>>(){}.getType();
         JsonElement unpaidPaymentsAsJsonObject = jsonObject.get("unpaidPayments");
-        loanDTO.unpaidPayments = gson.fromJson(unpaidPaymentsAsJsonObject.getAsJsonArray(), unpaidPaymentsType);
+        HashMap<Integer, LoanDTO.PaymentDTO> unpaidPaymentsInHashMap = new HashMap<>();
+        unpaidPaymentsInHashMap = gson.fromJson(unpaidPaymentsAsJsonObject, unpaidPaymentsType);
+        loanDTO.unpaidPayments.putAll(unpaidPaymentsInHashMap);
 
         //init paid payments
-        Type paidPaymentsType = new TypeToken<SortedMap<Integer, LoanDTO.PaymentDTO>>(){}.getType();
+        Type paidPaymentsType = new TypeToken<HashMap<Integer, LoanDTO.PaymentDTO>>(){}.getType();
         JsonObject paidPaymentsAsJsonObject = jsonObject.getAsJsonObject("paidPayments");
-        loanDTO.paidPayments = gson.fromJson(unpaidPaymentsAsJsonObject, paidPaymentsType);
+        HashMap<Integer, LoanDTO.PaymentDTO> paidPaymentsInHashMap = gson.fromJson(unpaidPaymentsAsJsonObject, paidPaymentsType);
+        loanDTO.paidPayments.putAll(paidPaymentsInHashMap);
 
         //init lenderDetails
-        Type lenderDetailsType = new TypeToken<ArrayList<LoanDTO.LenderDetailsDTO>>(){}.getType();
-        JsonObject lenderDetailsAsJsonObject = jsonObject.getAsJsonObject("lendersNameAndAmount");
-        loanDTO.lendersNameAndAmount = gson.fromJson(lenderDetailsAsJsonObject, lenderDetailsType);
+        Type lenderDetailsType = new TypeToken<List<LoanDTO.LenderDetailsDTO>>(){}.getType();
+        JsonArray lenderDetailsAsJsonObject = jsonObject.getAsJsonArray("lendersNameAndAmount");
+        List<LoanDTO.LenderDetailsDTO> lenderDetailsInList = gson.fromJson(lenderDetailsAsJsonObject, lenderDetailsType);
+        loanDTO.lendersNameAndAmount.addAll(lenderDetailsInList);
 
         return loanDTO;
     }
@@ -63,6 +69,8 @@ public class LoanDtoDeserializer implements JsonDeserializer<LoanDTO> {
 
         return prettyJson;
     }
+
+
 
 
 }

@@ -12,4 +12,5 @@ public class Configurations {
     public final static OkHttpClient HTTP_CLIENT = new OkHttpClient();
     public final static String LINE_SEPARATOR = System.getProperty("line.separator");
     public final static Gson GSON = new GsonBuilder().registerTypeAdapter(LoanDTO.class, new LoanDtoDeserializer()).create();
+//public final static Gson GSON = new Gson();
 }
