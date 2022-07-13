@@ -27,6 +27,7 @@ public class CustomerBaseController implements ParentController, BaseController 
     private MainSystem model;
     private Stage primaryStage;
     private BooleanProperty isLoggedIn;
+    private String customerLoggedInName;
 
     @FXML public void initialize()
     {
@@ -136,5 +137,10 @@ public class CustomerBaseController implements ParentController, BaseController 
     @Override
     public void setIsLoggedInProperty(Boolean newValue){
         isLoggedIn.set(newValue);
+    }
+
+    @Override
+    public String getUserLoggedIn() {
+        return c;
     }
 }
