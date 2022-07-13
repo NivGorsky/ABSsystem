@@ -1,6 +1,7 @@
 package customerScene.createLoanScene;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -15,7 +16,8 @@ public class CreateLoanSceneController {
     @FXML private TextField totalYazToPayTF;
     @FXML private TextField interestPerPaymentTF;
     @FXML private TextField paymentsRateTF;
-    @FXML private ComboBox<?> categoriesCB;
+    @FXML private ComboBox<String> categoriesCB;
+    @FXML private Button createLoanButton;
 
     ParentController parentController;
 
@@ -25,5 +27,10 @@ public class CreateLoanSceneController {
 
     public void setParentController(ParentController parentController) {
         this.parentController = parentController;
+    }
+
+    @FXML
+    public void createLoanButtonClicked() {
+
     }
 }
