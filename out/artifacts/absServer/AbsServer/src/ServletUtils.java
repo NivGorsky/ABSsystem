@@ -22,5 +22,4 @@ public class ServletUtils {
     public static Gson getGson(){
         return GSON;
     }
-
 }
