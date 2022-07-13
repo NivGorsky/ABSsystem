@@ -57,7 +57,7 @@
                                 <Insets left="10.0" />
                             </GridPane.margin>
                         </Label>
-                        <Label prefHeight="30.0" prefWidth="170.0" text="Total time to pay the loan: " GridPane.columnIndex="1" GridPane.rowIndex="5">
+                        <Label prefHeight="30.0" prefWidth="170.0" text="Total yaz to pay the loan: " GridPane.columnIndex="1" GridPane.rowIndex="5">
                             <GridPane.margin>
                                 <Insets left="10.0" />
                             </GridPane.margin>

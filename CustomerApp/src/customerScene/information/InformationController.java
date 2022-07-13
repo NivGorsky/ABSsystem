@@ -54,8 +54,12 @@ public class InformationController implements ParentController
 
     @Override
     public void switchStyleSheet(String selectedItem) {
+            parentController.switchStyleSheet(selectedItem);
+    }
 
-
+    @Override
+    public String getLoggedInUser() {
+        return null;
     }
 
 

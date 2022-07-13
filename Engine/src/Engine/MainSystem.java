@@ -45,11 +45,9 @@ public interface MainSystem {
     boolean isAdminLoggedIn(String name);
     void addAdmin(String name);
 
-    void createNewLoan(String customerName, String loanName, String category, int amount,
-                       int totalYazToPay, int paymentsRate, int interestPerPayment);
+    void createNewLoan(LoanDTO newLoan);
 
-
-
+    void sellLoan(String buyerName, String sellerName, LoanDTO selectedLoan) throws Exception;
 
 
 }

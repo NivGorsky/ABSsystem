@@ -125,6 +125,11 @@ public class PaymentController implements ParentController {
     }
 
     @Override
+    public String getLoggedInUser() {
+        return parentController.getLoggedInUser();
+    }
+
+    @Override
     public MainSystem getModel(){
         return parentController.getModel();
     }

@@ -86,7 +86,7 @@ public class LoanDTO {
 
     private final SimpleStringProperty loanName;
     private final SimpleStringProperty customerName;
-    private final SimpleDoubleProperty initialAmount;
+    private final SimpleIntegerProperty initialAmount;
     private final SimpleIntegerProperty maxYazToPay;
     private final SimpleDoubleProperty interestPerPayment;
     private final SimpleDoubleProperty totalInterest;
@@ -111,7 +111,7 @@ public class LoanDTO {
     //finish info
     private SimpleIntegerProperty finishYaz;
 
-    public LoanDTO(String loanName, String custName, double initialAmount, int totalYaz, double interestPerPayment, double totalInterest, int yazPerPayment,
+    public LoanDTO(String loanName, String custName, int initialAmount, int totalYaz, double interestPerPayment, double totalInterest, int yazPerPayment,
                       String status, String category, double paidInterest, double paidLoan, double debt, double amountRaised)
     {
         this.totalMoneyRaised = new SimpleDoubleProperty();
@@ -120,7 +120,7 @@ public class LoanDTO {
         this.finishYaz = new SimpleIntegerProperty();
         this.loanName = new SimpleStringProperty(loanName);
         this.customerName = new SimpleStringProperty(custName);
-        this.initialAmount = new SimpleDoubleProperty(initialAmount);
+        this.initialAmount = new SimpleIntegerProperty(initialAmount);
         this.maxYazToPay = new SimpleIntegerProperty(totalYaz);
         this.interestPerPayment = new SimpleDoubleProperty(interestPerPayment);
         this.totalInterest = new SimpleDoubleProperty(totalInterest);
@@ -148,10 +148,10 @@ public class LoanDTO {
     }
     public SimpleStringProperty getCustomerNameProperty() { return customerName; }
 
-    public double getInitialAmount() {
+    public int getInitialAmount() {
         return initialAmount.get();
     }
-    public SimpleDoubleProperty getInitialAmountProperty() {
+    public SimpleIntegerProperty getInitialAmountProperty() {
         return initialAmount;
     }
 

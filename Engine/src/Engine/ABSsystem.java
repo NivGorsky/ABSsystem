@@ -23,26 +23,192 @@ public class ABSsystem implements MainSystem, SystemService {
     private LinkedList<Loan> loans;
     private Map<Integer, Loan> loanId2Loan;
     private Map<Customer, List<Notification>> customer2Notifications;
-    private ArrayList<ArrayList<String>> scrambleQueryFields;
     private UIController scrambleController;
     private Integer numberOfLoansAssignedInSinglePlacingAlgorithmRun;
     private Task<Boolean> currentRunningTask;
     private ArrayList<String> admins;
     private boolean isAdminLoggedIn;
+    private Map<String, Loan> seller2loansForSale;
 
     public ABSsystem() {
-
         systemTimeline = new Timeline();
         name2customer = new TreeMap<>();
         loanId2Loan = new TreeMap<>();
         loans = new LinkedList<>();
         status2loan = new TreeMap<>();
         customer2Notifications = new TreeMap<Customer, List<Notification>>();
-//        initLoanPlacingQueryFields();
         numberOfLoansAssignedInSinglePlacingAlgorithmRun = -1;
         admins = new ArrayList<>();
         isAdminLoggedIn = false;
+        seller2loansForSale = new HashMap<>();
     }
+
+    //------------------------ XML FILE METHODS ---------------------------------------------------//
+    @Override
+    public void loadXML(String contentType, InputStream inputStream, String customer) throws XMLFileException, JAXBException {
+
+        try {
+            AbsDescriptor descriptor = SchemaForLAXB.getDescriptorFromXML(inputStream);
+            takeDataFromDescriptor(descriptor, customer);
+            injectSystemServiceInterfaceToLoans();
+        }
+        catch (XMLFileException ex) {
+            throw ex;
+        } catch (JAXBException ex) {
+            throw ex;
+        }
+    }
+
+    private void takeDataFromDescriptor(AbsDescriptor descriptor, String customer) throws XMLFileException {
+        AbsCategories categories = descriptor.getAbsCategories();
+        AbsLoans loans = descriptor.getAbsLoans();
+
+        try {
+            XMLFileChecker.isFileLogicallyOK(loans, categories);
+        } catch (XMLFileException ex) {
+            throw ex;
+        }
+
+        resetSystem();
+        takeCategoriesData(categories);
+        takeLoansData(loans, customer);
+    }
+
+    private void takeCategoriesData(AbsCategories categories) {
+        for (String c : categories.getAbsCategory()) {
+            String category = c.trim();
+            if(LoanCategories.getCategories().contains(category) == false) {
+                LoanCategories.addCategory(category);
+            }
+        }
+    }
+
+    private void takeLoansData(AbsLoans loans, String customer) {
+        for (AbsLoan l : loans.getAbsLoan()) {
+            Loan newLoan = JAXBConvertor.convertLoan(l, systemTimeline.getCurrentYaz(), customer);
+            this.status2loan.put(newLoan.getStatus(), newLoan);
+            this.loanId2Loan.put(newLoan.getLoanId(), newLoan);
+            this.loans.add(newLoan);
+        }
+    }
+    //------------------------ XML FILE METHODS ---------------------------------------------------//
+
+
+    //------------------------ DTO METHODS ---------------------------------------------------//
+    private CustomerDTO createCustomerDTO(Customer c) {
+        CustomerDTO customerDTO = new CustomerDTO(c.getName(), c.getAccount().getBalance());
+        ArrayList<Account.AccountMovement> customerMovements = c.getAccount().getMovements();
+        ArrayList<AccountMovementDTO> customerDTOMovements = new ArrayList<>();
+        ArrayList<LoanDTO> customerLoansAsLender = new ArrayList<>();
+        ArrayList<LoanDTO> customerLoansAsBorrower = new ArrayList<>();
+
+        for (Account.AccountMovement m : customerMovements) {
+            AccountMovementDTO curr = new AccountMovementDTO(m.getYaz(), m.getAmount(), m.getMovementKind(),
+                    m.getBalanceBefore(), m.getBalanceAfter());
+
+            customerDTOMovements.add(curr);
+        }
+        customerDTO.setAccountMovements(customerDTOMovements);
+
+        for (Loan loan : c.getLoansAsLender()) {
+            LoanDTO newLoanDTO = createLoanDTO(loan);
+            customerLoansAsLender.add(newLoanDTO);
+        }
+        customerDTO.setLoansAsLender(customerLoansAsLender);
+
+        for (Loan loan : c.getLoansAsBorrower()) {
+            LoanDTO newLoanDTO = createLoanDTO(loan);
+            customerLoansAsBorrower.add(newLoanDTO);
+        }
+        customerDTO.setLoansAsBorrower(customerLoansAsBorrower);
+
+        return customerDTO;
+    }
+
+    private LoanDTO createLoanDTO(Loan l) {
+        LoanDTO loanDTO = new LoanDTO(l.getLoanName(), l.getBorrowerName(), l.getInitialAmount(),
+                l.getMaxYazToPay(), l.getInterestPerPaymentSetByBorrowerInPercents(), l.getTotalInterestForLoan(),
+                l.getPaymentRateInYaz(), l.getStatus().toString(), l.getCategory(), l.getInterestPaid(), l.getAmountPaid(),
+                l.getDebt(), l.getLoanAmountFinancedByLenders());
+
+        for (Loan.LenderDetails ld : l.getLendersDetails()) {
+            loanDTO.addToLendersNameAndAmount(ld.lender.getName(), ld.lendersAmount);
+        }
+
+        setLoanDTOUnpaidPayments(l.getPaymentsData().getPaymentsDataBases().get(LoanPaymentsData.PaymentType.UNPAID), loanDTO);
+        setLoanDTOPaidPayments(l.getPaymentsData().getPaymentsDataBases().get(LoanPaymentsData.PaymentType.PAID), loanDTO);
+
+        initStatusInfo(loanDTO, l);
+        return loanDTO;
+    }
+
+    private void setLoanDTOUnpaidPayments(Engine.PaymentsDB.PaymentsDB payments, LoanDTO loanDTO){
+
+        for(LoanPaymentsData.Payment p : payments.getPayments().values())
+        {
+
+            LoanDTO.PaymentDTO payment = loanDTO. new PaymentDTO(p.getScheduledYaz(), p.getLoanPartOfThePayment(),
+                    p.getInterestPartOfThePayment(), p.getActualPaymentYaz(), p.getPaymentType().toString());
+
+            loanDTO.getUnpaidPayments().put(payment.getOriginalYazToPayProperty().getValue(), payment);
+        }
+    }
+
+    private void setLoanDTOPaidPayments(Engine.PaymentsDB.PaymentsDB payments, LoanDTO loanDTO) {
+        for(LoanPaymentsData.Payment p : payments.getPayments().values())
+        {
+            LoanDTO.PaymentDTO payment = loanDTO.new PaymentDTO(p.getScheduledYaz(), p.getLoanPartOfThePayment(),
+                    p.getInterestPartOfThePayment(), p.getActualPaymentYaz(), p.getPaymentType().toString());
+
+            loanDTO.getPaidPayments().put(payment.getActualPaymentYazProperty().getValue(), payment);
+        }
+    }
+
+    @Override
+    public CustomerDTO getCustomerDTO(String customerName) {
+        Customer c = name2customer.get(customerName);
+
+        return createCustomerDTO(c);
+    }
+
+    @Override
+    public NotificationsDTO getNotificationsDTO(String customerName) {
+        Customer customer = name2customer.get(customerName);
+
+        List<Notification> customerNotifications = customer2Notifications.getOrDefault(customer, new ArrayList<Notification>());
+        NotificationsDTO newNotificationsDTO = new NotificationsDTO();
+
+        for (Notification n : customerNotifications) {
+            NotificationsDTO.NotificationDTO singleNotificationDTO = newNotificationsDTO.new NotificationDTO(n.yaz, n.loanName, n.amount, n.DateTime);
+            newNotificationsDTO.notifications.add(singleNotificationDTO);
+        }
+
+        return newNotificationsDTO;
+    }
+    //------------------------ DTO METHODS ---------------------------------------------------//
+
+    //------------------------ TIMELINE METHODS ---------------------------------------------------//
+    @Override
+    public int getCurrYaz() {
+        return systemTimeline.getCurrentYaz();
+    }
+
+    @Override
+    public TimelineDTO moveTimeLine() {
+        TimelineDTO timeline;
+
+        MoveTimeLine.moveTimeLineInOneYaz(this, systemTimeline);
+        timeline = new TimelineDTO(systemTimeline.getCurrentYaz());
+
+        return timeline;
+    }
+
+    @Override
+    public Timeline getTimeLine() {
+        return this.systemTimeline;
+    }
+    //------------------------ TIMELINE METHODS ---------------------------------------------------//
+
 
     private void injectSystemServiceInterfaceToLoans() {
         for (Loan loan : loans) {
@@ -91,74 +257,13 @@ public class ABSsystem implements MainSystem, SystemService {
         }
     }
 
-    private CustomerDTO createCustomerDTO(Customer c) {
-        CustomerDTO customerDTO = new CustomerDTO(c.getName(), c.getAccount().getBalance());
-        ArrayList<Account.AccountMovement> customerMovements = c.getAccount().getMovements();
-        ArrayList<AccountMovementDTO> customerDTOMovements = new ArrayList<>();
-        ArrayList<LoanDTO> customerLoansAsLender = new ArrayList<>();
-        ArrayList<LoanDTO> customerLoansAsBorrower = new ArrayList<>();
-
-        for (Account.AccountMovement m : customerMovements) {
-            AccountMovementDTO curr = new AccountMovementDTO(m.getYaz(), m.getAmount(), m.getMovementKind(),
-                    m.getBalanceBefore(), m.getBalanceAfter());
-
-            customerDTOMovements.add(curr);
-        }
-        customerDTO.setAccountMovements(customerDTOMovements);
-
-        for (Loan loan : c.getLoansAsLender()) {
-            LoanDTO newLoanDTO = createLoanDTO(loan);
-            customerLoansAsLender.add(newLoanDTO);
-        }
-        customerDTO.setLoansAsLender(customerLoansAsLender);
-
-        for (Loan loan : c.getLoansAsBorrower()) {
-            LoanDTO newLoanDTO = createLoanDTO(loan);
-            customerLoansAsBorrower.add(newLoanDTO);
-        }
-        customerDTO.setLoansAsBorrower(customerLoansAsBorrower);
-
-        return customerDTO;
-    }
-
-    private void takeDataFromDescriptor(AbsDescriptor descriptor, String customer) throws XMLFileException {
-        AbsCategories categories = descriptor.getAbsCategories();
-        AbsLoans loans = descriptor.getAbsLoans();
-
-        try {
-            XMLFileChecker.isFileLogicallyOK(loans, categories);
-        } catch (XMLFileException ex) {
-            throw ex;
-        }
-
-        resetSystem();
-        takeCategoriesData(categories);
-        takeLoansData(loans, customer);
-    }
-
-    private void takeCategoriesData(AbsCategories categories) {
-        for (String c : categories.getAbsCategory()) {
-            String category = c.trim();
-            if(LoanCategories.getCategories().contains(category) == false) {
-                LoanCategories.addCategory(category);
-            }
-        }
-    }
-
-    private void takeLoansData(AbsLoans loans, String customer) {
-        for (AbsLoan l : loans.getAbsLoan()) {
-            Loan newLoan = JAXBConvertor.convertLoan(l, systemTimeline.getCurrentYaz(), customer);
-            this.status2loan.put(newLoan.getStatus(), newLoan);
-            this.loanId2Loan.put(newLoan.getLoanId(), newLoan);
-            this.loans.add(newLoan);
-        }
-    }
-
     public void addNotificationToCustomer(Customer customer, Notification notification) {
         List<Notification> customerNotifications = customer2Notifications.getOrDefault(customer, new ArrayList<Notification>());
         customerNotifications.add(notification);
         customer2Notifications.put(customer, customerNotifications);
     }
+
+    public Map<String, Loan> seller2loansForSale() { return seller2loansForSale; }
 
     private Loan getLoanByName(String loanName) throws Exception {
         for (Loan loan : loans) {
@@ -256,47 +361,6 @@ public class ABSsystem implements MainSystem, SystemService {
         }
     }
 
-    private LoanDTO createLoanDTO(Loan l) {
-        LoanDTO loanDTO = new LoanDTO(l.getLoanName(), l.getBorrowerName(), l.getInitialAmount(),
-                l.getMaxYazToPay(), l.getInterestPerPaymentSetByBorrowerInPercents(), l.getTotalInterestForLoan(),
-                l.getPaymentRateInYaz(), l.getStatus().toString(), l.getCategory(), l.getInterestPaid(), l.getAmountPaid(),
-                l.getDebt(), l.getLoanAmountFinancedByLenders());
-
-        for (Loan.LenderDetails ld : l.getLendersDetails()) {
-            loanDTO.addToLendersNameAndAmount(ld.lender.getName(), ld.lendersAmount);
-        }
-
-        setLoanDTOUnpaidPayments(l.getPaymentsData().getPaymentsDataBases().get(LoanPaymentsData.PaymentType.UNPAID), loanDTO);
-        setLoanDTOPaidPayments(l.getPaymentsData().getPaymentsDataBases().get(LoanPaymentsData.PaymentType.PAID), loanDTO);
-
-        initStatusInfo(loanDTO, l);
-        return loanDTO;
-    }
-
-    private void setLoanDTOUnpaidPayments(Engine.PaymentsDB.PaymentsDB payments, LoanDTO loanDTO){
-
-        for(LoanPaymentsData.Payment p : payments.getPayments().values())
-        {
-
-            LoanDTO.PaymentDTO payment = loanDTO. new PaymentDTO(p.getScheduledYaz(), p.getLoanPartOfThePayment(),
-                    p.getInterestPartOfThePayment(), p.getActualPaymentYaz(), p.getPaymentType().toString());
-
-            loanDTO.getUnpaidPayments().put(payment.getOriginalYazToPayProperty().getValue(), payment);
-        }
-    }
-
-    private void setLoanDTOPaidPayments(Engine.PaymentsDB.PaymentsDB payments, LoanDTO loanDTO)
-    {
-        for(LoanPaymentsData.Payment p : payments.getPayments().values())
-        {
-            LoanDTO.PaymentDTO payment = loanDTO.new PaymentDTO(p.getScheduledYaz(), p.getLoanPartOfThePayment(),
-                    p.getInterestPartOfThePayment(), p.getActualPaymentYaz(), p.getPaymentType().toString());
-
-            loanDTO.getPaidPayments().put(payment.getActualPaymentYazProperty().getValue(), payment);
-        }
-    }
-
-
     @Override
     public boolean isCustomerExists(String name) {
         return name2customer.containsKey(name);
@@ -324,28 +388,8 @@ public class ABSsystem implements MainSystem, SystemService {
     }
 
     @Override
-    public int getCurrYaz() {
-        return systemTimeline.getCurrentYaz();
-    }
-
-    @Override
     public ArrayList<String> getCustomersNames() {
         return new ArrayList<>(name2customer.keySet());
-    }
-
-    @Override
-    public void loadXML(String contentType, InputStream inputStream, String customer) throws XMLFileException, JAXBException {
-
-        try {
-            AbsDescriptor descriptor = SchemaForLAXB.getDescriptorFromXML(inputStream);
-            takeDataFromDescriptor(descriptor, customer);
-            injectSystemServiceInterfaceToLoans();
-        }
-        catch (XMLFileException ex) {
-            throw ex;
-        } catch (JAXBException ex) {
-           throw ex;
-        }
     }
 
     @Override
@@ -393,16 +437,6 @@ public class ABSsystem implements MainSystem, SystemService {
     }
 
     @Override
-    public TimelineDTO moveTimeLine() {
-        TimelineDTO timeline;
-
-        MoveTimeLine.moveTimeLineInOneYaz(this, systemTimeline);
-        timeline = new TimelineDTO(systemTimeline.getCurrentYaz());
-
-        return timeline;
-    }
-
-    @Override
     public void moveMoneyBetweenAccounts(Account accountToSubtract, Account accountToAdd, double amount) {
         accountToSubtract.substructFromBalance(this.getCurrYaz(), amount);
         accountToAdd.addToBalance(this.getCurrYaz(), amount);
@@ -419,35 +453,8 @@ public class ABSsystem implements MainSystem, SystemService {
     }
 
     @Override
-    public Timeline getTimeLine() {
-        return this.systemTimeline;
-    }
-
-    @Override
     public LoanCategorisDTO getSystemLoanCategories() {
         return new LoanCategorisDTO(LoanCategories.getCategories());
-    }
-
-    @Override
-    public CustomerDTO getCustomerDTO(String customerName) {
-        Customer c = name2customer.get(customerName);
-
-        return createCustomerDTO(c);
-    }
-
-    @Override
-    public NotificationsDTO getNotificationsDTO(String customerName) {
-        Customer customer = name2customer.get(customerName);
-
-        List<Notification> customerNotifications = customer2Notifications.getOrDefault(customer, new ArrayList<Notification>());
-        NotificationsDTO newNotificationsDTO = new NotificationsDTO();
-
-        for (Notification n : customerNotifications) {
-            NotificationsDTO.NotificationDTO singleNotificationDTO = newNotificationsDTO.new NotificationDTO(n.yaz, n.loanName, n.amount, n.DateTime);
-            newNotificationsDTO.notifications.add(singleNotificationDTO);
-        }
-
-        return newNotificationsDTO;
     }
 
     @Override
@@ -600,22 +607,46 @@ public class ABSsystem implements MainSystem, SystemService {
         return funds >= amount;
     }
 
-    public void addNewCustomer(String name) throws Exception {
-        if (name2customer.containsKey(name)) {
-            throw new Exception("Customer's name already exists!");
-        }
-        else {
-            name2customer.values().add(new Customer(name, 0));
-        }
-    } //TODO: new, maybe should be a servlet?
-
     @Override
-    public void createNewLoan(String customerName, String loanName, String category, int amount,
-                              int totalYazToPay, int paymentsRate, int interestPerPayment) {
-        Loan loan = new Loan(loanName, customerName, amount, totalYazToPay, paymentsRate, interestPerPayment, category, getCurrYaz());
+    public void createNewLoan(LoanDTO newLoan) {
+        Loan loan = new Loan(newLoan.getLoanName(), newLoan.getCustomerName(), newLoan.getInitialAmount(),
+                newLoan.getMaxYazToPay(), newLoan.getYazPerPayment(), newLoan.getInterestPerPayment(), newLoan.getCategory(), getCurrYaz());
         status2loan.put(Loan.LoanStatus.NEW, loan);
         //TODO: loanId2loan.put()??
 
-        name2customer.get(customerName).addLoanAsLender(loan);
+        name2customer.get(newLoan.getCustomerName()).addLoanAsLender(loan);
+    }
+
+    @Override
+    public void sellLoan(String buyerName, String sellerName, LoanDTO selectedLoan) throws Exception {
+        Customer buyer = name2customer.get(buyerName);
+        Customer seller = name2customer.get(sellerName);
+        Loan loanToSell=null;
+        double lendersPartInLoan = 0;
+
+        for(Loan loan : loans) {
+            if(loan.getLoanName() == selectedLoan.getLoanName()) {
+                loanToSell = loan;
+                break;
+            }
+        }
+
+        for(Loan.LenderDetails details : loanToSell.getLendersDetails()){
+            if(details.lender == seller) {
+                lendersPartInLoan = details.lendersPartOfLoanInPercent;
+                break;
+            }
+        }
+
+        try {
+            loanToSell.getLendersDetails().remove(seller);
+            loanToSell.addNewLender(buyer, lendersPartInLoan);
+        }
+        catch (Exception ex) {
+            throw ex;
+        }
+
+        seller.getLoansAsLender().remove(loanToSell);
+        buyer.getLoansAsLender().add(loanToSell);
     }
 }

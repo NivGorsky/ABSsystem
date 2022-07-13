@@ -32,7 +32,7 @@ public class LoansTableComponentController implements ParentController {
     @FXML private TableColumn<LoanDTO, String> loanNameCol;
     @FXML private TableColumn<LoanDTO, String> loanerNameCol;
     @FXML private TableColumn<LoanDTO, String> categoryCol;
-    @FXML private TableColumn<LoanDTO, Double> initialAmountCol;
+    @FXML private TableColumn<LoanDTO, Integer> initialAmountCol;
     @FXML private TableColumn<LoanDTO, Integer> totalYazCol;
     @FXML private TableColumn<LoanDTO, Double> totalInterestCol;
     @FXML private TableColumn<LoanDTO, Integer> PaymentRateCol;

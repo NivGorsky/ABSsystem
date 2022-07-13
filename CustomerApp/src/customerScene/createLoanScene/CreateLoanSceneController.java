@@ -1,5 +1,6 @@
 package customerScene.createLoanScene;
 
+import DTO.LoanDTO;
 import com.google.gson.Gson;
 import customerBase.CustomerBaseController;
 import javafx.application.Platform;
@@ -45,21 +46,17 @@ public class CreateLoanSceneController {
     @FXML
     public void createLoanButtonClicked() {
         String custName = parentController.getLoggedInUser();
+        double totalInterestForLoan = Integer.parseInt(interestPerPaymentTF.getText())*Double.parseDouble(amountTF.getText())/100;
 
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/createLoan").newBuilder();
         String finalUrl = urlBuilder.build().toString();
 
-       String body = "Loan Name: " + loanNameTF.getText() + Configurations.LINE_SEPARATOR +
-               "Customer Name: " + custName + Configurations.LINE_SEPARATOR +
-               "Category: " + categoriesCB.getSelectionModel().getSelectedItem() + Configurations.LINE_SEPARATOR +
-               "Amount: " + custName + Configurations.LINE_SEPARATOR +
-               "Total Yaz To Pay: " + totalYazToPayTF + Configurations.LINE_SEPARATOR +
-               "Payments Rate: " + paymentsRateTF + Configurations.LINE_SEPARATOR +
-               "Interest Per Payment: " + interestPerPaymentTF + Configurations.LINE_SEPARATOR;
-
+        LoanDTO newLoan = new LoanDTO(loanNameTF.getText(), custName, Integer.parseInt(amountTF.getText()), Integer.parseInt(totalYazToPayTF.getText()),
+                Integer.parseInt(interestPerPaymentTF.getText()), totalInterestForLoan, Integer.parseInt(paymentsRateTF.getText()), "NEW",
+                categoriesCB.getSelectionModel().getSelectedItem(), 0, 0, 0, 0);
 
         Request request = new Request.Builder().url(finalUrl).post(RequestBody.create(
-                Configurations.GSON.toJson(body).getBytes())).build();
+                Configurations.GSON.toJson(newLoan).getBytes())).build();
         Call call = Configurations.HTTP_CLIENT.newCall(request);
 
         Callback newLoanCallBack = new Callback() {

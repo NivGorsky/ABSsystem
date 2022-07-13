@@ -25,7 +25,7 @@ public class Loan
     private final String category;
     private final int initialAmount;
     private final String borrowerName;
-    private final int interestPerPaymentSetByBorrowerInPercents;
+    private final double interestPerPaymentSetByBorrowerInPercents;
     private final double totalInterestForLoan;
     private LoanStatus status;
     private final Account account;
@@ -49,7 +49,7 @@ public class Loan
     private double loanAmountFinancedByLenders;
 
     public Loan(String loanName, String borrowerName, int originalLoanAmount, int yaz, int paymentRateInYaz,
-                int interestPercentPerPayment, String category, int currentYaz)
+                double interestPercentPerPayment, String category, int currentYaz)
     {
         //init loan's general data
         this.loanName = loanName;
@@ -84,14 +84,13 @@ public class Loan
     }
 
 
-
     //getters
     public int getLoanId() { return loanId; }
     public  String getLoanName() { return loanName; }
     public String getBorrowerName() {
         return borrowerName;
     }
-    public double getInitialAmount() {
+    public int getInitialAmount() {
         return initialAmount;
     }
     public int getMaxYazToPay() {
