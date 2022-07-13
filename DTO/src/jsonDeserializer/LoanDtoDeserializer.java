@@ -3,15 +3,18 @@ import DTO.LoanDTO;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import javafx.beans.property.SimpleStringProperty;
-
+import javax.security.auth.login.Configuration;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.SortedMap;
 
 public class LoanDtoDeserializer implements JsonDeserializer<LoanDTO> {
 
+    private Gson gson = new Gson();
+
     @Override
     public LoanDTO deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+
         //extract raw data
         JsonObject jsonObject = json.getAsJsonObject();
         String loanName = jsonObject.getAsJsonObject("loanName").get("value").getAsString();
@@ -32,15 +35,22 @@ public class LoanDtoDeserializer implements JsonDeserializer<LoanDTO> {
         LoanDTO loanDTO = new LoanDTO(loanName, customerName, initialAmount, totalYaz, interestPerPayment, totalInterest, yazPerPerPayment,
                 status, category, paidInterest, paidLoan, debt, amountRaised);
 
+        //init unpaid payments
         Type unpaidPaymentsType = new TypeToken<SortedMap<Integer, LoanDTO.PaymentDTO>>(){}.getType();
-//        ArrayList<LoanDTO> loans = Configurations.GSON.fromJson(rawBody, arrayListLoanDtoType);
+        JsonElement unpaidPaymentsAsJsonObject = jsonObject.get("unpaidPayments");
+        loanDTO.unpaidPayments = gson.fromJson(unpaidPaymentsAsJsonObject.getAsJsonArray(), unpaidPaymentsType);
 
-        //need to add the payments from the json to the loanDTO....
-        
+        //init paid payments
+        Type paidPaymentsType = new TypeToken<SortedMap<Integer, LoanDTO.PaymentDTO>>(){}.getType();
+        JsonObject paidPaymentsAsJsonObject = jsonObject.getAsJsonObject("paidPayments");
+        loanDTO.paidPayments = gson.fromJson(unpaidPaymentsAsJsonObject, paidPaymentsType);
 
+        //init lenderDetails
+        Type lenderDetailsType = new TypeToken<ArrayList<LoanDTO.LenderDetailsDTO>>(){}.getType();
+        JsonObject lenderDetailsAsJsonObject = jsonObject.getAsJsonObject("lendersNameAndAmount");
+        loanDTO.lendersNameAndAmount = gson.fromJson(lenderDetailsAsJsonObject, lenderDetailsType);
 
-
-        return null;
+        return loanDTO;
     }
 
     private static String toPrettyJsonFormat(String jsonString)

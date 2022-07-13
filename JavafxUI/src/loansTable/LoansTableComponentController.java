@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
+import jsonDeserializer.LoanDtoDeserializer;
 import main.Configurations;
 import mutualInterfaces.ParentController;
 import javafx.fxml.FXMLLoader;

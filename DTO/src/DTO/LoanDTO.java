@@ -97,11 +97,11 @@ public class LoanDTO {
     private final SimpleDoubleProperty paidInterest;
     private final SimpleDoubleProperty paidLoan;
     private final SimpleDoubleProperty amountRaised;
-    private final SortedMap<Integer, LoanDTO.PaymentDTO> unpaidPayments;
-    private final SortedMap<Integer, LoanDTO.PaymentDTO> paidPayments;
+    public SortedMap<Integer, LoanDTO.PaymentDTO> unpaidPayments;
+    public SortedMap<Integer, LoanDTO.PaymentDTO> paidPayments;
 
     //pending info
-    private final ArrayList<LoanDTO.LenderDetailsDTO> lendersNameAndAmount;
+    public ArrayList<LoanDTO.LenderDetailsDTO> lendersNameAndAmount;
     private SimpleDoubleProperty totalMoneyRaised;
 
     //active info
