@@ -254,7 +254,6 @@ public class CustomerSceneController implements ParentController {
                     Platform.runLater(() -> {
                         try {
                             currentYAZ.set(Integer.parseInt(response.body().string()));
-                            response.close();
                         }
                         catch (IOException e) {
                             parentController.createExceptionDialog(e);
@@ -262,7 +261,7 @@ public class CustomerSceneController implements ParentController {
                     });
                 }
 
-
+                response.close();
             }
         };
 
