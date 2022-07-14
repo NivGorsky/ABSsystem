@@ -2,6 +2,7 @@ package loansTable;
 
 import DTO.LoanDTO;
 import Engine.MainSystem;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -11,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
+import jsonDeserializer.LoanDtoDeserializer;
 import main.Configurations;
 import mutualInterfaces.ParentController;
 import javafx.fxml.FXMLLoader;
@@ -21,6 +23,8 @@ import loansTable.loansAdditionalInfo.InRiskInfoController;
 import loansTable.loansAdditionalInfo.PendingInfoController;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
+import com.google.gson.reflect.TypeToken;
+import java.io.Console;
 import java.lang.reflect.Type;
 import java.io.IOException;
 import java.net.URL;
@@ -163,6 +167,7 @@ public class LoansTableComponentController implements ParentController {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/showLoansInfo").newBuilder();
         String finalUrl = urlBuilder.build().toString();
         Request request = new Request.Builder().url(finalUrl).get().build();
+
         Call call = Configurations.HTTP_CLIENT.newCall(request);
 
         Callback showLoansInfoCallBack = new Callback() {
@@ -198,7 +203,8 @@ public class LoansTableComponentController implements ParentController {
         createTableLoanColumns();
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/showLoansInfo").newBuilder();
         urlBuilder.addQueryParameter("customer-name", customerName);
-        urlBuilder.addQueryParameter("loans-type", "lender");
+        urlBuilder.addQueryParameter("loan-type", "lender");
+
         String finalUrl = urlBuilder.build().toString();
         Request request = new Request.Builder().url(finalUrl).get().build();
         Call call = Configurations.HTTP_CLIENT.newCall(request);
@@ -237,7 +243,7 @@ public class LoansTableComponentController implements ParentController {
         createTableLoanColumns();
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/showLoansInfo").newBuilder();
         urlBuilder.addQueryParameter("customer-name", customerName);
-        urlBuilder.addQueryParameter("loans-type", "borrower");
+        urlBuilder.addQueryParameter("loan-type", "borrower");
 
         String finalUrl = urlBuilder.build().toString();
         Request request = new Request.Builder().url(finalUrl).get().build();
@@ -256,9 +262,9 @@ public class LoansTableComponentController implements ParentController {
                 if(response.isSuccessful()){
                     String rawBody = response.body().string();
                     Type arrayListLoanDtoType = new TypeToken<ArrayList<LoanDTO>>(){}.getType();
-                    ArrayList<LoanDTO> loans = Configurations.GSON.fromJson(rawBody, arrayListLoanDtoType);
 
                     Platform.runLater(() -> {
+                        ArrayList<LoanDTO> loans = Configurations.GSON.fromJson(rawBody, arrayListLoanDtoType);
                         putLoansInTable(loans);
                     });
                 }
@@ -315,7 +321,6 @@ public class LoansTableComponentController implements ParentController {
     public void setLoanSelectionListener(ChangeListener<LoanDTO> changeListener){
         loansTable.getSelectionModel().selectedItemProperty().addListener(changeListener);
     }
-
 }
 
 

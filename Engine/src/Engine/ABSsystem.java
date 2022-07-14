@@ -70,7 +70,6 @@ public class ABSsystem implements MainSystem, SystemService {
             throw ex;
         }
 
-        resetSystem();
         takeCategoriesData(categories);
         takeLoansData(loans, customer);
     }
@@ -397,8 +396,7 @@ public class ABSsystem implements MainSystem, SystemService {
     public ArrayList<String> getCustomersNames() {
         return new ArrayList<>(name2customer.keySet());
     }
-
-    @Override
+    
     public ArrayList<LoanDTO> showLoansInfo() {
         ArrayList<LoanDTO> loansInfo = new ArrayList<>();
         for (Loan l : loans) {

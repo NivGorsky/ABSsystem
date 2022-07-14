@@ -22,11 +22,12 @@ public class FileUploadServlet extends HttpServlet {
 
         String custName = request.getParameter("customer-name");
         Collection<Part> parts = request.getParts();
-        MainSystem AbsSystem = ServletUtils.getAbsSystem(getServletContext());
+        MainSystem absSystem = ServletUtils.getAbsSystem(getServletContext());
         try {
             synchronized (this) {
                 for (Part part : parts) {
-                    AbsSystem.loadXML(part.getContentType(), part.getInputStream(), custName);
+                    absSystem.loadXML(part.getContentType(), part.getInputStream(), custName);
+                    getServletContext().setAttribute(ServletUtils.MAIN_SYSTEM_ATTRIBUTE_NAME, absSystem);
                     response.setStatus(200);
                 }
             }

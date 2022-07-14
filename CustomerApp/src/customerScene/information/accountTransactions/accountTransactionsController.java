@@ -3,7 +3,9 @@ package customerScene.information.accountTransactions;
 
 import DTO.*;
 
+import com.google.gson.reflect.TypeToken;
 import customerScene.information.InformationController;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -12,7 +14,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import main.Configurations;
+import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 public class accountTransactionsController {
@@ -31,11 +39,41 @@ public class accountTransactionsController {
     public StringProperty getCustomerNameProperty(){return this.customerNameProperty;}
 
     public void updateAccountMovements(){
-        CustomerDTO customerDTO = parentController.getModel().getCustomerDTO(customerNameProperty.getValue());
-        List<AccountMovementDTO> movementsFromEngine = customerDTO.getAccountMovements();
-        accountMovements.clear();
-        accountMovements.addAll(movementsFromEngine);
-        accountTransactionsTableView.setItems(accountMovements); //should be as listening to property
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/account-transactions").newBuilder();
+        urlBuilder.addQueryParameter("customer-name", parentController.getCustomerNameProperty().getValue());
+        String finalUrl = urlBuilder.build().toString();
+        Request request = new Request.Builder().url(finalUrl).get().build();
+        Call call = Configurations.HTTP_CLIENT.newCall(request);
+
+        Callback showLoansInfoCallBack = new Callback() {
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    Platform.runLater(() -> {
+                        parentController.createExceptionDialog(e);
+                    });
+                }
+
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    if(response.isSuccessful()){
+                        String rawBody = response.body().string();
+
+                        Platform.runLater(() -> {
+                            Type arrayListAccountMovementsType = new TypeToken<List<AccountMovementDTO>>(){}.getType();
+                            List<AccountMovementDTO> accountMovementDTOS = Configurations.GSON.fromJson(rawBody, arrayListAccountMovementsType);
+                            accountMovements.clear();
+                            accountMovements.addAll(accountMovementDTOS);
+                            accountTransactionsTableView.setItems(accountMovements);
+                        });
+                    }
+
+                    else{
+                        parentController.createExceptionDialog(new Exception(Integer.toString(response.code())));
+                    }
+                }
+            };
+
+            call.enqueue(showLoansInfoCallBack);
     }
 
     public accountTransactionsController(){

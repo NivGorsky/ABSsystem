@@ -211,6 +211,7 @@ public class CustomerSceneController implements ParentController {
                     Platform.runLater(() -> {
                         onShow();
                         isFileSelected.set(true);
+                        informationController.onShow(); //need to change to this.onShow
                     });
                 }
            }
