@@ -77,6 +77,8 @@ public class CreateLoanSceneController {
                         //TODO: loansTableOnShow
                     });
                 }
+
+                response.close();
             }
         };
 

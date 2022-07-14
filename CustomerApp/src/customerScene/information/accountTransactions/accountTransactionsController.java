@@ -70,6 +70,8 @@ public class accountTransactionsController {
                     else{
                         parentController.createExceptionDialog(new Exception(Integer.toString(response.code())));
                     }
+
+                    response.close();
                 }
             };
 

@@ -147,6 +147,8 @@ public class LoanTradingSceneController {
                         loadLoansToTables(); //TODO!!!
                     });
                 }
+
+                response.close();
             }
         };
 
@@ -181,6 +183,8 @@ public class LoanTradingSceneController {
                         seller2LoansForSale = Configurations.GSON.fromJson(response.body().toString(), typeOfHashMap);
                     });
                 }
+
+                response.close();
             }
         };
 
