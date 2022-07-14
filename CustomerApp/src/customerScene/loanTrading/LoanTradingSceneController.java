@@ -6,6 +6,8 @@ import com.google.gson.reflect.TypeToken;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -20,13 +22,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class LoanTradingSceneController {
 
-    @FXML private ScrollPane loansTrade;
+    @FXML private ScrollPane loanTradingScene;
     @FXML private AnchorPane loansForSaleAP;
     @FXML private Button buyLoanButton;
     @FXML private AnchorPane loansAsLenderAP;
@@ -34,16 +35,23 @@ public class LoanTradingSceneController {
     @FXML private Label loanPriceLabel;
     @FXML private Label sellerLabel;
 
-    @FXML private ScrollPane loansTableComponent;
-    @FXML private LoansTableComponentController loansTableComponentController;
+    @FXML private ScrollPane loansForSaleTable;
+    @FXML private LoansTableComponentController loansForSaleTableController;
+
+    @FXML private ScrollPane myLoansToSaleTable;
+    @FXML private LoansTableComponentController myLoansToSaleTableController;
 
     private SimpleBooleanProperty isLoanSelected;
     Map<String, LoanDTO> seller2LoansForSale;
+    private SimpleDoubleProperty loanPrice;
+    private SimpleStringProperty loanSeller;
 
     private ParentController parentController;
 
     public LoanTradingSceneController() {
         isLoanSelected = new SimpleBooleanProperty(false);
+        loanPrice = new SimpleDoubleProperty();
+        loanSeller = new SimpleStringProperty();
         seller2LoansForSale = new HashMap<>();
     }
 
@@ -52,57 +60,61 @@ public class LoanTradingSceneController {
     }
 
     @FXML public void initialize() {
-
         loanPriceLabel.visibleProperty().bind(isLoanSelected);
-        loanPriceLabel.textProperty().bind(Bindings.concat("Loan Price: " , calcLoanPrice()));
+        loanPriceLabel.textProperty().bind(Bindings.concat("Loan Price: " + loanPrice.get()));
 
         sellerLabel.visibleProperty().bind(isLoanSelected);
-        sellerLabel.textProperty().bind(Bindings.concat("Seller: " , findSeller()));
+        sellerLabel.textProperty().bind(Bindings.concat("Seller: " + loanSeller.get()));
+
+        loansForSaleTableController.setLoanSelectionListener((observable, oldValue, newValue) -> {
+           findSeller();
+           calcLoanPrice();
+        });
     }
 
-    private double calcLoanPrice() {
+    private void calcLoanPrice() {
         double price = 0;
-        String seller = findSeller();
 
-        for(LoanDTO.LenderDetailsDTO lenderDetails : loansTableComponentController.getSelectedLoanFromTable().getLenderDTOS()) {
-            if(lenderDetails.getLenderName() == seller) {
+        for(LoanDTO.LenderDetailsDTO lenderDetails : loansForSaleTableController.getSelectedLoanFromTable().getLenderDTOS()) {
+            if(lenderDetails.getLenderName() == loanSeller.get()) {
                 price = lenderDetails.getLendersInvestAmount();
             }
         }
 
-        return price;
+        loanPrice.set(price);
     }
 
-    private String findSeller() {
+    private void findSeller() {
         String seller = null;
         for(Map.Entry<String, LoanDTO> item : seller2LoansForSale.entrySet()) {
-            if(item.getValue() == loansTableComponentController.getSelectedLoanFromTable()) {
+            if(item.getValue() == loansForSaleTableController.getSelectedLoanFromTable()) {
                 seller = item.getKey();
                 break;
             }
         }
-        return seller;
+
+        loanSeller.set(seller);
     }
 
     @FXML
     void buyLoanButtonClicked(ActionEvent event) {
-        LoanDTO selectedLoan = loansTableComponentController.getSelectedLoanFromTable();
-        sendTradeHttpRequest("BUY", findSeller(), selectedLoan.getLoanName());
+        LoanDTO selectedLoan = loansForSaleTableController.getSelectedLoanFromTable();
+        sendTradeHttpRequest("BUY", loanSeller.get(), selectedLoan.getLoanName());
     }
 
     @FXML
     void sellLoanButtonClicked(ActionEvent event) {
-        LoanDTO selectedLoan = loansTableComponentController.getSelectedLoanFromTable();
+        LoanDTO selectedLoan = myLoansToSaleTableController.getSelectedLoanFromTable();
         sendTradeHttpRequest("SELL", parentController.getLoggedInUser(), selectedLoan.getLoanName());
     }
 
     private void sendTradeHttpRequest(String action, String sellerName, String loanName) {
         LoanForSaleDTO loanForSale = null;
         if(action == "SELL") {
-            loanForSale = new LoanForSaleDTO(null, parentController.getLoggedInUser(), loanName, calcLoanPrice());
+            loanForSale = new LoanForSaleDTO(null, parentController.getLoggedInUser(), loanName, loanPrice.get());
         }
         else {
-            loanForSale = new LoanForSaleDTO(parentController.getLoggedInUser(), sellerName, loanName, calcLoanPrice());
+            loanForSale = new LoanForSaleDTO(parentController.getLoggedInUser(), sellerName, loanName, loanPrice.get());
         }
 
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/LoanTrading").newBuilder();
