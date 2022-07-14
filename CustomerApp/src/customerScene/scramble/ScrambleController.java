@@ -1,5 +1,5 @@
 package customerScene.scramble;
-import DTO.LoanCategorisDTO;
+import DTO.LoanCategoriesDTO;
 import DTO.LoanPlacingDTO;
 import DTO.UIController;
 import customerScene.CustomerSceneController;
@@ -364,10 +364,10 @@ public class ScrambleController implements UIController {
     }
 
     private void getLoanCategoriesToTable(){
-        LoanCategorisDTO loanCategorisDTO = parentController.getModel().getSystemLoanCategories();
+        LoanCategoriesDTO loanCategoriesDTO = parentController.getModel().getSystemLoanCategories();
         ObservableList<LoanCategoryForTable> observableCategories = FXCollections.observableArrayList();
 
-        for (String loanCategory:loanCategorisDTO.loanCategories){
+        for (String loanCategory: loanCategoriesDTO.loanCategories){
             LoanCategoryForTable newLoanCategory = new LoanCategoryForTable(loanCategory);
             observableCategories.add(newLoanCategory);
         }

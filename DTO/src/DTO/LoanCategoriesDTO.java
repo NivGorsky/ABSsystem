@@ -3,11 +3,11 @@ package DTO;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LoanCategorisDTO {
+public class LoanCategoriesDTO {
     public ArrayList<String> loanCategories;
 
-    public LoanCategorisDTO(List<String> categorisList){
+    public LoanCategoriesDTO(List<String> categoriesList){
         loanCategories = new ArrayList<>();
-        loanCategories.addAll(categorisList);
+        loanCategories.addAll(categoriesList);
     }
 }

@@ -7,15 +7,14 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet("/sellersAndLoansForSale")
-public class GetSellersAndLoansForSale extends HttpServlet {
-
+@WebServlet("/categories")
+public class CategoriesServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
         response.setContentType("application/json");
         MainSystem AbsSystem = ServletUtils.getAbsSystem(getServletContext());
 
-        response.getWriter().println(ServletUtils.GSON.toJson(AbsSystem.getSeller2loansForSale()));
+        response.getWriter().println(ServletUtils.GSON.toJson(AbsSystem.getSystemLoanCategories()));
     }
 }

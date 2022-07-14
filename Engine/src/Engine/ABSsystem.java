@@ -95,6 +95,11 @@ public class ABSsystem implements MainSystem, SystemService {
 
 
     //------------------------ DTO METHODS ---------------------------------------------------//
+    @Override
+    public LoanCategoriesDTO getSystemLoanCategories() {
+        return new LoanCategoriesDTO(LoanCategories.getCategories());
+    }
+
     private CustomerDTO createCustomerDTO(Customer c) {
         CustomerDTO customerDTO = new CustomerDTO(c.getName(), c.getAccount().getBalance());
         ArrayList<Account.AccountMovement> customerMovements = c.getAccount().getMovements();
@@ -463,11 +468,6 @@ public class ABSsystem implements MainSystem, SystemService {
     @Override
     public Map<String, Customer> getAllCustomers() {
         return this.name2customer;
-    }
-
-    @Override
-    public LoanCategorisDTO getSystemLoanCategories() {
-        return new LoanCategorisDTO(LoanCategories.getCategories());
     }
 
     @Override

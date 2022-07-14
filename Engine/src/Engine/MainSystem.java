@@ -19,7 +19,7 @@ public interface MainSystem {
      TimelineDTO moveTimeLine();
      ArrayList<String> getCustomersNames();
      int getCurrYaz();
-     LoanCategorisDTO getSystemLoanCategories();
+     LoanCategoriesDTO getSystemLoanCategories();
 
     //new methods for javafx
      CustomerDTO getCustomerDTO(String customerName);

@@ -2,6 +2,7 @@ package customerScene.createLoanScene;
 
 import DTO.LoanDTO;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import customerBase.CustomerBaseController;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -16,6 +17,8 @@ import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.Map;
 
 public class CreateLoanSceneController {
 
@@ -81,9 +84,44 @@ public class CreateLoanSceneController {
         };
 
         call.enqueue(newLoanCallBack);
+    }
 
+    public void onShow() {
+        getCategories();
+    }
 
+    private void getCategories() {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/categories").newBuilder();
+        String finalUrl = urlBuilder.build().toString();
 
+        Request request = new Request.Builder().url(finalUrl).build();
 
+        Call call = Configurations.HTTP_CLIENT.newCall(request);
+        Callback categoriesCallBack = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                parentController.createExceptionDialog(e);
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.code() != 200) {
+                    String responseBody = Configurations.GSON.fromJson(response.body().string(), String.class);
+                    Platform.runLater(() ->
+                            parentController.createExceptionDialog(new Exception(Integer.toString(response.code())
+                                    + "\n" + responseBody)));
+                }
+
+                else {
+                    Platform.runLater(() -> {
+                        Type typeOfHashMap = new TypeToken<Map<String, LoanDTO>>() {}.getType();
+                        seller2LoansForSale = Configurations.GSON.fromJson(response.body().toString(), typeOfHashMap);
+                    });
+                }
+            }
+        };
+
+        call.enqueue(categoriesCallBack);
+    }
     }
 }
