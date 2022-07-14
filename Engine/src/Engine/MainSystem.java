@@ -4,6 +4,7 @@ import Exceptions.XMLFileException;
 import javax.xml.bind.JAXBException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.function.Consumer;
 
 
@@ -47,7 +48,9 @@ public interface MainSystem {
 
     void createNewLoan(LoanDTO newLoan);
 
-    void sellLoan(String buyerName, String sellerName, LoanDTO selectedLoan) throws Exception;
+    void sellLoan(LoanForSaleDTO loanForSale) throws Exception;
+    void buyLoan(LoanForSaleDTO loanToBuy) throws Exception;
 
 
+    Map<String, LoanDTO> getSeller2loansForSale();
 }

@@ -20,6 +20,7 @@ import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.Map;
 
 public class LoanTradingSceneController {
 
@@ -34,18 +35,13 @@ public class LoanTradingSceneController {
     @FXML private ScrollPane loansTableComponent;
     @FXML private LoansTableComponentController loansTableComponentController;
 
-    private LoanDTO selectedLoanFromLoansTable;
     private SimpleBooleanProperty isLoanSelected;
-    private SimpleDoubleProperty loanPrice;
-    private SimpleStringProperty seller;
+    Map<String, LoanDTO> seller2LoansForSale;
 
     private ParentController parentController;
 
     public LoanTradingSceneController() {
-        selectedLoanFromLoansTable = null;
         isLoanSelected = new SimpleBooleanProperty(false);
-        loanPrice = new SimpleDoubleProperty();
-        seller = new SimpleStringProperty();
     }
 
     public void setParentController(ParentController parentController) {
@@ -53,28 +49,67 @@ public class LoanTradingSceneController {
     }
 
     @FXML public void initialize() {
+
         loanPriceLabel.visibleProperty().bind(isLoanSelected);
-        loanPriceLabel.textProperty().bind(Bindings.concat("Loan Price: " , loanPrice.getValue()));
+        loanPriceLabel.textProperty().bind(Bindings.concat("Loan Price: " , calcLoanPrice()));
 
         sellerLabel.visibleProperty().bind(isLoanSelected);
-        sellerLabel.textProperty().bind(Bindings.concat("Seller: " , seller.getValue()));
+        sellerLabel.textProperty().bind(Bindings.concat("Seller: " , findSeller()));
+    }
+
+    private double calcLoanPrice() {
+        double price = 0;
+        String seller = findSeller();
+
+        for(LoanDTO.LenderDetailsDTO lenderDetails : loansTableComponentController.getSelectedLoanFromTable().getLenderDTOS()) {
+            if(lenderDetails.getLenderName() == seller) {
+                price = lenderDetails.getLendersInvestAmount();
+            }
+        }
+
+        return price;
+    }
+
+    private String findSeller() {
+        String seller = null;
+        for(Map.Entry<String, LoanDTO> item : seller2LoansForSale.entrySet()) {
+            if(item.getValue() == loansTableComponentController.getSelectedLoanFromTable()) {
+                seller = item.getKey();
+                break;
+            }
+        }
+        return seller;
     }
 
     @FXML
     void buyLoanButtonClicked(ActionEvent event) {
-        sendHttpRequest("BUY");
+        LoanDTO selectedLoan = loansTableComponentController.getSelectedLoanFromTable();
+        sendHttpRequest("BUY", findSeller(), selectedLoan.getLoanName());
     }
 
     @FXML
     void sellLoanButtonClicked(ActionEvent event) {
-        sendHttpRequest("SELL");
+        LoanDTO selectedLoan = loansTableComponentController.getSelectedLoanFromTable();
+        sendHttpRequest("SELL", parentController.getLoggedInUser(), selectedLoan.getLoanName());
     }
 
-    private void sendHttpRequest(String action) {
+    private void sendHttpRequest(String action, String sellerName, String loanName) {
+        LoanForSaleDTO loanForSale = null;
+        if(action == "SELL") {
+            loanForSale = new LoanForSaleDTO(null, parentController.getLoggedInUser(), loanName, calcLoanPrice());
+        }
+        else {
+            loanForSale = new LoanForSaleDTO(parentController.getLoggedInUser(), sellerName, loanName, calcLoanPrice());
+        }
+
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/LoanTrading").newBuilder();
         urlBuilder.addQueryParameter("Action", action);
         String finalUrl = urlBuilder.build().toString();
-        Request request = new Request.Builder().url(finalUrl).build();
+
+        Request request = new Request.Builder()
+                .url(finalUrl)
+                .post(RequestBody.create(Configurations.GSON.toJson(loanForSale).getBytes()))
+                .build();
 
         Call call = Configurations.HTTP_CLIENT.newCall(request);
         Callback tradeLoanCallBack = new Callback() {
@@ -86,9 +121,10 @@ public class LoanTradingSceneController {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (response.code() != 200) {
-                    String responseBody = response.body().string();
+                    String responseBody = Configurations.GSON.fromJson(response.body().string(), String.class);
                     Platform.runLater(() ->
-                            parentController.createExceptionDialog(new Exception(Integer.toString(response.code()))));
+                            parentController.createExceptionDialog(new Exception(Integer.toString(response.code())
+                                  + "\n" + responseBody)));
                 }
 
                 else {
@@ -104,6 +140,11 @@ public class LoanTradingSceneController {
 
     public void loadLoansToTables() {
         //TODO!!!!
+    }
+
+    public void onShow() {
+        //getLoansForSaleMap and save it
+        loadLoansToTables();
     }
 
 }

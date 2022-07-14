@@ -28,6 +28,7 @@ public class ABSsystem implements MainSystem, SystemService {
     private Task<Boolean> currentRunningTask;
     private ArrayList<String> admins;
     private boolean isAdminLoggedIn;
+
     private Map<String, Loan> seller2loansForSale;
 
     public ABSsystem() {
@@ -209,6 +210,11 @@ public class ABSsystem implements MainSystem, SystemService {
     }
     //------------------------ TIMELINE METHODS ---------------------------------------------------//
 
+    @Override
+    public Map<String, LoanDTO> getSeller2loansForSale() {
+        //showLoansInfo -> to map
+        return null;
+    }
 
     private void injectSystemServiceInterfaceToLoans() {
         for (Loan loan : loans) {
@@ -618,14 +624,28 @@ public class ABSsystem implements MainSystem, SystemService {
     }
 
     @Override
-    public void sellLoan(String buyerName, String sellerName, LoanDTO selectedLoan) throws Exception {
-        Customer buyer = name2customer.get(buyerName);
-        Customer seller = name2customer.get(sellerName);
+    public void sellLoan(LoanForSaleDTO loanForSaleDto) throws Exception {
+
+        Loan loanForSale = null;
+        for(Loan loan : status2loan.values()) {
+            if(loan.getLoanName() == loanForSale.getLoanName()) {
+                loanForSale = loan;
+                break;
+            }
+        }
+
+        seller2loansForSale.put(loanForSaleDto.getSellerName(), loanForSale);
+    }
+
+    @Override
+    public void buyLoan(LoanForSaleDTO loanToBuy) throws Exception {
+        Customer buyer = name2customer.get(loanToBuy.getSellerName());
+        Customer seller = name2customer.get(loanToBuy.getSellerName());
         Loan loanToSell=null;
         double lendersPartInLoan = 0;
 
         for(Loan loan : loans) {
-            if(loan.getLoanName() == selectedLoan.getLoanName()) {
+            if(loan.getLoanName() == loanToBuy.getLoanName()) {
                 loanToSell = loan;
                 break;
             }
@@ -638,6 +658,10 @@ public class ABSsystem implements MainSystem, SystemService {
             }
         }
 
+        if(seller.getAccount().getBalance() < loanToBuy.getPrice()) {
+            throw new Exception("You do not have enough balance to buy the loan!");
+        }
+
         try {
             loanToSell.getLendersDetails().remove(seller);
             loanToSell.addNewLender(buyer, lendersPartInLoan);
@@ -648,6 +672,7 @@ public class ABSsystem implements MainSystem, SystemService {
 
         seller.getLoansAsLender().remove(loanToSell);
         buyer.getLoansAsLender().add(loanToSell);
+        moveMoneyBetweenAccounts(buyer.getAccount(), seller.getAccount(), loanToBuy.getPrice());
         seller2loansForSale.remove(loanToSell);
     }
 }

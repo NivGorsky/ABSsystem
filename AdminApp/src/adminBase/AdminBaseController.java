@@ -108,6 +108,12 @@ public class AdminBaseController implements ParentController, BaseController {
             }
         }
     }
+
+    @Override
+    public String getLoggedInUser() {
+        return adminSceneController.getAdminName();
+    }
+
     public void setPrimaryStage(Stage primaryStage)
     {
         this.primaryStage = primaryStage;
@@ -121,9 +127,10 @@ public class AdminBaseController implements ParentController, BaseController {
 
     @Override
     public void setLoggedInDetails(String name){
-        adminSceneController.setHeyAdminLabel(name);
+        adminSceneController.setAdminName(name);
         isLoggedIn.set(true);
     }
+
     private void loadAdminScene() {
         try {
             FXMLLoader loader = new FXMLLoader();

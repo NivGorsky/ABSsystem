@@ -77,11 +77,11 @@ public class LoginController {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (response.code() != 200) {
-                    String responseBody = response.body().string();
+                    String responseBody = Configurations.GSON.fromJson(response.body().string(), String.class);
                     Platform.runLater(() ->
-                            parentController.createExceptionDialog(new Exception(Integer.toString(response.code()))));
+                            parentController.createExceptionDialog(new Exception(Integer.toString(response.code())
+                               + "\n" + responseBody)));
                 }
-
                 else {
                     Platform.runLater(() -> {
                         baseController.setLoggedInDetails(name);

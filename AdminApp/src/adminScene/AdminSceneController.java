@@ -48,6 +48,7 @@ public class AdminSceneController implements ParentController {
 
     private Timer timer;
     private final int REFRESH_RATE = 2;
+    private String adminName;
 
     private SimpleIntegerProperty currentYAZ = new SimpleIntegerProperty(1);
     private ParentController parentController;
@@ -58,6 +59,7 @@ public class AdminSceneController implements ParentController {
     {
         displayModeCB.setItems(displayModeOptions);
         currentYazLabel.textProperty().bind(Bindings.concat("Current YAZ: ", currentYAZ));
+        heyAdminLabel.textProperty().bind(Bindings.concat("Hey " + adminName + "!"));
         displayModeCB.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             parentController.switchStyleSheet(displayModeCB.getSelectionModel().getSelectedItem());
         });
@@ -71,7 +73,13 @@ public class AdminSceneController implements ParentController {
         startRefresher();
     }
 
-    public void setHeyAdminLabel(String text) { heyAdminLabel.setText(text); }
+    public void setAdminName(String adminName) {
+        this.adminName = adminName;
+    }
+
+    public String getAdminName() {
+        return adminName;
+    }
 
     public void setIncreaseYAZButtonDisable(SimpleBooleanProperty isFileSelected)
     {
@@ -158,6 +166,11 @@ public class AdminSceneController implements ParentController {
     @Override
     public void switchStyleSheet(String selectedItem) {
         parentController.switchStyleSheet(selectedItem);
+    }
+
+    @Override
+    public String getLoggedInUser() {
+        return adminName;
     }
 
     public void onShow(){

@@ -44,7 +44,7 @@ public class PaymentController implements ParentController {
         borrowerLoansTableComponentController.changeTableSelectionModelToSingle();
         borrowerLoansTableComponentController.setLoanSelectionListener((observable, oldValue, newValue) -> {
             LoanWasSelectedFromLoansTable(newValue);
-            setSelectedLoanFromLoansTable(newValue);
+            setSelectedLoanFromLoansTable(newValue); //TODO
         });
         initLendersTable();
         initPaymentButtons();

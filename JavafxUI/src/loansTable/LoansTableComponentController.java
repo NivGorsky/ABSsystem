@@ -46,6 +46,7 @@ public class LoansTableComponentController implements ParentController {
 
     private ArrayList<LoanDTO> loans;
     private ParentController parentController;
+    private LoanDTO selectedLoanFromTable;
 
 
     @FXML public void initialize()
@@ -70,7 +71,18 @@ public class LoansTableComponentController implements ParentController {
             });
             return row ;
         });
+
+        changeTableSelectionModelToSingle();
+        setLoanSelectionListener((observable, oldValue, newValue) -> {
+            setSelectedLoanFromLoansTable(newValue);
+        });
     }
+
+    private void setSelectedLoanFromLoansTable(LoanDTO selectedLoan) {
+        this.selectedLoanFromTable = selectedLoan;
+    }
+
+    public LoanDTO getSelectedLoanFromTable() { return selectedLoanFromTable; }
 
     @Override
     public MainSystem getModel() {
