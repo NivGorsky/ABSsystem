@@ -211,8 +211,17 @@ public class ABSsystem implements MainSystem, SystemService {
 
     @Override
     public Map<String, LoanDTO> getSeller2loansForSale() {
-        //showLoansInfo -> to map
-        return null;
+        ArrayList<LoanDTO> loansDto = new ArrayList<>();
+        for(Loan loan : seller2loansForSale.values()) {
+            LoanDTO loanDto = createLoanDTO(loan);
+            loansDto.add(loanDto);
+        }
+
+        Map toReturn = new HashMap<String, LoanDTO>();
+        toReturn.keySet().addAll(seller2loansForSale.keySet());
+        toReturn.values().addAll(loansDto);
+
+        return toReturn;
     }
 
     private void injectSystemServiceInterfaceToLoans() {
@@ -396,7 +405,7 @@ public class ABSsystem implements MainSystem, SystemService {
     public ArrayList<String> getCustomersNames() {
         return new ArrayList<>(name2customer.keySet());
     }
-    
+
     public ArrayList<LoanDTO> showLoansInfo() {
         ArrayList<LoanDTO> loansInfo = new ArrayList<>();
         for (Loan l : loans) {

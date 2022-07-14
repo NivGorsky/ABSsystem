@@ -48,7 +48,7 @@
                         </Label>
                         <AnchorPane fx:id="loansForSaleAP" maxHeight="380.0" maxWidth="600.0" prefHeight="380.0" prefWidth="600.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
                            <children>
-                               <fx:include maxWidth="600.0" prefWidth="600.0" source="../../../JavafxUI/loansTable/loansTableComponent.fxml"  />
+                               <fx:include source="../../../JavafxUI/loansTable/loansTableComponent.fxml"  />
                            </children></AnchorPane>
                         <Button fx:id="buyLoanButton" mnemonicParsing="false" onAction="#buyLoanButtonClicked" prefHeight="35.0" prefWidth="120.0" text="Buy Loan" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="TOP">
                            <GridPane.margin>
@@ -93,7 +93,7 @@
                         </Label>
                         <AnchorPane fx:id="loansAsLenderAP" maxHeight="380.0" prefHeight="380.0" prefWidth="466.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
                            <children>
-                               <fx:include maxWidth="600.0" prefWidth="600.0" source="../../../JavafxUI/loansTable/loansTableComponent.fxml"  />
+                               <fx:include source="../../../JavafxUI/loansTable/loansTableComponent.fxml"  />
                            </children></AnchorPane>
                         <Button fx:id="sellLoanButton" mnemonicParsing="false" onAction="#sellLoanButtonClicked" prefHeight="35.0" prefWidth="120.0" text="Sell Loan" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                            <GridPane.margin>

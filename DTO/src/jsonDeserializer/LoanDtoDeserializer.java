@@ -21,7 +21,7 @@ public class LoanDtoDeserializer implements JsonDeserializer<LoanDTO> {
         JsonObject jsonObject = json.getAsJsonObject();
         String loanName = jsonObject.getAsJsonObject("loanName").get("value").getAsString();
         String customerName = jsonObject.getAsJsonObject("customerName").get("value").getAsString();
-        double initialAmount = jsonObject.getAsJsonObject("initialAmount").get("value").getAsDouble();
+        int initialAmount = jsonObject.getAsJsonObject("initialAmount").get("value").getAsInt();
         int totalYaz = jsonObject.getAsJsonObject("maxYazToPay").get("value").getAsInt();
         double interestPerPayment = jsonObject.getAsJsonObject("interestPerPayment").get("value").getAsDouble();
         double totalInterest = jsonObject.getAsJsonObject("totalInterest").get("value").getAsDouble();

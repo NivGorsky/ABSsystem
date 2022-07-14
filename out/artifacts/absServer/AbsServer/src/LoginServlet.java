@@ -46,7 +46,7 @@ public class LoginServlet extends HttpServlet
                 synchronized (this) {
                     if (absSystem.isCustomerExists(name)) {
                         String errorMessage = "Username " + name + " already exists. Please enter a different username.";
-                        response.getWriter().println(errorMessage);
+                        response.getWriter().println(ServletUtils.GSON.toJson(errorMessage));
                         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     }
                     else{

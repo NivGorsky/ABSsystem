@@ -172,7 +172,6 @@ public class CustomerSceneController implements ParentController {
         return customerNameProperty.get();
     }
 
-
     @FXML
     public void loadFileButtonClicked() {
         FileChooser fileChooser = new FileChooser();

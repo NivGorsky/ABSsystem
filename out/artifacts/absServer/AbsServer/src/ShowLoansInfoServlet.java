@@ -24,15 +24,14 @@ public class ShowLoansInfoServlet extends HttpServlet
             String customerName = request.getParameter("customer-name");
 
             switch (request.getParameter("loan-type")){
-                case "lender":
+                case "lender": {
                     loansInfo = mainSystem.getLoansByCustomerNameAsLender(customerName);
-
                     break;
-
-                case "borrower":
+                }
+                case "borrower": {
                     loansInfo = mainSystem.getLoansByCustomerNameAsBorrower(customerName);
-
                     break;
+                }
             }
         }
 
