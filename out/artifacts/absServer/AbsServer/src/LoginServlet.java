@@ -59,7 +59,6 @@ public class LoginServlet extends HttpServlet
             }
         }
 
-
+        response.getWriter().close();
     }
-
 }

@@ -302,7 +302,9 @@ public class LoansTableComponentController implements ParentController {
     }
 
     public void clearTable(){
-        loansTable.getItems().clear();
+        if(!loansTable.getItems().isEmpty()){
+            loansTable.getItems().clear();
+        }
     }
 
     private FXMLLoader loadFile(String path)

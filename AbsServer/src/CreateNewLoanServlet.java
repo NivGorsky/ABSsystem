@@ -18,6 +18,7 @@ public class CreateNewLoanServlet extends HttpServlet {
 
         LoanDTO newLoan = ServletUtils.GSON.fromJson(request.getReader(), LoanDTO.class);
         mainSystem.createNewLoan(newLoan);
+        response.getWriter().close();
 
 
     }

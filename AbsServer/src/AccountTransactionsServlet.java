@@ -25,6 +25,7 @@ public class AccountTransactionsServlet extends HttpServlet
 
         response.getWriter().print(accountTransactionsInfoAsJsonString);
         response.getWriter().flush();
+        response.getWriter().close();
     }
 }
 

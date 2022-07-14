@@ -21,5 +21,6 @@ public class ShowCustomersInfoServlet extends HttpServlet
         String customersInfoAsJsonString = ServletUtils.GSON.toJson(customersInfo);
         response.getWriter().print(customersInfoAsJsonString);
         response.getWriter().flush();
+        response.getWriter().close();
     }
 }
