@@ -249,11 +249,12 @@ public class CustomerSceneController implements ParentController {
                 else {
                     Platform.runLater(() -> {
                         try {
-                            currentYAZ.set(Integer.parseInt(response.body().string()));
-                        }
-                        catch (IOException e) {
+                            int currentYazResponse = Configurations.GSON.fromJson(response.body().string(), int.class);
+                            currentYAZ.set(currentYazResponse);
+                        } catch (IOException e) {
                             parentController.createExceptionDialog(e);
                         }
+
                     });
                 }
             }

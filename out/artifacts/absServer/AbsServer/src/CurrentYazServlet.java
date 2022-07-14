@@ -13,7 +13,7 @@ public class CurrentYazServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-        response.setContentType("text/plain;charset=UTF-8");
+        response.setContentType("application/json");
         String moveDirection = request.getParameter("move-direction");
         MainSystem AbsSystem = ServletUtils.getAbsSystem(getServletContext());
 
@@ -31,6 +31,6 @@ public class CurrentYazServlet extends HttpServlet {
             }
         }
 
-        response.getWriter().println(AbsSystem.getCurrYaz());
+        response.getWriter().println(ServletUtils.GSON.toJson(AbsSystem.getCurrYaz()));
     }
 }
