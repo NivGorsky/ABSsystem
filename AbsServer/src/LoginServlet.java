@@ -39,6 +39,8 @@ public class LoginServlet extends HttpServlet
                             getServletContext().setAttribute(ServletUtils.MAIN_SYSTEM_ATTRIBUTE_NAME, absSystem);
                         }
                     }
+
+                    break;
             }
             case "CUSTOMER": {
                 synchronized (this) {

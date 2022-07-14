@@ -39,6 +39,8 @@ public class LoginServlet extends HttpServlet
                             getServletContext().setAttribute(ServletUtils.MAIN_SYSTEM_ATTRIBUTE_NAME, absSystem);
                         }
                     }
+
+                    break;
             }
             case "CUSTOMER": {
                 synchronized (this) {
@@ -51,11 +53,6 @@ public class LoginServlet extends HttpServlet
                         synchronized (this){
                             absSystem.addCustomer(name);
                             getServletContext().setAttribute(ServletUtils.MAIN_SYSTEM_ATTRIBUTE_NAME, absSystem);
-                            absSystem = (MainSystem) getServletContext().getAttribute(ServletUtils.MAIN_SYSTEM_ATTRIBUTE_NAME) ;
-
-                            //test
-                            System.out.println("login servlet\n" + absSystem.getCustomersNames());
-                            //
                         }
                     }
                 }

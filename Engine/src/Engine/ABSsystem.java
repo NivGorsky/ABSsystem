@@ -131,7 +131,7 @@ public class ABSsystem implements MainSystem, SystemService {
             throw ex;
         }
 
-        resetSystem();
+//        resetSystem();
         takeCategoriesData(categories);
         takeLoansData(loans, customer);
     }

@@ -18,11 +18,6 @@ public class ShowLoansInfoServlet extends HttpServlet
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
         MainSystem mainSystem = ServletUtils.getAbsSystem(getServletContext());
-
-        //test
-        System.out.println("show loans info servlet\n" + mainSystem.getCustomersNames());
-        //
-
         ArrayList<LoanDTO> loansInfo = new ArrayList<>();
 
         if(!request.getParameterMap().isEmpty()){
