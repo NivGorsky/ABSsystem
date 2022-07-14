@@ -210,9 +210,11 @@ public class CustomerSceneController implements ParentController {
                     Platform.runLater(() -> {
                         onShow();
                         isFileSelected.set(true);
-                        informationController.onShow(); //need to change to this.onShow
+//                        informationController.onShow(); //need to change to this.onShow
                     });
                 }
+
+                response.close();
            }
         };
 
@@ -222,7 +224,9 @@ public class CustomerSceneController implements ParentController {
 
     public void setCustomer(String name) {
         customerNameProperty.set(name);
+        informationController.setCustomerNameProperty(name);
         heyCustomerLabel.setText("Hey " + name + "!");
+
     }
 
     public void updateCurrentYaz() {
@@ -256,6 +260,8 @@ public class CustomerSceneController implements ParentController {
                         }
                     });
                 }
+
+                response.close();
             }
         };
 

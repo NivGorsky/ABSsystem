@@ -31,6 +31,6 @@ public class CurrentYazServlet extends HttpServlet {
             }
         }
 
-        response.getWriter().println(AbsSystem.getCurrYaz());
+        response.getWriter().print(AbsSystem.getCurrYaz());
     }
 }

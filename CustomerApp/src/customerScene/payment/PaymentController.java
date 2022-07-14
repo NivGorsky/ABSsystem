@@ -212,7 +212,7 @@ public class PaymentController implements ParentController {
     }
 
     public void onShow(){
-        updateNotifications();
+//        updateNotifications();
         borrowerLoansTableComponentController.clearTable();
         borrowerLoansTableComponentController.loadSpecificCustomerLoansAsBorrower(customerNameProperty.getValue());
         lendersTableView.getItems().clear();

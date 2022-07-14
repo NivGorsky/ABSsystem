@@ -7,7 +7,10 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import loginScene.LoginController;
@@ -36,7 +39,6 @@ public class CustomerBaseController implements ParentController, BaseController 
         if(loginSceneController != null && customerSceneController != null)
         {
             loginSceneController.setParentController(this);
-            customerSceneController.setParentController(this);
             loginSceneController.setParentController(this);
             loginSceneController.setLoginType(LoginController.LoginType.CUSTOMER);
         }
@@ -47,7 +49,10 @@ public class CustomerBaseController implements ParentController, BaseController 
         isLoggedIn.addListener(((observable, oldValue, newValue) -> {
 
             if(newValue == true){
+                customerSceneController.setParentController(this);
                 root.setContent(customerScene);
+                customerSceneController.onShow();
+                customerSceneController.startRefresher();
             }
 
             else{
@@ -77,7 +82,6 @@ public class CustomerBaseController implements ParentController, BaseController 
             loader.setLocation(mainFXML);
             customerScene = loader.load();
             customerSceneController = loader.getController();
-            customerSceneController.startRefresher();
         }
 
         catch (Exception ex){
