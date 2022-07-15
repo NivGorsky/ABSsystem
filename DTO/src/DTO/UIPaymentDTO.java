@@ -5,5 +5,6 @@ public class UIPaymentDTO {
     public String operation;
     public LoanDTO loanDTO;
     public int yaz;
-    double amount;
+    public double amount;
+    public LoanDTO.LenderDetailsDTO lenderDetailsDTO;
 }

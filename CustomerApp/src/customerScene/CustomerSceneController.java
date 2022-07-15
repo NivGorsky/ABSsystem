@@ -5,10 +5,7 @@ import customerScene.payment.PaymentController;
 import customerScene.scramble.ScrambleController;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -105,6 +102,7 @@ public class CustomerSceneController implements ParentController {
     public StringProperty getCustomerNameProperty(){
         return customerNameProperty;
     }
+    public IntegerProperty getCurrentYazProperty(){return currentYAZ;}
 
     public void setParentController(ParentController parentController){
         this.parentController = parentController;
