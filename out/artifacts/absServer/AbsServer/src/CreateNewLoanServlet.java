@@ -2,6 +2,7 @@ import DTO.LoanDTO;
 import Engine.MainSystem;
 import com.google.gson.Gson;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -9,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import javax.security.auth.login.Configuration;
 import java.io.IOException;
 
+@WebServlet("/createLoan")
 public class CreateNewLoanServlet extends HttpServlet {
 
     @Override
@@ -19,7 +21,5 @@ public class CreateNewLoanServlet extends HttpServlet {
         LoanDTO newLoan = ServletUtils.GSON.fromJson(request.getReader(), LoanDTO.class);
         mainSystem.createNewLoan(newLoan);
         response.getWriter().close();
-
-
     }
 }

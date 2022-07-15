@@ -1,6 +1,8 @@
 package customerScene;
 import Engine.MainSystem;
+import customerScene.createLoanScene.CreateLoanSceneController;
 import customerScene.information.InformationController;
+import customerScene.loanTrading.LoanTradingSceneController;
 import customerScene.payment.PaymentController;
 import customerScene.scramble.ScrambleController;
 import javafx.application.Platform;
@@ -63,6 +65,19 @@ public class CustomerSceneController implements ParentController {
 
     //.............................................................................................//
 
+    //create new loan tab
+    @FXML private  ScrollPane createLoanScene;
+    @FXML private CreateLoanSceneController createLoanSceneController;
+    @FXML private Tab createNewLoanTab;
+
+    //.............................................................................................//
+
+    //loans trading tab
+    @FXML private  ScrollPane loanTradingScene;
+    @FXML private LoanTradingSceneController loanTradingSceneController;
+    @FXML private Tab loanTradingTab;
+
+    //.............................................................................................//
 
     @FXML private TabPane customerTabPane;
 
@@ -136,6 +151,13 @@ public class CustomerSceneController implements ParentController {
 
                     case "Payment":
                         paymentController.onShow();
+
+                    case "Create new loan":
+                        createLoanSceneController.onShow();
+
+                    case "Loans trading":
+                        loanTradingSceneController.onShow();
+
                 }
             }));
         }

@@ -20,10 +20,14 @@ public class CurrentYazServlet extends HttpServlet {
         switch (moveDirection) {
             case "+": {
                 //increase yaz
+                ServletUtils.setAdminVersion(ServletUtils.getAdminVersion() + 1);
+                ServletUtils.setCustomerVersion(ServletUtils.getCustomerVersion() + 1);
                 break;
             }
             case "-": {
                 //decrease yaz
+                ServletUtils.setAdminVersion(ServletUtils.getAdminVersion() + 1);
+                ServletUtils.setCustomerVersion(ServletUtils.getCustomerVersion() + 1);
                 break;
             }
             case "=": {

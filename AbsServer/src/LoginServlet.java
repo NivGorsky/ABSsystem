@@ -53,6 +53,9 @@ public class LoginServlet extends HttpServlet
                         synchronized (this){
                             absSystem.addCustomer(name);
                             getServletContext().setAttribute(ServletUtils.MAIN_SYSTEM_ATTRIBUTE_NAME, absSystem);
+                            ServletUtils.setAdminVersion(ServletUtils.getAdminVersion() + 1); /*if another customer logged in
+                                    the admin showCustomers table should update*/
+
                         }
                     }
                 }

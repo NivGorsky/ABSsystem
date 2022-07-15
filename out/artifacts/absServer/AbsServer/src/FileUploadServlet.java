@@ -36,6 +36,7 @@ public class FileUploadServlet extends HttpServlet {
           String errorMessage = ex.getMessage();
           response.getWriter().println(errorMessage);
           response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+          response.getWriter().close();
 
         }
 

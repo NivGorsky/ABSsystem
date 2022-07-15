@@ -5,6 +5,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import customerBase.CustomerBaseController;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -18,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Map;
 
 public class CreateLoanSceneController {
@@ -113,11 +116,16 @@ public class CreateLoanSceneController {
                             parentController.createExceptionDialog(new Exception(Integer.toString(response.code())
                                     + "\n" + responseBody)));
                 }
-
                 else {
+                    Type arrayListStringType = new TypeToken<ArrayList<String>>(){}.getType();
+
                     Platform.runLater(() -> {
-                        Type typeOfHashMap = new TypeToken<Map<String, LoanDTO>>() {}.getType();
-                        seller2LoansForSale = Configurations.GSON.fromJson(response.body().toString(), typeOfHashMap);
+                        try {
+                           ArrayList<String> categories = Configurations.GSON.fromJson(response.body().string(), arrayListStringType);
+                           categoriesCB.setItems(FXCollections.observableArrayList(categories));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     });
                 }
             }
@@ -125,5 +133,5 @@ public class CreateLoanSceneController {
 
         call.enqueue(categoriesCallBack);
     }
-    }
 }
+
