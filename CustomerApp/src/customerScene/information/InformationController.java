@@ -27,17 +27,23 @@ public class InformationController implements ParentController
     @FXML private ScrollPane lenderLoansTableComponent;
     @FXML private LoansTableComponentController lenderLoansTableComponentController;
 
-    private CustomerSceneController parentController;
     private StringProperty customerNameProperty;
+    private CustomerSceneController parentController;
     private SimpleBooleanProperty isTabSelected;
 
     public InformationController () {
         customerNameProperty = new SimpleStringProperty();
+
     }
     public void setParentController(CustomerSceneController parentController) {
         this.parentController = parentController;
     }
-    public StringProperty getCustomerNameProperty(){return this.customerNameProperty;}
+
+    public void setCustomerNameProperty(String newName){
+        customerNameProperty.set(newName);
+    }
+
+    public StringProperty getCustomerNameProperty(){return customerNameProperty;}
 
     @Override
     public MainSystem getModel(){return parentController.getModel();}

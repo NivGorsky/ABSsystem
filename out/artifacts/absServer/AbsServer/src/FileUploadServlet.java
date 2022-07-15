@@ -39,5 +39,9 @@ public class FileUploadServlet extends HttpServlet {
 
         }
 
+       finally {
+            response.getWriter().close();
+        }
+
     }
 }

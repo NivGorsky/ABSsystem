@@ -36,6 +36,10 @@ public class BuyAndSellLoansServlet extends HttpServlet {
             response.getWriter().println(ServletUtils.GSON.toJson(e.getMessage()));
             response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
         }
+
+        finally {
+            response.getWriter().close();
+        }
     }
 
 }

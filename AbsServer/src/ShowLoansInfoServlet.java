@@ -42,5 +42,6 @@ public class ShowLoansInfoServlet extends HttpServlet
         String loansInfoAsJsonString = ServletUtils.GSON.toJson(loansInfo);
         response.getWriter().print(loansInfoAsJsonString);
         response.getWriter().flush();
+        response.getWriter().close();
     }
 }

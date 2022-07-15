@@ -16,6 +16,7 @@ public class GetSellersAndLoansForSale extends HttpServlet {
         response.setContentType("application/json");
         MainSystem AbsSystem = ServletUtils.getAbsSystem(getServletContext());
 
-        response.getWriter().println(ServletUtils.GSON.toJson(AbsSystem.getSeller2loansForSale()));
+        ServletUtils.GSON.toJson(AbsSystem.getSeller2loansForSale());
+        response.getWriter().close();
     }
 }

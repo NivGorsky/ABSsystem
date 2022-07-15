@@ -87,6 +87,8 @@ public class LoginController {
                         baseController.setLoggedInDetails(name);
                     });
                 }
+
+                response.close();
             }
         };
 

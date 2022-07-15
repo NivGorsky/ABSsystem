@@ -94,6 +94,8 @@ public class CustomersInfoTableController {
                         parentController.createExceptionDialog(new Exception(response.message()));
                     });
                 }
+
+                response.close();
             }
         };
 

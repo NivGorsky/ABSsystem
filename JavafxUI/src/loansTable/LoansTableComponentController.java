@@ -193,6 +193,8 @@ public class LoansTableComponentController implements ParentController {
                 else{
                     parentController.createExceptionDialog(new Exception(Integer.toString(response.code())));
                 }
+
+                response.close();
             }
         };
 
@@ -232,6 +234,8 @@ public class LoansTableComponentController implements ParentController {
                 else{
                     parentController.createExceptionDialog(new Exception(Integer.toString(response.code())));
                 }
+
+                response.close();
             }
         };
 
@@ -272,6 +276,8 @@ public class LoansTableComponentController implements ParentController {
                 else{
                     parentController.createExceptionDialog(new Exception(Integer.toString(response.code())));
                 }
+
+                response.close();
             }
         };
 
@@ -296,7 +302,9 @@ public class LoansTableComponentController implements ParentController {
     }
 
     public void clearTable(){
-        loansTable.getItems().clear();
+        if(!loansTable.getItems().isEmpty()){
+            loansTable.getItems().clear();
+        }
     }
 
     private FXMLLoader loadFile(String path)

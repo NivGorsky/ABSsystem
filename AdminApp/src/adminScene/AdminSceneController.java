@@ -110,6 +110,8 @@ public class AdminSceneController implements ParentController {
                         //payments??
                     });
                 }
+
+                response.close();
             }
         };
 
@@ -140,6 +142,8 @@ public class AdminSceneController implements ParentController {
                         //TODO-move timeline back
                     });
                 }
+
+                response.close();
             }
         };
 
