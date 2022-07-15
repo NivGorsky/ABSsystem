@@ -55,8 +55,12 @@ public class accountTransactionsController {
 
                 @Override
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                    if(response.isSuccessful()){
-                        String rawBody = response.body().string();
+                    String rawBody = response.body().string();
+                    boolean isResponseSuccessful = response.isSuccessful();
+                    int responseCode = response.code();
+                    response.close();
+
+                    if(isResponseSuccessful){
 
                         Platform.runLater(() -> {
                             Type arrayListAccountMovementsType = new TypeToken<List<AccountMovementDTO>>(){}.getType();
@@ -68,10 +72,8 @@ public class accountTransactionsController {
                     }
 
                     else{
-                        parentController.createExceptionDialog(new Exception(Integer.toString(response.code())));
+                        parentController.createExceptionDialog(new Exception(Integer.toString(responseCode)));
                     }
-
-                    response.close();
                 }
             };
 

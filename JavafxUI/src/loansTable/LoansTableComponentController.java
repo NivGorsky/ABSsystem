@@ -221,8 +221,12 @@ public class LoansTableComponentController implements ParentController {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if(response.isSuccessful()){
-                    String rawBody = response.body().string();
+                String rawBody = response.body().string();
+                int responseCode = response.code();
+                boolean isResponseSuccessful = response.isSuccessful();
+                response.close();
+
+                if(isResponseSuccessful){
                     Type arrayListLoanDtoType = new TypeToken<ArrayList<LoanDTO>>(){}.getType();
                     ArrayList<LoanDTO> loans = Configurations.GSON.fromJson(rawBody, arrayListLoanDtoType);
 
@@ -232,15 +236,12 @@ public class LoansTableComponentController implements ParentController {
                 }
 
                 else{
-                    parentController.createExceptionDialog(new Exception(Integer.toString(response.code())));
+                    parentController.createExceptionDialog(new Exception(Integer.toString(responseCode)));
                 }
-
-                response.close();
             }
         };
 
         call.enqueue(showLoansInfoCallBack);
-
     }
 
     public void loadSpecificCustomerLoansAsBorrower(String customerName){
@@ -263,8 +264,12 @@ public class LoansTableComponentController implements ParentController {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if(response.isSuccessful()){
-                    String rawBody = response.body().string();
+                String rawBody = response.body().string();
+                int responseCode = response.code();
+                boolean isResponseSuccessful = response.isSuccessful();
+                response.close();
+
+                if(isResponseSuccessful){
                     Type arrayListLoanDtoType = new TypeToken<ArrayList<LoanDTO>>(){}.getType();
 
                     Platform.runLater(() -> {
@@ -274,10 +279,8 @@ public class LoansTableComponentController implements ParentController {
                 }
 
                 else{
-                    parentController.createExceptionDialog(new Exception(Integer.toString(response.code())));
+                    parentController.createExceptionDialog(new Exception(Integer.toString(responseCode)));
                 }
-
-                response.close();
             }
         };
 

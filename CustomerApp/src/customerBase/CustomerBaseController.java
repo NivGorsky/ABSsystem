@@ -50,6 +50,7 @@ public class CustomerBaseController implements ParentController, BaseController 
 
             if(newValue == true){
                 customerSceneController.setParentController(this);
+                customerSceneController.initializeTabs();
                 root.setContent(customerScene);
                 customerSceneController.onShow();
                 customerSceneController.startRefresher();

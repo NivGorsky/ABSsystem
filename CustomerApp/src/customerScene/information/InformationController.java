@@ -1,6 +1,8 @@
 package customerScene.information;
+import com.sun.media.jfxmedia.events.PlayerEvent;
 import customerScene.CustomerSceneController;
 import customerScene.information.accountTransactions.accountTransactionsController;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -12,7 +14,12 @@ import javafx.scene.control.TextField;
 import Engine.MainSystem;
 import javafx.stage.Stage;
 import loansTable.LoansTableComponentController;
+import main.Configurations;
 import mutualInterfaces.ParentController;
+import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
 
 
 public class InformationController implements ParentController
@@ -71,14 +78,49 @@ public class InformationController implements ParentController
 
     @FXML
     void chargeButtonClicked(ActionEvent event) {
-        String customerName = customerNameProperty.getValue();
-        double amount = Double.parseDouble(amountTextField.getText());
-
         try {
-            //make the actual deposit
-            amountTextField.clear();
-            parentController.getModel().depositMoney(customerName, amount);
-            accountTransactionsController.updateAccountMovements();
+            if (!amountTextField.getText().isEmpty()){
+                String customerName = customerNameProperty.getValue();
+
+                HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/account-transactions").newBuilder();
+                urlBuilder.addQueryParameter("operation", "deposit");
+                urlBuilder.addQueryParameter("customer-name", customerName);
+                urlBuilder.addQueryParameter("amount", amountTextField.getText());
+                String finalUrl = urlBuilder.build().toString();
+
+                Request request = new Request.Builder().url(finalUrl).post(RequestBody.create("".getBytes())).build();
+                Call call = Configurations.HTTP_CLIENT.newCall(request);
+                Callback depositCallBack = new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Platform.runLater(() -> {
+                            parentController.createExceptionDialog(e);
+                        });
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        if (response.code() != 200) {
+                            String responseBody = response.body().string();
+                            response.close();
+                            Platform.runLater(() ->
+                                    parentController.createExceptionDialog(new Exception(Integer.toString(response.code())
+                                            + "\n" + responseBody)));
+                        }
+
+                        else{
+                            Platform.runLater(() -> {
+                                response.close();
+                                amountTextField.clear();
+                                accountTransactionsController.updateAccountMovements();
+                                amountTextField.clear();
+                            });
+                        }
+
+                    }
+                };
+                call.enqueue(depositCallBack);
+            }
         }
 
         catch (Exception ex){
@@ -89,23 +131,52 @@ public class InformationController implements ParentController
     @FXML
     void withdrawButtonClicked(ActionEvent event) {
         try {
-            //need to check regex of only numbers
             if (!amountTextField.getText().isEmpty()){
                 String customerName = customerNameProperty.getValue();
-                double amount = Double.parseDouble(amountTextField.getText());
 
-                parentController.getModel().withdrawMoney(customerName, amount);
-                amountTextField.clear();
-                accountTransactionsController.updateAccountMovements();
-                amountTextField.clear();
+                HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/account-transactions").newBuilder();
+                urlBuilder.addQueryParameter("operation", "withdraw");
+                urlBuilder.addQueryParameter("customer-name", customerName);
+                urlBuilder.addQueryParameter("amount", amountTextField.getText());
+                String finalUrl = urlBuilder.build().toString();
+
+                Request request = new Request.Builder().url(finalUrl).post(RequestBody.create("".getBytes())).build();
+                Call call = Configurations.HTTP_CLIENT.newCall(request);
+                Callback withdrawCallBack = new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Platform.runLater(() -> {
+                            parentController.createExceptionDialog(e);
+                        });
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        if (response.code() != 200) {
+                            String responseBody = response.body().string();
+                            response.close();
+                            Platform.runLater(() ->
+                                    parentController.createExceptionDialog(new Exception(Integer.toString(response.code())
+                                            + "\n" + responseBody)));
+                        }
+
+                        else{
+                            Platform.runLater(() -> {
+                                response.close();
+                                amountTextField.clear();
+                                accountTransactionsController.updateAccountMovements();
+                                amountTextField.clear();
+                            });
+                        }
+                    }
+                };
+                call.enqueue(withdrawCallBack);
             }
         }
 
         catch (Exception ex){
             parentController.createExceptionDialog(ex);
         }
-
-        //make the actual withdraw
     }
 
     @FXML
