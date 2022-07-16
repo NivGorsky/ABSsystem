@@ -2,8 +2,10 @@ package customerScene.payment;
 
 import DTO.LoanDTO;
 import DTO.NotificationsDTO;
+import DTO.UIPaymentDTO;
 import Engine.MainSystem;
 import customerScene.CustomerSceneController;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -14,8 +16,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import loansTable.LoansTableComponentController;
+import main.Configurations;
 import mutualInterfaces.ParentController;
+import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.util.*;
 
 public class PaymentController implements ParentController {
@@ -59,54 +65,83 @@ public class PaymentController implements ParentController {
         selectedLoanFromLoansTable = null;
     }
 
+    private void postPayment(UIPaymentDTO uiPaymentDTO){
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/payment").newBuilder();
+        String finalUrl = urlBuilder.build().toString();
+        String uiPaymentDtoAsJson = Configurations.GSON.toJson(uiPaymentDTO);
+        Request request = new Request.Builder()
+                .url(finalUrl)
+                .post(RequestBody.create(uiPaymentDtoAsJson.getBytes()))
+                .build();
+
+        Call call = Configurations.HTTP_CLIENT.newCall(request);
+        Callback payDebtCallBack = new Callback() {
+
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                parentController.createExceptionDialog(e);
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String responseBodyAsJson =  Configurations.GSON.fromJson(response.body().string(), String.class);
+                int responseCode = response.code();
+                boolean isResponseSuccessful = response.isSuccessful();
+                response.close();
+
+                if (!isResponseSuccessful) {
+                    Platform.runLater(() ->
+                            parentController.createExceptionDialog(new Exception(Integer.toString(response.code())
+                                    + "\n" + responseBodyAsJson)));
+                }
+            }
+        };
+
+        call.enqueue(payDebtCallBack);
+    }
+
     @FXML
     void payDebtButtonClicked(ActionEvent event){
-        double amount = Double.parseDouble(payDebtTextField.getText());
+        UIPaymentDTO uiPaymentDTO = new UIPaymentDTO();
+        uiPaymentDTO.loanDTO = selectedLoanFromLoansTable;
+        uiPaymentDTO.amount = Double.parseDouble(payDebtTextField.getText());
+        uiPaymentDTO.yaz = parentController.getCurrentYazProperty().getValue();
+        uiPaymentDTO.operation = "payDebt";
 
-        try{
-            parentController.getModel().payDebt(amount, selectedLoanFromLoansTable, parentController.getModel().getCurrYaz());
-        }
-
-        catch (Exception e){
-            parentController.createExceptionDialog(e);
-        }
+        postPayment(uiPaymentDTO);
     }
 
     @FXML
     void closeLoanButtonClicked(ActionEvent event) {
-        double loanAmountToPay = selectedLoanFromLoansTable.getDebt();
-        String customerName = this.customerNameProperty.getValue();
-        try {
-            if(parentController.getModel().getCustomerDTO(customerName).getBalance() >= loanAmountToPay){
-                parentController.getModel().closeLoan(selectedLoanFromLoansTable, parentController.getModel().getCurrYaz());
-            }
-            else{
-                throw new Exception("Insufficient funds to pay the loan");
-            }
-        }
-        catch (Exception ex) {
-           parentController.createExceptionDialog(ex);
-        }
+        UIPaymentDTO uiPaymentDTO = new UIPaymentDTO();
+        uiPaymentDTO.loanDTO = selectedLoanFromLoansTable;
+        uiPaymentDTO.amount =  selectedLoanFromLoansTable.getDebt();
+        uiPaymentDTO.yaz = parentController.getCurrentYazProperty().getValue();
+        uiPaymentDTO.customerName = this.customerNameProperty.getValue();
+        uiPaymentDTO.operation = "closeLoan";
+
+        postPayment(uiPaymentDTO);
     }
 
     @FXML
     void payToAllLendersButtonClicked(ActionEvent event) {
-        try {
-            parentController.getModel().payToAllLendersForCurrentYaz(selectedLoanFromLoansTable,parentController.getModel().getCurrYaz());
-        }
-        catch (Exception ex) {
-            parentController.createExceptionDialog(ex);
-        }
+        UIPaymentDTO uiPaymentDTO = new UIPaymentDTO();
+        uiPaymentDTO.loanDTO = selectedLoanFromLoansTable;
+        uiPaymentDTO.yaz = parentController.getCurrentYazProperty().getValue();
+        uiPaymentDTO.operation = "payToAllLenders";
+
+        postPayment(uiPaymentDTO);
     }
 
     @FXML
     void payToLenderButtonClicked(ActionEvent event) {
-        try {
-            parentController.getModel().payToLender(lendersTableView.getSelectionModel().getSelectedItem(), selectedLoanFromLoansTable , parentController.getModel().getCurrYaz());
-        }
-        catch (Exception ex) {
-            parentController.createExceptionDialog(ex);
-        }
+        UIPaymentDTO uiPaymentDTO = new UIPaymentDTO();
+        uiPaymentDTO.loanDTO = selectedLoanFromLoansTable;
+        uiPaymentDTO.yaz = parentController.getCurrentYazProperty().getValue();
+        uiPaymentDTO.lenderDetailsDTO = lendersTableView.getSelectionModel().getSelectedItem();
+        uiPaymentDTO.operation = "closeLoan";
+
+        postPayment(uiPaymentDTO);
     }
 
     @Override

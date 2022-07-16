@@ -7,10 +7,7 @@ import customerScene.payment.PaymentController;
 import customerScene.scramble.ScrambleController;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -120,6 +117,7 @@ public class CustomerSceneController implements ParentController {
     public StringProperty getCustomerNameProperty(){
         return customerNameProperty;
     }
+    public IntegerProperty getCurrentYazProperty(){return currentYAZ;}
 
     public void setParentController(ParentController parentController){
         this.parentController = parentController;
@@ -255,7 +253,6 @@ public class CustomerSceneController implements ParentController {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/currentYaz").newBuilder();
         urlBuilder.addQueryParameter("move-direction", "=");
         String finalUrl = urlBuilder.build().toString();
-
         Request request = new Request.Builder().url(finalUrl).build();
 
         Call call = Configurations.HTTP_CLIENT.newCall(request);
@@ -267,25 +264,26 @@ public class CustomerSceneController implements ParentController {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (response.code() != 200) {
-                    String responseBody = response.body().string();
+                String responseBody = response.body().string();
+                int responseCode = response.code();
+                response.close();
+
+                if (responseCode != 200) {
                     Platform.runLater(() ->
                             parentController.createExceptionDialog(new Exception(responseBody)));
                 }
-                else {
+
+                else{
                     Platform.runLater(() -> {
                         try {
-                            currentYAZ.set(Integer.parseInt(response.body().string()));
-                            response.close();
+                            currentYAZ.set(Integer.parseInt(responseBody));
                         }
-                        catch (IOException e) {
+                        catch (Exception e) {
                             parentController.createExceptionDialog(e);
                         }
 
                     });
                 }
-
-
             }
         };
 
