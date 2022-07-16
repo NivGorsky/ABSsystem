@@ -81,16 +81,7 @@ public class ScrambleController implements UIController {
 
     @FXML
     void findLoansButtonClicked(ActionEvent event) {
-
-        if (isAmountForScrambleValid()) {
-            placeToLoans();
-
-        }
-
-        else {
-            parentController.createExceptionDialog(new Exception("Insufficient funds for this scramble request"));
-        }
-
+        placeToLoans();
         clearTextFields();
     }
 
@@ -122,13 +113,6 @@ public class ScrambleController implements UIController {
         bindFieldsToTheirValidity();
         bindIsScrambleFormValidPropertyToAllFieldsProperties();
         bindScrambleButtonToIsFormValid();
-    }
-
-    private boolean isAmountForScrambleValid(){
-        double amountEnteredToTextField = Double.parseDouble(amountTextField.getText());
-        String customerName = ((CustomerSceneController)parentController).getCustomerNameProperty().getValue();
-
-        return parentController.getModel().getCustomerDTO(customerName).getBalance() >= amountEnteredToTextField;
     }
 
     private void placeToLoans(){

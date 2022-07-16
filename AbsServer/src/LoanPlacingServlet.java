@@ -42,31 +42,12 @@ public class LoanPlacingServlet extends HttpServlet
     }
 
     protected void handleRequest(LoanPlacingDTO loanPlacingDTO, MainSystem engine) throws Exception{
-        engine.assignLoansToLender(loanPlacingDTO);
-    }
-
-    protected void handlePayToLender(UIPaymentDTO uiPaymentDTO, MainSystem engine) throws Exception {
-        engine.payToLender(uiPaymentDTO.lenderDetailsDTO, uiPaymentDTO.loanDTO, uiPaymentDTO.yaz);
-    }
-
-    protected void handlePayToAllLenders(UIPaymentDTO uiPaymentDTO, MainSystem engine) throws Exception{
-        engine.payToAllLendersForCurrentYaz(uiPaymentDTO.loanDTO, uiPaymentDTO.yaz);
-    }
-
-    protected void handleCloseLoan(UIPaymentDTO uiPaymentDTO, MainSystem engine) throws Exception{
-        double loanAmountToPay = uiPaymentDTO.amount;
-        String customerName = uiPaymentDTO.customerName;
-
-        if(engine.getCustomerDTO(customerName).getBalance() >= loanAmountToPay){
-            engine.closeLoan(uiPaymentDTO.loanDTO, uiPaymentDTO.yaz);
+        if(engine.getCustomerDTO(loanPlacingDTO.getCustomerName()).getBalance() >= loanPlacingDTO.getAmountToInvest()){
+            engine.assignLoansToLender(loanPlacingDTO);
         }
 
         else{
-            throw new Exception("Insufficient funds for closing the load");
+            throw new Exception("Insufficient funds");
         }
-    }
-
-    protected void handlePayDebt(UIPaymentDTO uiPaymentDTO, MainSystem engine) throws Exception{
-        engine.payDebt(uiPaymentDTO.amount,uiPaymentDTO.loanDTO, uiPaymentDTO.yaz);
     }
 }
