@@ -15,11 +15,12 @@ public class CurrentYazServlet extends HttpServlet {
 
         response.setContentType("application/json");
         String moveDirection = request.getParameter("move-direction");
-        MainSystem AbsSystem = ServletUtils.getAbsSystem(getServletContext());
+        MainSystem engine = ServletUtils.getAbsSystem(getServletContext());
 
         switch (moveDirection) {
             case "+": {
                 //increase yaz
+                engine.moveTimeLine();
                 ServletUtils.setAdminVersion(ServletUtils.getAdminVersion() + 1);
                 ServletUtils.setCustomerVersion(ServletUtils.getCustomerVersion() + 1);
                 break;
@@ -35,7 +36,7 @@ public class CurrentYazServlet extends HttpServlet {
             }
         }
 
-        response.getWriter().print(AbsSystem.getCurrYaz());
+        response.getWriter().print(engine.getCurrYaz());
         response.getWriter().close();
     }
 }
