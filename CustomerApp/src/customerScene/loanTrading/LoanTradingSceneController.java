@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -170,21 +171,22 @@ public class LoanTradingSceneController {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (response.code() != 200) {
-                    String responseBody = Configurations.GSON.fromJson(response.body().string(), String.class);
+                int responseCode = response.code();
+                String body = response.body().string();
+                response.close();
+                if (responseCode != 200) {
+                    String responseBody = Configurations.GSON.fromJson(body, String.class);
                     Platform.runLater(() ->
-                            parentController.createExceptionDialog(new Exception(Integer.toString(response.code())
+                            parentController.createExceptionDialog(new Exception(Integer.toString(responseCode)
                                     + "\n" + responseBody)));
                 }
 
                 else {
                     Platform.runLater(() -> {
-                        Type typeOfHashMap = new TypeToken<Map<String, LoanDTO>>() {}.getType();
-                        seller2LoansForSale = Configurations.GSON.fromJson(response.body().toString(), typeOfHashMap);
+                        Type typeOfMap = new TypeToken<Map<String, LoanDTO>>() {}.getType();
+                        seller2LoansForSale = Configurations.GSON.fromJson(body, typeOfMap);
                     });
                 }
-
-                response.close();
             }
         };
 
@@ -192,12 +194,17 @@ public class LoanTradingSceneController {
     }
 
     public void loadLoansToTables() {
-        //TODO!!!!
+        myLoansToSaleTableController.loadSpecificCustomerLoansAsLender(parentController.getLoggedInUser());
+        if(seller2LoansForSale != null) {
+            ArrayList<LoanDTO> loansForSale = new ArrayList<>(seller2LoansForSale.values());
+            loansForSaleTableController.putLoansInTable(loansForSale);
+        }
     }
 
     public void onShow() {
-        //getLoansForSaleMap and save it
+        requestSellersAndLoansForSale();
         loadLoansToTables();
     }
+
 
 }

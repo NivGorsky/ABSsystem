@@ -30,15 +30,13 @@ public class CustomerBaseController implements ParentController, BaseController 
     private MainSystem model;
     private Stage primaryStage;
     private BooleanProperty isLoggedIn;
-    private String customerLoggedInName; //TODO:IS THIS CORRECT??
-
 
     @FXML public void initialize()
     {
         loadCustomerScene();
         if(loginSceneController != null && customerSceneController != null)
         {
-            loginSceneController.setParentController(this);
+            customerSceneController.setParentController(this);
             loginSceneController.setParentController(this);
             loginSceneController.setLoginType(LoginController.LoginType.CUSTOMER);
         }
@@ -149,7 +147,7 @@ public class CustomerBaseController implements ParentController, BaseController 
 
     @Override
     public String getLoggedInUser() {
-        return customerLoggedInName;
+        return customerSceneController.getLoggedInUser();
     }
 
 

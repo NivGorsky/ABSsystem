@@ -402,6 +402,11 @@ public class ABSsystem implements MainSystem, SystemService {
     }
 
     @Override
+    public void adminLoggedOut() {
+        isAdminLoggedIn = false;
+    }
+    
+    @Override
     public void addAdmin(String name) {
        admins.add(name);
     }
@@ -624,8 +629,7 @@ public class ABSsystem implements MainSystem, SystemService {
     public void createNewLoan(LoanDTO newLoan) {
         Loan loan = new Loan(newLoan.getLoanName(), newLoan.getCustomerName(), newLoan.getInitialAmount(),
                 newLoan.getMaxYazToPay(), newLoan.getYazPerPayment(), newLoan.getInterestPerPayment(), newLoan.getCategory(), getCurrYaz());
-        status2loan.put(Loan.LoanStatus.NEW, loan);
-        //TODO: loanId2loan.put()??
+        loans.add(loan);
 
         name2customer.get(newLoan.getCustomerName()).addLoanAsLender(loan);
     }
@@ -634,7 +638,7 @@ public class ABSsystem implements MainSystem, SystemService {
     public void sellLoan(LoanForSaleDTO loanForSaleDto) throws Exception {
 
         Loan loanForSale = null;
-        for(Loan loan : status2loan.values()) {
+        for(Loan loan : loans) {
             if(loan.getLoanName() == loanForSale.getLoanName()) {
                 loanForSale = loan;
                 break;

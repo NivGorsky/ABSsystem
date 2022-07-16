@@ -8,6 +8,7 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
@@ -48,8 +49,7 @@ public class AdminSceneController implements ParentController {
 
     private Timer timer;
     private final int REFRESH_RATE = 2;
-    private String adminName;
-
+    private SimpleStringProperty adminName = new SimpleStringProperty();
     private SimpleIntegerProperty currentYAZ = new SimpleIntegerProperty(1);
     private ParentController parentController;
 
@@ -59,7 +59,6 @@ public class AdminSceneController implements ParentController {
     {
         displayModeCB.setItems(displayModeOptions);
         currentYazLabel.textProperty().bind(Bindings.concat("Current YAZ: ", currentYAZ));
-        heyAdminLabel.textProperty().bind(Bindings.concat("Hey " + adminName + "!"));
         displayModeCB.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             parentController.switchStyleSheet(displayModeCB.getSelectionModel().getSelectedItem());
         });
@@ -74,11 +73,16 @@ public class AdminSceneController implements ParentController {
     }
 
     public void setAdminName(String adminName) {
-        this.adminName = adminName;
+        this.adminName.set(adminName);
     }
 
     public String getAdminName() {
-        return adminName;
+        return adminName.get();
+    }
+
+    public void setAdmin(String name) {
+        adminName.set(name);
+        heyAdminLabel.setText("Hey " + name + "!");
     }
 
     public void setIncreaseYAZButtonDisable(SimpleBooleanProperty isFileSelected)
@@ -174,7 +178,7 @@ public class AdminSceneController implements ParentController {
 
     @Override
     public String getLoggedInUser() {
-        return adminName;
+        return adminName.get();
     }
 
     public void onShow(){

@@ -12,7 +12,7 @@ public class ServletUtils {
     private static final Object mainSystemLock = new Object();
     private static final Object customerVersionLock = new Object();
     private static final Object adminVersionLock = new Object();
-    public final static Gson GSON = new Gson();
+    public final static Gson GSON = new GsonBuilder().registerTypeAdapter(LoanDTO.class, new LoanDtoDeserializer()).create();
     public static int customerVersion = 1;
     public static int adminVersion = 1;
 

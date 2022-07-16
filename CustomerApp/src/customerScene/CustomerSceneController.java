@@ -16,12 +16,10 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import main.Configurations;
-import mutualInterfaces.BaseController;
 import mutualInterfaces.ParentController;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.image.BandCombineOp;
 import java.io.File;
 import java.io.IOException;
 import java.util.Timer;
@@ -63,15 +61,15 @@ public class CustomerSceneController implements ParentController {
     //.............................................................................................//
 
     //create new loan tab
-    @FXML private  ScrollPane createLoanScene;
-    @FXML private CreateLoanSceneController createLoanSceneController;
+    @FXML private  ScrollPane createNewLoan;
+    @FXML private CreateLoanSceneController createNewLoanController;
     @FXML private Tab createNewLoanTab;
 
     //.............................................................................................//
 
     //loans trading tab
-    @FXML private  ScrollPane loanTradingScene;
-    @FXML private LoanTradingSceneController loanTradingSceneController;
+    @FXML private  ScrollPane loansTrading;
+    @FXML private LoanTradingSceneController loansTradingController;
     @FXML private Tab loanTradingTab;
 
     //.............................................................................................//
@@ -107,6 +105,12 @@ public class CustomerSceneController implements ParentController {
         displayModeCB.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             parentController.switchStyleSheet(displayModeCB.getSelectionModel().getSelectedItem());
         });
+
+        informationController.setParentController(this);
+        scrambleController.setParentController(this);
+        paymentController.setParentController(this);
+        loansTradingController.setParentController(this);
+        createNewLoanController.setParentController(this);
     }
 
     private boolean areControllersInitialized(InformationController customerController, ScrambleController scrambleController, PaymentController paymentController){
@@ -151,10 +155,10 @@ public class CustomerSceneController implements ParentController {
                         paymentController.onShow();
 
                     case "Create new loan":
-                        createLoanSceneController.onShow();
+                        createNewLoanController.onShow();
 
                     case "Loans trading":
-                        loanTradingSceneController.onShow();
+                        loansTradingController.onShow();
 
                 }
             }));
@@ -292,8 +296,13 @@ public class CustomerSceneController implements ParentController {
 
     public void onShow() {
         updateCurrentYaz();
-        informationController.onShow();
-        paymentController.onShow();
+        if(isFileSelected.get())
+        {
+            informationController.onShow();
+            paymentController.onShow();
+            loansTradingController.onShow();
+            createNewLoanController.onShow();
+        }
     }
 
     public void startRefresher() {

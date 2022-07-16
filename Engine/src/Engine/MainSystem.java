@@ -44,6 +44,9 @@ public interface MainSystem {
     void addCustomer(String name);
     boolean isAdminExists(String name);
     boolean isAdminLoggedIn(String name);
+
+    void adminLoggedOut();
+
     void addAdmin(String name);
 
     void createNewLoan(LoanDTO newLoan);

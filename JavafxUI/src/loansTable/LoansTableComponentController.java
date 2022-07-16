@@ -287,7 +287,7 @@ public class LoansTableComponentController implements ParentController {
         call.enqueue(showLoansInfoCallBack);
     }
 
-    private void putLoansInTable( ArrayList<LoanDTO> loans){
+    public void putLoansInTable(ArrayList<LoanDTO> loans){
         ObservableList<LoanDTO> loansForTable = FXCollections.observableArrayList();
         loansForTable.addAll(loans);
         loansTable.setItems(loansForTable);

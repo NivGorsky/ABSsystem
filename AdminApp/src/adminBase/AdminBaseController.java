@@ -4,17 +4,24 @@ import Engine.ABSsystem;
 import Engine.MainSystem;
 import adminScene.AdminSceneController;
 import exceptionDialog.ExceptionDialogCreator;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import loginScene.LoginController;
+import main.Configurations;
 import mutualInterfaces.BaseController;
 import mutualInterfaces.ParentController;
+import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.net.URL;
 
 public class AdminBaseController implements ParentController, BaseController {
@@ -24,16 +31,6 @@ public class AdminBaseController implements ParentController, BaseController {
     @FXML private AdminSceneController adminSceneController;
     @FXML private ScrollPane loginScene;
     @FXML private LoginController loginSceneController;
-
-    @FXML public void initialize() {
-        loadAdminScene();
-        adminSceneController.setParentController(this);
-        if(adminSceneController != null && loginSceneController != null) {
-            adminSceneController.setParentController(this);
-            loginSceneController.setParentController(this);
-            loginSceneController.setLoginType(LoginController.LoginType.ADMIN);
-        }
-    }
 
     private BooleanProperty isLoggedIn;
     private MainSystem model;
@@ -52,6 +49,37 @@ public class AdminBaseController implements ParentController, BaseController {
                 root.setContent(loginScene);
             }
         }));
+    }
+
+    @FXML public void initialize() {
+        loadAdminScene();
+        if(loginSceneController != null && adminSceneController != null)
+        {
+            adminSceneController.setParentController(this);
+            loginSceneController.setParentController(this);
+            loginSceneController.setLoginType(LoginController.LoginType.ADMIN);
+        }
+    }
+
+    public void adminLoggedOut() {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/logout").newBuilder();
+        String finalUrl = urlBuilder.build().toString();
+
+        Request request = new Request.Builder().url(finalUrl).build();
+
+        Call call = Configurations.HTTP_CLIENT.newCall(request);
+        Callback logoutCallBack = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                ExceptionDialogCreator.createExceptionDialog(e);                    }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                response.close();
+            }
+        };
+
+        call.enqueue(logoutCallBack);
     }
 
     @Override
@@ -114,20 +142,21 @@ public class AdminBaseController implements ParentController, BaseController {
         return adminSceneController.getAdminName();
     }
 
-    public void setPrimaryStage(Stage primaryStage)
-    {
+    public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
     }
+
     public void setModel(MainSystem model) {
         this.model = model;
     }
+
     public void setRoot(ScrollPane root){
         this.root = root;
     }
 
     @Override
     public void setLoggedInDetails(String name){
-        adminSceneController.setAdminName(name);
+       adminSceneController.setAdmin(name);
         isLoggedIn.set(true);
     }
 

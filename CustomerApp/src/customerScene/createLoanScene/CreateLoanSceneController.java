@@ -1,5 +1,6 @@
 package customerScene.createLoanScene;
 
+import DTO.LoanCategoriesDTO;
 import DTO.LoanDTO;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -117,12 +118,10 @@ public class CreateLoanSceneController {
                                     + "\n" + responseBody)));
                 }
                 else {
-                    Type arrayListStringType = new TypeToken<ArrayList<String>>(){}.getType();
-
                     Platform.runLater(() -> {
                         try {
-                           ArrayList<String> categories = Configurations.GSON.fromJson(response.body().string(), arrayListStringType);
-                           categoriesCB.setItems(FXCollections.observableArrayList(categories));
+                          LoanCategoriesDTO categories = Configurations.GSON.fromJson(response.body().string(), LoanCategoriesDTO.class);
+                           categoriesCB.setItems(FXCollections.observableArrayList(categories.loanCategories));
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

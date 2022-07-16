@@ -18,12 +18,12 @@ public class LoanCategoriesDeserializer implements JsonDeserializer<LoanCategori
     public LoanCategoriesDTO deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         JsonObject jsonObject = jsonElement.getAsJsonObject();
 
-
-        Type loanDtoType = new TypeToken<ArrayList<String>>(){}.getType();
+        Type categoriesDtoType = new TypeToken<List<String>>(){}.getType();
         JsonArray categoriesAsJsonObject =  jsonObject.getAsJsonArray("loanCategories");
-        ArrayList<String> loanCategories = gson.fromJson(categoriesAsJsonObject, loanDtoType);
+        List<String> loanCategories = gson.fromJson(categoriesAsJsonObject, categoriesDtoType);
 
-        LoanCategoriesDTO loanCategoriesDTO = new LoanCategoriesDTO(loanCategories);
+        ArrayList<String> categories = new ArrayList<>(loanCategories);
+        LoanCategoriesDTO loanCategoriesDTO = new LoanCategoriesDTO(categories);
 
         return loanCategoriesDTO;
     }
