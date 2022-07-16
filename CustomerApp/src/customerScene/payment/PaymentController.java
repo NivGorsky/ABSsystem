@@ -167,11 +167,6 @@ public class PaymentController implements ParentController {
         return parentController.getLoggedInUser();
     }
 
-    @Override
-    public MainSystem getModel(){
-        return parentController.getModel();
-    }
-
     public void setSelectedLoanFromLoansTable(LoanDTO selectedLoan){
         this.selectedLoanFromLoansTable = selectedLoan;
     }

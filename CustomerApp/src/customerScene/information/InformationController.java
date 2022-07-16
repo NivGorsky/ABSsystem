@@ -53,9 +53,6 @@ public class InformationController implements ParentController
     public StringProperty getCustomerNameProperty(){return customerNameProperty;}
 
     @Override
-    public MainSystem getModel(){return parentController.getModel();}
-
-    @Override
     public void createExceptionDialog(Exception ex) {
         parentController.createExceptionDialog(ex);
     }

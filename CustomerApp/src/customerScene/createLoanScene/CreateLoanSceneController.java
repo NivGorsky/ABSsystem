@@ -111,20 +111,19 @@ public class CreateLoanSceneController {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (response.code() != 200) {
-                    String responseBody = Configurations.GSON.fromJson(response.body().string(), String.class);
+                String body = response.body().string();
+                int responseCode = response.code();
+                response.close();
+                if (responseCode != 200) {
+                    String responseBody = Configurations.GSON.fromJson(body, String.class);
                     Platform.runLater(() ->
-                            parentController.createExceptionDialog(new Exception(Integer.toString(response.code())
+                            parentController.createExceptionDialog(new Exception(Integer.toString(responseCode)
                                     + "\n" + responseBody)));
                 }
                 else {
                     Platform.runLater(() -> {
-                        try {
-                          LoanCategoriesDTO categories = Configurations.GSON.fromJson(response.body().string(), LoanCategoriesDTO.class);
-                           categoriesCB.setItems(FXCollections.observableArrayList(categories.loanCategories));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        LoanCategoriesDTO categories = Configurations.GSON.fromJson(body, LoanCategoriesDTO.class);
+                        categoriesCB.setItems(FXCollections.observableArrayList(categories.loanCategories));
                     });
                 }
             }

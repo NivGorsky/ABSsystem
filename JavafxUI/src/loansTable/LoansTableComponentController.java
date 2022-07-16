@@ -88,10 +88,6 @@ public class LoansTableComponentController implements ParentController {
 
     public LoanDTO getSelectedLoanFromTable() { return selectedLoanFromTable; }
 
-    @Override
-    public MainSystem getModel() {
-        return parentController.getModel();
-    }
 
     @Override
     public void createExceptionDialog(Exception ex) {

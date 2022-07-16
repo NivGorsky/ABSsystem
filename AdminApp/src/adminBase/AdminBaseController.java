@@ -83,11 +83,6 @@ public class AdminBaseController implements ParentController, BaseController {
     }
 
     @Override
-    public MainSystem getModel() {
-        return model;
-    }
-
-    @Override
     public void createExceptionDialog(Exception ex) {
         ExceptionDialogCreator.createExceptionDialog(ex);
     }

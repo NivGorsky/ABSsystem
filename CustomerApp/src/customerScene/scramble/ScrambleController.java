@@ -402,19 +402,53 @@ public class ScrambleController implements UIController {
 
     public void onShow(){
         getLoanCategoriesToTable();
-        parentController.getModel().setScrambleController(this);
     }
 
     private void getLoanCategoriesToTable(){
-        LoanCategoriesDTO loanCategoriesDTO = parentController.getModel().getSystemLoanCategories();
-        ObservableList<LoanCategoryForTable> observableCategories = FXCollections.observableArrayList();
+       getCategories();
+    }
 
-        for (String loanCategory: loanCategoriesDTO.loanCategories){
-            LoanCategoryForTable newLoanCategory = new LoanCategoryForTable(loanCategory);
-            observableCategories.add(newLoanCategory);
-        }
+    private void getCategories() {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/categories").newBuilder();
+        String finalUrl = urlBuilder.build().toString();
 
-        loanCategoriesViewTable.setItems(observableCategories);
+        Request request = new Request.Builder().url(finalUrl).build();
+
+        Call call = Configurations.HTTP_CLIENT.newCall(request);
+        Callback categoriesCallBack = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                parentController.createExceptionDialog(e);
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String body = response.body().string();
+                int responseCode = response.code();
+                response.close();
+                if (responseCode != 200) {
+                    String responseBody = Configurations.GSON.fromJson(body, String.class);
+                    Platform.runLater(() ->
+                            parentController.createExceptionDialog(new Exception(Integer.toString(responseCode)
+                                    + "\n" + responseBody)));
+                }
+                else {
+                    Platform.runLater(() -> {
+                        LoanCategoriesDTO categories = Configurations.GSON.fromJson(body, LoanCategoriesDTO.class);
+                        ObservableList<LoanCategoryForTable> observableCategories = FXCollections.observableArrayList();
+
+                        for (String loanCategory: categories.loanCategories){
+                            LoanCategoryForTable newLoanCategory = new LoanCategoryForTable(loanCategory);
+                            observableCategories.add(newLoanCategory);
+                        }
+
+                        loanCategoriesViewTable.setItems(observableCategories);
+                    });
+                }
+            }
+        };
+
+        call.enqueue(categoriesCallBack);
     }
 
     public void bindTaskToUIComponents(Task<Boolean> task){

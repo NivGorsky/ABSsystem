@@ -94,9 +94,6 @@ public class CustomerBaseController implements ParentController, BaseController 
     }
 
     @Override
-    public MainSystem getModel() { return model; }
-
-    @Override
     public Stage getPrimaryStage() { return primaryStage; }
 
     @Override
