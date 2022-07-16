@@ -43,22 +43,30 @@ public class PaymentServlet extends HttpServlet
     protected void handleRequest(UIPaymentDTO uiPaymentDTO, MainSystem engine) throws Exception{
         switch (uiPaymentDTO.operation){
             case "payDebt":
-                handlePayDebt(uiPaymentDTO, engine);
+                synchronized (this){
+                    handlePayDebt(uiPaymentDTO, engine);
+                }
 
                 break;
 
             case "closeLoan":
-                handleCloseLoan(uiPaymentDTO, engine);
+                synchronized (this){
+                    handleCloseLoan(uiPaymentDTO, engine);
+                }
 
                 break;
 
             case "payToAllLenders":
-                handlePayToAllLenders(uiPaymentDTO, engine);
+                synchronized (this){
+                    handlePayToAllLenders(uiPaymentDTO, engine);
+                }
 
                 break;
 
             case "payToLender":
-                handlePayToLender(uiPaymentDTO, engine);
+                synchronized (this){
+                    handlePayToLender(uiPaymentDTO, engine);
+                }
 
                 break;
         }

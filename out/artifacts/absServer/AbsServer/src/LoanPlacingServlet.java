@@ -1,4 +1,5 @@
 import DTO.LoanDTO;
+import DTO.LoanPlacingDTO;
 import DTO.UIPaymentDTO;
 import Engine.MainSystem;
 import com.google.gson.Gson;
@@ -12,8 +13,8 @@ import javax.security.auth.login.Configuration;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-@WebServlet("/payment")
-public class PaymentServlet extends HttpServlet
+@WebServlet("/loan-placing")
+public class LoanPlacingServlet extends HttpServlet
 {
 
     @Override
@@ -23,10 +24,10 @@ public class PaymentServlet extends HttpServlet
 
         BufferedReader reader = request.getReader();
         Gson gson = new Gson();
-        UIPaymentDTO uiPaymentDTO = gson.fromJson(reader, UIPaymentDTO.class);
+        LoanPlacingDTO loanPlacingDTO = gson.fromJson(reader, LoanPlacingDTO.class);
 
         try{
-            handleRequest(uiPaymentDTO, engine);
+            handleRequest(loanPlacingDTO, engine);
         }
 
         catch (Exception e){
@@ -40,36 +41,8 @@ public class PaymentServlet extends HttpServlet
         }
     }
 
-    protected void handleRequest(UIPaymentDTO uiPaymentDTO, MainSystem engine) throws Exception{
-        switch (uiPaymentDTO.operation){
-            case "payDebt":
-                synchronized (this){
-                    handlePayDebt(uiPaymentDTO, engine);
-                }
-
-                break;
-
-            case "closeLoan":
-                synchronized (this){
-                    handleCloseLoan(uiPaymentDTO, engine);
-                }
-
-                break;
-
-            case "payToAllLenders":
-                synchronized (this){
-                    handlePayToAllLenders(uiPaymentDTO, engine);
-                }
-
-                break;
-
-            case "payToLender":
-                synchronized (this){
-                    handlePayToLender(uiPaymentDTO, engine);
-                }
-
-                break;
-        }
+    protected void handleRequest(LoanPlacingDTO loanPlacingDTO, MainSystem engine) throws Exception{
+        engine.assignLoansToLender(loanPlacingDTO);
     }
 
     protected void handlePayToLender(UIPaymentDTO uiPaymentDTO, MainSystem engine) throws Exception {

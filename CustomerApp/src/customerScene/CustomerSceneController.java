@@ -16,12 +16,10 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import main.Configurations;
-import mutualInterfaces.BaseController;
 import mutualInterfaces.ParentController;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.image.BandCombineOp;
 import java.io.File;
 import java.io.IOException;
 import java.util.Timer;
@@ -63,8 +61,8 @@ public class CustomerSceneController implements ParentController {
     //.............................................................................................//
 
     //create new loan tab
-    @FXML private  ScrollPane createLoanScene;
-    @FXML private CreateLoanSceneController createLoanSceneController;
+    @FXML private  ScrollPane createNewLoan;
+    @FXML private CreateLoanSceneController createNewLoanController;
     @FXML private Tab createNewLoanTab;
 
     //.............................................................................................//
@@ -150,12 +148,17 @@ public class CustomerSceneController implements ParentController {
                     case "Payment":
                         paymentController.onShow();
 
+                        break;
+
                     case "Create new loan":
-                        createLoanSceneController.onShow();
+                        createNewLoanController.onShow();
+
+                        break;
 
                     case "Loans trading":
                         loanTradingSceneController.onShow();
 
+                        break;
                 }
             }));
         }

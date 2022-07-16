@@ -22,7 +22,7 @@ public class NotificationsDTODeserializer implements JsonDeserializer<Notificati
 
         //build the actual object
         Type notificationsDTOType = new TypeToken<List<NotificationsDTO.NotificationDTO>>(){}.getType();
-        JsonObject notificationsAsJsonObject = jsonObject.getAsJsonObject("notifications");
+        JsonArray notificationsAsJsonObject = jsonObject.getAsJsonArray("notifications");
         List<NotificationsDTO.NotificationDTO> notificationDTOSFromJson = gson.fromJson(notificationsAsJsonObject, notificationsDTOType);
         NotificationsDTO newNotificationsDTO = new NotificationsDTO();
         newNotificationsDTO.notifications = notificationDTOSFromJson;
