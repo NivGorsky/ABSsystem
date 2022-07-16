@@ -102,16 +102,17 @@ public class AdminSceneController implements ParentController {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (response.code() != 200) {
-                    String responseBody = response.body().string();
+                boolean isResponseSuccessful = response.isSuccessful();
+                String responseBody = response.body().string();
+                response.close();
+
+                if (!isResponseSuccessful) {
                     Platform.runLater(() ->
                             parentController.createExceptionDialog(new Exception(responseBody)));
                 }
                 else {
                     Platform.runLater(() -> {
-                        String body = response.body().toString();
-                        currentYAZ.set(Integer.parseInt(body));
-                        //payments??
+                        currentYAZ.set(Integer.parseInt(responseBody));
                     });
                 }
 
@@ -159,7 +160,6 @@ public class AdminSceneController implements ParentController {
     {
         this.parentController = parentController;
     }
-    public MainSystem getModel() { return parentController.getModel(); }
 
     @Override
     public void createExceptionDialog(Exception ex) {
