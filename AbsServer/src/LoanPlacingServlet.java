@@ -23,8 +23,7 @@ public class LoanPlacingServlet extends HttpServlet
         MainSystem engine = ServletUtils.getAbsSystem(getServletContext());
 
         BufferedReader reader = request.getReader();
-        Gson gson = new Gson();
-        LoanPlacingDTO loanPlacingDTO = gson.fromJson(reader, LoanPlacingDTO.class);
+        LoanPlacingDTO loanPlacingDTO = ServletUtils.getGson().fromJson(reader, LoanPlacingDTO.class);
 
         try{
             handleRequest(loanPlacingDTO, engine);

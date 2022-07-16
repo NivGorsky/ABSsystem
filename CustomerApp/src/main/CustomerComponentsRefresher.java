@@ -31,6 +31,15 @@ public class CustomerComponentsRefresher extends TimerTask {
                 }
             }
         }
+
+        else{
+            synchronized (lock) {
+                shouldUpdate();
+                if(update) {
+                    customerSceneToUpdate.updateCurrentYaz();
+                }
+            }
+        }
     }
 
     private void shouldUpdate() {

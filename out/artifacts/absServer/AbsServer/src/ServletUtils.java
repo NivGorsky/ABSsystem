@@ -1,11 +1,14 @@
 import DTO.LoanDTO;
 import DTO.LoanPlacingDTO;
+import DTO.UIPaymentDTO;
 import Engine.ABSsystem;
 import Engine.MainSystem;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import jakarta.servlet.ServletContext;
-import jsonDeserializer.LoanDtoDeserializer;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
+import jsonDeserializer.*;
 
 public class ServletUtils {
 
@@ -13,7 +16,11 @@ public class ServletUtils {
     private static final Object mainSystemLock = new Object();
     private static final Object customerVersionLock = new Object();
     private static final Object adminVersionLock = new Object();
-    public final static Gson GSON = new GsonBuilder().registerTypeAdapter(LoanPlacingDTO.class, new LoanDtoDeserializer()).create();
+    public final static Gson GSON = new GsonBuilder()
+            .registerTypeAdapter(LoanPlacingDTO.class, new LoanPlacingDTODeserializer())
+            .registerTypeAdapter(UIPaymentDTO.class, new UIPaymentsDTODeserializer())
+            .registerTypeAdapter(LoanDTO.class, new LoanDtoDeserializer())
+            .create();
 
     public static int customerVersion = 1;
     public static int adminVersion = 1;

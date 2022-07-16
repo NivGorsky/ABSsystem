@@ -24,7 +24,7 @@ public class LoanPlacingDTODeserializer implements JsonDeserializer<LoanPlacingD
         int maximumOpenLoansForBorrower = jsonObject.get("maximumOpenLoansForBorrower").getAsInt();
 
         Type categoriesWillingToInvestInType = new TypeToken<List<String>>(){}.getType();
-        JsonObject categoriesWillingToInvestIn = jsonObject.getAsJsonObject("categoriesWillingToInvestIn");
+        JsonArray categoriesWillingToInvestIn = jsonObject.getAsJsonArray("categoriesWillingToInvestIn");
         List<String> categoriesWillingToInvestInAsList = gson.fromJson(categoriesWillingToInvestIn, categoriesWillingToInvestInType);
         ArrayList<String> categoriesWillingToInvestInAsArray = new ArrayList<>(categoriesWillingToInvestInAsList);
 

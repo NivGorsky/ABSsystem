@@ -87,15 +87,15 @@ public class PaymentController implements ParentController {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                String responseBodyAsJson =  Configurations.GSON.fromJson(response.body().string(), String.class);
+                String responseBody =  response.body().string();
                 int responseCode = response.code();
                 boolean isResponseSuccessful = response.isSuccessful();
                 response.close();
 
                 if (!isResponseSuccessful) {
                     Platform.runLater(() ->
-                            parentController.createExceptionDialog(new Exception(Integer.toString(response.code())
-                                    + "\n" + responseBodyAsJson)));
+                            parentController.createExceptionDialog(new Exception(Integer.toString(responseCode)
+                                    + "\n" + responseBody)));
                 }
             }
         };

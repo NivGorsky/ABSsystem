@@ -22,8 +22,7 @@ public class PaymentServlet extends HttpServlet
         MainSystem engine = ServletUtils.getAbsSystem(getServletContext());
 
         BufferedReader reader = request.getReader();
-        Gson gson = new Gson();
-        UIPaymentDTO uiPaymentDTO = gson.fromJson(reader, UIPaymentDTO.class);
+        UIPaymentDTO uiPaymentDTO = ServletUtils.getGson().fromJson(reader, UIPaymentDTO.class);
 
         try {
             synchronized (this) {
