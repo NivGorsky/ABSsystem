@@ -10,8 +10,8 @@ public class ServletUtils {
     private static final Object customerVersionLock = new Object();
     private static final Object adminVersionLock = new Object();
     public final static Gson GSON = new Gson();
-    public static int customerVersion;
-    public static int adminVersion;
+    public static int customerVersion = 1;
+    public static int adminVersion = 1;
 
     //------------------------------METHODS------------------------------------------//
 

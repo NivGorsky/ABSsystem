@@ -303,6 +303,8 @@ public class CustomerSceneController implements ParentController {
         timer = new Timer();
         timer.schedule(refresher, REFRESH_RATE, REFRESH_RATE);
     }
+
+    public boolean getIsFileSelected() { return isFileSelected.get(); }
 }
 
 

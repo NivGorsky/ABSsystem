@@ -29,6 +29,8 @@ public class FileUploadServlet extends HttpServlet {
                     absSystem.loadXML(part.getContentType(), part.getInputStream(), custName);
                     getServletContext().setAttribute(ServletUtils.MAIN_SYSTEM_ATTRIBUTE_NAME, absSystem);
                     response.setStatus(200);
+                    ServletUtils.setAdminVersion(ServletUtils.getAdminVersion() + 1);
+                    ServletUtils.setCustomerVersion(ServletUtils.getCustomerVersion() + 1);
                 }
             }
         }

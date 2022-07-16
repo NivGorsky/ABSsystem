@@ -24,10 +24,13 @@ public class BuyAndSellLoansServlet extends HttpServlet {
             switch (action) {
                 case "BUY": {
                     AbsSystem.buyLoan(loan);
+                    ServletUtils.setAdminVersion(ServletUtils.getAdminVersion() + 1);
+                    ServletUtils.setCustomerVersion(ServletUtils.getCustomerVersion() + 1);
                     break;
                 }
                 case "SELL": {
                     AbsSystem.sellLoan(loan);
+                    ServletUtils.setCustomerVersion(ServletUtils.getCustomerVersion() + 1);
                     break;
                 }
             }

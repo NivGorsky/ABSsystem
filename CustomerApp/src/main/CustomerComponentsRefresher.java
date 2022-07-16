@@ -1,37 +1,39 @@
 package main;
-import DTO.LoanDTO;
 import customerScene.CustomerSceneController;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleIntegerProperty;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CustomerComponentsRefresher extends TimerTask {
 
     private CustomerSceneController customerSceneToUpdate;
     private int version;
+    private boolean update;
     private final Object lock = new Object();
 
     public CustomerComponentsRefresher(CustomerSceneController customerSceneController) {
         this.customerSceneToUpdate = customerSceneController;
-        this.version = 0;
+        this.version = 1;
     }
 
     @Override
     public void run() {
 
-        synchronized (lock) {
-            if(shouldUpdate(version)) {
-                customerSceneToUpdate.onShow();
+        if(customerSceneToUpdate.getIsFileSelected()) {
+            synchronized (lock) {
+                shouldUpdate();
+                if(update) {
+                    customerSceneToUpdate.onShow();
+                }
             }
         }
-
     }
 
-    private boolean shouldUpdate(int version) {
+    private void shouldUpdate() {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/version").newBuilder();
         urlBuilder.addQueryParameter("consumer", "CUSTOMER");
         String finalUrl = urlBuilder.build().toString();
@@ -47,14 +49,21 @@ public class CustomerComponentsRefresher extends TimerTask {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String responseBody = response.body().string();
                 if (response.code() != 200) {
-                    String responseBody = response.body().string();
                     Platform.runLater(() ->
                             customerSceneToUpdate.createExceptionDialog(new Exception(responseBody)));
                 }
                 else {
                     Platform.runLater(() -> {
-                       
+                       int versionResponse = Configurations.GSON.fromJson(responseBody, int.class);
+                       if(version != versionResponse) {
+                           update = true;
+                           version++;
+                       }
+                       else {
+                           update = false;
+                       }
                     });
                 }
 
