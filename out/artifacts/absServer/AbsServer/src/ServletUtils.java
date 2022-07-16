@@ -30,6 +30,10 @@ public class ServletUtils {
         return (MainSystem) servletContext.getAttribute(MAIN_SYSTEM_ATTRIBUTE_NAME);
     }
 
+//    public static MainSystem getAbsSystemInSpecificYaz(ServletContext servletContext, int YAZ) {
+//
+//    }
+
     public static Gson getGson(){
         return GSON;
     }

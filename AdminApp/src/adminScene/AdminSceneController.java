@@ -36,7 +36,8 @@ public class AdminSceneController implements ParentController {
     @FXML private Label heyAdminLabel;
 
     @FXML private Button increaseYazButton;
-    @FXML private Button decreaseYazButton;
+    @FXML private Button rewindButton;
+    @FXML private ComboBox<Integer> rewindYazChooseCB;
     @FXML private Button loadFileButton;
 
     @FXML private Label loansLabel;
@@ -52,6 +53,7 @@ public class AdminSceneController implements ParentController {
     private SimpleStringProperty adminName = new SimpleStringProperty();
     private SimpleIntegerProperty currentYAZ = new SimpleIntegerProperty(1);
     private ParentController parentController;
+    private SimpleBooleanProperty isRewindMode = new SimpleBooleanProperty(false);
 
     ObservableList<String> displayModeOptions =  FXCollections.observableArrayList("Light Mode", "Dark Mode", "MTA Mode", "Barbi Mode");
 
@@ -69,6 +71,7 @@ public class AdminSceneController implements ParentController {
             customersInfoTableController.setParentController(this);
         }
 
+        rewindYazChooseCB.disableProperty().bind(isRewindMode.not());
         startRefresher();
     }
 
@@ -122,37 +125,48 @@ public class AdminSceneController implements ParentController {
         call.enqueue(currentYazCallBack);
     }
 
-    @FXML public void decreaseYAZButtonClicked() {
+    @FXML public void rewindButtonClicked() {
+        setRewindData();
+//        Request request = createCurrentYazRequest("-");
+//        Call call = Configurations.HTTP_CLIENT.newCall(request);
+//        Callback currentYazCallBack = new Callback() {
+//            @Override
+//            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+//                parentController.createExceptionDialog(e);
+//            }
+//
+//            @Override
+//            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+//                if (response.code() != 200) {
+//                    String responseBody = response.body().string();
+//                    Platform.runLater(() ->
+//                            parentController.createExceptionDialog(new Exception(responseBody)));
+//                }
+//                else {
+//                    Platform.runLater(() -> {
+//                        String body = response.body().toString();
+//                        currentYAZ.set(Integer.parseInt(body));
+//                        //TODO-move timeline back
+//                    });
+//                }
+//
+//                response.close();
+//            }
+//        };
+//
+//        call.enqueue(currentYazCallBack);
 
-        Request request = createCurrentYazRequest("-");
-        Call call = Configurations.HTTP_CLIENT.newCall(request);
-        Callback currentYazCallBack = new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                parentController.createExceptionDialog(e);
-            }
+    }
 
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (response.code() != 200) {
-                    String responseBody = response.body().string();
-                    Platform.runLater(() ->
-                            parentController.createExceptionDialog(new Exception(responseBody)));
-                }
-                else {
-                    Platform.runLater(() -> {
-                        String body = response.body().toString();
-                        currentYAZ.set(Integer.parseInt(body));
-                        //TODO-move timeline back
-                    });
-                }
-
-                response.close();
-            }
-        };
-
-        call.enqueue(currentYazCallBack);
-
+    private void setRewindData() {
+        if(isRewindMode.get() == false) {
+            isRewindMode.set(true);
+            rewindButton.setText("Finish Rewind");
+        }
+        else {
+            isRewindMode.set(false);
+            rewindButton.setText("Rewind");
+        }
     }
 
     public void setParentController(ParentController parentController)
