@@ -25,8 +25,13 @@ public class PaymentServlet extends HttpServlet
         Gson gson = new Gson();
         UIPaymentDTO uiPaymentDTO = gson.fromJson(reader, UIPaymentDTO.class);
 
-        try{
-            handleRequest(uiPaymentDTO, engine);
+        try {
+            synchronized (this) {
+                handleRequest(uiPaymentDTO, engine);
+            }
+
+            ServletUtils.setAdminVersion(ServletUtils.getAdminVersion() + 1);
+            ServletUtils.setCustomerVersion(ServletUtils.getCustomerVersion() + 1);
         }
 
         catch (Exception e){
@@ -42,34 +47,31 @@ public class PaymentServlet extends HttpServlet
 
     protected void handleRequest(UIPaymentDTO uiPaymentDTO, MainSystem engine) throws Exception{
         switch (uiPaymentDTO.operation){
-            case "payDebt":
-                synchronized (this){
-                    handlePayDebt(uiPaymentDTO, engine);
-                }
-
+            case "payDebt": {
+                handlePayDebt(uiPaymentDTO, engine);
                 break;
+            }
 
-            case "closeLoan":
-                synchronized (this){
-                    handleCloseLoan(uiPaymentDTO, engine);
-                }
-
+            case "closeLoan": {
+                handleCloseLoan(uiPaymentDTO, engine);
                 break;
+            }
 
-            case "payToAllLenders":
-                synchronized (this){
-                    handlePayToAllLenders(uiPaymentDTO, engine);
-                }
 
+
+            case "payToAllLenders": {
+                handlePayToAllLenders(uiPaymentDTO, engine);
                 break;
+            }
 
-            case "payToLender":
-                synchronized (this){
-                    handlePayToLender(uiPaymentDTO, engine);
-                }
-
+            case "payToLender": {
+                handlePayToLender(uiPaymentDTO, engine);
                 break;
+            }
         }
+
+        ServletUtils.setAdminVersion(ServletUtils.getAdminVersion() + 1);
+        ServletUtils.setCustomerVersion(ServletUtils.getCustomerVersion() + 1);
     }
 
     protected void handlePayToLender(UIPaymentDTO uiPaymentDTO, MainSystem engine) throws Exception {

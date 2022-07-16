@@ -89,6 +89,8 @@ public class ABSsystem implements MainSystem, SystemService {
             this.status2loan.put(newLoan.getStatus(), newLoan);
             this.loanId2Loan.put(newLoan.getLoanId(), newLoan);
             this.loans.add(newLoan);
+
+            name2customer.get(customer).addLoanAsBorrower(newLoan);
         }
     }
     //------------------------ XML FILE METHODS ---------------------------------------------------//

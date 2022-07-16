@@ -28,6 +28,8 @@ public class LoanPlacingServlet extends HttpServlet
 
         try{
             handleRequest(loanPlacingDTO, engine);
+            ServletUtils.setAdminVersion(ServletUtils.getAdminVersion() + 1);
+            ServletUtils.setCustomerVersion(ServletUtils.getCustomerVersion() + 1);
         }
 
         catch (Exception e){

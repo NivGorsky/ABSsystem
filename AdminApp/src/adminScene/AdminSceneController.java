@@ -159,7 +159,6 @@ public class AdminSceneController implements ParentController {
     {
         this.parentController = parentController;
     }
-    public MainSystem getModel() { return parentController.getModel(); }
 
     @Override
     public void createExceptionDialog(Exception ex) {

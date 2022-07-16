@@ -52,6 +52,10 @@ public class Customer implements Comparable{
         this.loansAsLender.add(loan);
     }
 
+    public void addLoanAsBorrower(Loan loan) {
+        this.getLoansAsBorrower().add(loan);
+    }
+
     @Override
     public int compareTo(Object o) {
         if (!(o instanceof Customer)){
@@ -62,4 +66,5 @@ public class Customer implements Comparable{
             return this.getName().compareTo(((Customer) o).getName());
         }
     }
+
 }
