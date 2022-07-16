@@ -146,20 +146,18 @@ public class CustomerSceneController implements ParentController {
                     case "Information":
                         informationController.onShow();
                         break;
-
                     case "Scramble":
                         scrambleController.onShow();
                         break;
-
                     case "Payment":
                         paymentController.onShow();
-
+                        break;
                     case "Create new loan":
                         createNewLoanController.onShow();
-
+                        break;
                     case "Loans trading":
                         loansTradingController.onShow();
-
+                        break;
                 }
             }));
         }

@@ -1,9 +1,11 @@
 package customerScene.payment;
 
+import DTO.AccountMovementDTO;
 import DTO.LoanDTO;
 import DTO.NotificationsDTO;
 import DTO.UIPaymentDTO;
 import Engine.MainSystem;
+import com.google.gson.reflect.TypeToken;
 import customerScene.CustomerSceneController;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -22,6 +24,7 @@ import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.*;
 
 public class PaymentController implements ParentController {
@@ -241,13 +244,46 @@ public class PaymentController implements ParentController {
     }
 
     public void updateNotifications(){
-        NotificationsDTO notificationsDTO = parentController.getModel().getNotificationsDTO(customerNameProperty.getValue());
-        notifications.clear();
-        notifications.addAll(notificationsDTO.notifications);
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/notifications").newBuilder();
+        urlBuilder.addQueryParameter("customer-name", parentController.getCustomerNameProperty().getValue());
+        String finalUrl = urlBuilder.build().toString();
+        Request request = new Request.Builder().url(finalUrl).get().build();
+        Call call = Configurations.HTTP_CLIENT.newCall(request);
+
+        Callback updateNotificationsCallBack = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> {
+                    parentController.createExceptionDialog(e);
+                });
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String rawBody = response.body().string();
+                boolean isResponseSuccessful = response.isSuccessful();
+                int responseCode = response.code();
+                response.close();
+
+                if(isResponseSuccessful){
+                    Platform.runLater(() -> {
+                        NotificationsDTO notificationsDTO = Configurations.GSON.fromJson(rawBody, NotificationsDTO.class);
+                        notifications.clear();
+                        notifications.addAll(notificationsDTO.notifications);
+                    });
+                }
+
+                else{
+                    parentController.createExceptionDialog(new Exception(Integer.toString(responseCode)));
+                }
+            }
+        };
+
+        call.enqueue(updateNotificationsCallBack);
     }
 
     public void onShow(){
-//        updateNotifications();
+        updateNotifications();
         borrowerLoansTableComponentController.clearTable();
         borrowerLoansTableComponentController.loadSpecificCustomerLoansAsBorrower(customerNameProperty.getValue());
         lendersTableView.getItems().clear();

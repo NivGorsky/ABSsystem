@@ -4,6 +4,7 @@ import DTO.LoanPlacingDTO;
 import DTO.UIController;
 import customerScene.CustomerSceneController;
 import customerScene.scramble.scrambleFields.simpleField.SimpleField;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -15,7 +16,12 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import main.Configurations;
 import mutualInterfaces.ParentController;
+import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
 import java.util.regex.*;
 import java.util.*;
 
@@ -139,7 +145,8 @@ public class ScrambleController implements UIController {
                 customerName = ((CustomerSceneController)parentController).getCustomerNameProperty().getValue();
                 LoanPlacingDTO loanPlacingDTO = new LoanPlacingDTO(amountToInvest, categoriesWillingToInvestIn, minimumInterestPerYaz, minimumYazForLoan, maximumPercentOwnership, maximumOpenLoansForBorrower, customerName);
                 //parentController.getModel().assignLoansToLender(loanPlacingDTO);
-                parentController.getModel().assignLoansToLenderWithTask(loanPlacingDTO, numberOfLoansPlaced::set);
+//                parentController.getModel().assignLoansToLenderWithTask(loanPlacingDTO, numberOfLoansPlaced::set);
+                postPlaceToLoans(loanPlacingDTO);
             }
 
             else{
@@ -150,6 +157,41 @@ public class ScrambleController implements UIController {
         catch (Exception e){
             parentController.createExceptionDialog(new Exception("Could not perform place to loans"));
         }
+    }
+
+    private void postPlaceToLoans(LoanPlacingDTO loanPlacingDTO){
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/loan-placing").newBuilder();
+        String finalUrl = urlBuilder.build().toString();
+        String loanPlacingDTOAsJson = Configurations.GSON.toJson(loanPlacingDTO);
+        Request request = new Request.Builder()
+                .url(finalUrl)
+                .post(RequestBody.create(loanPlacingDTOAsJson.getBytes()))
+                .build();
+
+        Call call = Configurations.HTTP_CLIENT.newCall(request);
+        Callback loanPlacingCallBack = new Callback() {
+
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                parentController.createExceptionDialog(e);
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String responseBodyAsJson =  Configurations.GSON.fromJson(response.body().string(), String.class);
+                int responseCode = response.code();
+                boolean isResponseSuccessful = response.isSuccessful();
+                response.close();
+
+                if (!isResponseSuccessful) {
+                    Platform.runLater(() ->
+                            parentController.createExceptionDialog(new Exception(responseCode
+                                    + "\n" + responseBodyAsJson)));
+                }
+            }
+        };
+
+        call.enqueue(loanPlacingCallBack);
     }
 
     private Double getTextFieldContentToDouble(TextField textField){
