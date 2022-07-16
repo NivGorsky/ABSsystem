@@ -27,33 +27,19 @@ public interface MainSystem {
      ArrayList<LoanDTO> getLoansByCustomerNameAsBorrower(String customerName);
      ArrayList<LoanDTO> getLoansByCustomerNameAsLender(String customerName);
 //    public ScrambleQueryFieldsDTO getScrambleQueryFields();
-     void setScrambleController(UIController controller);
-     void assignLoansToLenderWithTask(LoanPlacingDTO loanPlacingDTO, Consumer<Integer> numberOfLoansAssigned);
      void closeLoan(LoanDTO loanDTO, int yaz) throws Exception;
      void payToAllLendersForCurrentYaz(LoanDTO loan, int yaz) throws Exception;
      void payToLender(LoanDTO.LenderDetailsDTO lenderDTO, LoanDTO loanDTO, int yaz) throws Exception;
      boolean hasBorrowerEnoughFundsToPayAmount(Customer customerDTO, double amount);
      void payDebt(Double amount, LoanDTO loanDTO, int yaz) throws Exception;
-
-    /*services:
-    void registerAsCustomer(String name) throws Exception
-    void registerAsAdmin(String name) throws Exception
-    List<String> getCategories(); */
-
     boolean isCustomerExists(String name);
     void addCustomer(String name);
     boolean isAdminExists(String name);
     boolean isAdminLoggedIn(String name);
-
     void adminLoggedOut();
-
     void addAdmin(String name);
-
     void createNewLoan(LoanDTO newLoan);
-
     void sellLoan(LoanForSaleDTO loanForSale) throws Exception;
     void buyLoan(LoanForSaleDTO loanToBuy) throws Exception;
-
-
     Map<String, LoanDTO> getSeller2loansForSale();
 }

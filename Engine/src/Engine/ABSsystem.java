@@ -2,9 +2,6 @@ package Engine;
 
 import java.io.*;
 import java.util.*;
-import java.util.function.Consumer;
-
-import Engine.LoanPlacing.loanPlacingAsTask.LoanPlacingAsTask;
 import Engine.PaymentsDB.PaymentsDB;
 import Exceptions.*;
 import Engine.LoanPlacing.regularLoanPlacing.LoanPlacing;
@@ -12,20 +9,14 @@ import Engine.TimeLineMoving.MoveTimeLine;
 import DTO.*;
 import Engine.XML_Handler.*;
 import Exceptions.XMLFileException;
-import javafx.concurrent.Task;
-
 import javax.xml.bind.JAXBException;
 
 public class ABSsystem implements MainSystem, SystemService {
     private final Timeline systemTimeline;
     private Map<String, Customer> name2customer;
-    private Map<Loan.LoanStatus, Loan> status2loan;
     private LinkedList<Loan> loans;
-    private Map<Integer, Loan> loanId2Loan;
     private Map<Customer, List<Notification>> customer2Notifications;
-    private UIController scrambleController;
     private Integer numberOfLoansAssignedInSinglePlacingAlgorithmRun;
-    private Task<Boolean> currentRunningTask;
     private ArrayList<String> admins;
     private boolean isAdminLoggedIn;
 
@@ -34,9 +25,7 @@ public class ABSsystem implements MainSystem, SystemService {
     public ABSsystem() {
         systemTimeline = new Timeline();
         name2customer = new TreeMap<>();
-        loanId2Loan = new TreeMap<>();
         loans = new LinkedList<>();
-        status2loan = new TreeMap<>();
         customer2Notifications = new TreeMap<Customer, List<Notification>>();
         numberOfLoansAssignedInSinglePlacingAlgorithmRun = -1;
         admins = new ArrayList<>();
@@ -86,8 +75,6 @@ public class ABSsystem implements MainSystem, SystemService {
     private void takeLoansData(AbsLoans loans, String customer) {
         for (AbsLoan l : loans.getAbsLoan()) {
             Loan newLoan = JAXBConvertor.convertLoan(l, systemTimeline.getCurrentYaz(), customer);
-            this.status2loan.put(newLoan.getStatus(), newLoan);
-            this.loanId2Loan.put(newLoan.getLoanId(), newLoan);
             this.loans.add(newLoan);
 
             name2customer.get(customer).addLoanAsBorrower(newLoan);
@@ -245,9 +232,7 @@ public class ABSsystem implements MainSystem, SystemService {
     }
 
     private void resetLoans() {
-        loanId2Loan = new TreeMap<>();
         loans = new LinkedList<>();
-        status2loan = new TreeMap<>();
     }
 
     private void initStatusInfo(LoanDTO loanToInit, Loan l) {
@@ -505,24 +490,6 @@ public class ABSsystem implements MainSystem, SystemService {
     }
 
     @Override
-    public void setScrambleController(UIController controller) {
-        this.scrambleController = controller;
-    }
-
-    @Override
-    public void assignLoansToLenderWithTask(LoanPlacingDTO loanPlacingDTO, Consumer<Integer> numberOfLoansAssigned) {
-        //Consumers wiring
-        Consumer<Integer> numberOfLoansAssignedToLenderConsumer = number -> {
-            this.numberOfLoansAssignedInSinglePlacingAlgorithmRun = number;
-            numberOfLoansAssigned.accept(number);
-        };
-
-        currentRunningTask = new LoanPlacingAsTask(numberOfLoansAssignedToLenderConsumer, loanPlacingDTO, this.loans, this, getCurrYaz());
-        scrambleController.bindTaskToUIComponents(currentRunningTask);
-        new Thread(currentRunningTask).start();
-    }
-
-    @Override
     public void payToLender(LoanDTO.LenderDetailsDTO lenderDTO, LoanDTO loanDTO, int yaz) throws Exception{
         try {
             Customer lender = name2customer.get(lenderDTO.getLenderName());
@@ -614,8 +581,6 @@ public class ABSsystem implements MainSystem, SystemService {
             loan.setLoanStatus(Loan.LoanStatus.FINISHED, yaz);
             loan.setAmountPaid(loan.getInitialAmount());
             loan.setInterestPaid(loan.getTotalInterestForLoan());
-
-
         }
     }
 
@@ -647,7 +612,12 @@ public class ABSsystem implements MainSystem, SystemService {
             }
         }
 
-        seller2loansForSale.put(loanForSaleDto.getSellerName(), loanForSale);
+        if(loanForSale.getStatus() == Loan.LoanStatus.IN_RISK) {
+            throw new Exception("The loan that you are trying to sell is in status \"In Risk\"!");
+        }
+        else {
+            seller2loansForSale.put(loanForSaleDto.getSellerName(), loanForSale);
+        }
     }
 
     @Override
