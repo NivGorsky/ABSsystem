@@ -29,7 +29,8 @@ public class CurrentYazServlet extends HttpServlet {
                 break;
             }
             case "-": {
-                int yazToRewind = Integer.parseInt(request.getParameter("yaz-rewind"));
+                String yazAsString = request.getParameter("yaz-rewind");
+                int yazToRewind = Integer.parseInt(yazAsString);
                 rewindOrStopRewind(yazToRewind);
                 ServletUtils.setAdminVersion(ServletUtils.getAdminVersion() + 1);
                 ServletUtils.setCustomerVersion(ServletUtils.getCustomerVersion() + 1);
@@ -52,7 +53,7 @@ public class CurrentYazServlet extends HttpServlet {
 
         if(yazToRewind == 0) {
             ServletUtils.setIsRewind(false);
-            system = ServletUtils.getAbsSystemInSpecificYaz(servletContext,lastYaz);
+            system = ServletUtils.getAbsSystemInSpecificYaz(servletContext,lastYaz-1);
             ServletUtils.setAbsSystem(servletContext, system);
         }
         else {

@@ -79,7 +79,7 @@ public class AdminSceneController implements ParentController {
 
         rewindYazChooseCB.disableProperty().bind(isRewindMode.not());
         rewindYazChooseCB.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            sendRewindRequest(rewindYazChooseCB.getSelectionModel().getSelectedItem());
+            sendRewindRequest(rewindYazChooseCB.getSelectionModel().getSelectedItem().intValue());
         });
         startRefresher();
     }
@@ -98,7 +98,6 @@ public class AdminSceneController implements ParentController {
     }
 
     @FXML public void increaseYazButtonClicked() {
-
         Request request = createCurrentYazRequest("+");
         Call call = Configurations.HTTP_CLIENT.newCall(request);
         Callback currentYazCallBack = new Callback() {
@@ -144,12 +143,19 @@ public class AdminSceneController implements ParentController {
         else {
             isRewindMode.set(false);
             rewindButton.setText("Rewind");
+            rewindYazChooseCB.getSelectionModel().clearSelection();
             sendRewindRequest(0);
         }
     }
 
     private void sendRewindRequest(int chosenYaz) {
-        Request request = createCurrentYazRequest("-", chosenYaz);
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/currentYaz").newBuilder();
+        urlBuilder.addQueryParameter("move-direction", "-");
+        urlBuilder.addQueryParameter("yaz-rewind", String.valueOf(chosenYaz));
+        String finalUrl = urlBuilder.build().toString();
+
+        Request request = new Request.Builder().url(finalUrl).build();
+
         Call call = Configurations.HTTP_CLIENT.newCall(request);
         Callback currentYazCallBack = new Callback() {
             @Override
@@ -205,6 +211,7 @@ public class AdminSceneController implements ParentController {
     }
 
     public void onShow(){
+        getCurrentYaz();
         loansTableComponentController.clearTable();
         loansTableComponentController.loadLoansData();
         customersInfoTableController.clearTable();
@@ -217,13 +224,13 @@ public class AdminSceneController implements ParentController {
         timer.schedule(refresher, REFRESH_RATE, REFRESH_RATE);
     }
 
-    public Request createCurrentYazRequest(String moveDirection, Integer... chosenYazToRewind) {
+    public Request createCurrentYazRequest(String moveDirection) {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/currentYaz").newBuilder();
         urlBuilder.addQueryParameter("move-direction", moveDirection);
-        urlBuilder.addQueryParameter("yaz-rewind", chosenYazToRewind.toString());
         String finalUrl = urlBuilder.build().toString();
 
         return new Request.Builder().url(finalUrl).build();
+
     }
 
     public void getCurrentYaz(){
@@ -249,7 +256,6 @@ public class AdminSceneController implements ParentController {
                 else {
                     Platform.runLater(() -> {
                         currentYAZ.set(Integer.parseInt(responseBody));
-                        //payments??
                     });
                 }
             }
