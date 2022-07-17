@@ -72,6 +72,7 @@ public class PaymentController implements ParentController {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/payment").newBuilder();
         String finalUrl = urlBuilder.build().toString();
         String uiPaymentDtoAsJson = Configurations.GSON.toJson(uiPaymentDTO);
+
         Request request = new Request.Builder()
                 .url(finalUrl)
                 .post(RequestBody.create(uiPaymentDtoAsJson.getBytes()))
@@ -109,6 +110,7 @@ public class PaymentController implements ParentController {
         uiPaymentDTO.loanDTO = selectedLoanFromLoansTable;
         uiPaymentDTO.amount = Double.parseDouble(payDebtTextField.getText());
         uiPaymentDTO.yaz = parentController.getCurrentYazProperty().getValue();
+        uiPaymentDTO.customerName = parentController.getCustomerNameProperty().getValue();
         uiPaymentDTO.operation = "payDebt";
 
         postPayment(uiPaymentDTO);
@@ -131,6 +133,7 @@ public class PaymentController implements ParentController {
         UIPaymentDTO uiPaymentDTO = new UIPaymentDTO();
         uiPaymentDTO.loanDTO = selectedLoanFromLoansTable;
         uiPaymentDTO.yaz = parentController.getCurrentYazProperty().getValue();
+        uiPaymentDTO.customerName = parentController.getCustomerNameProperty().getValue();
         uiPaymentDTO.operation = "payToAllLenders";
 
         postPayment(uiPaymentDTO);
@@ -142,7 +145,8 @@ public class PaymentController implements ParentController {
         uiPaymentDTO.loanDTO = selectedLoanFromLoansTable;
         uiPaymentDTO.yaz = parentController.getCurrentYazProperty().getValue();
         uiPaymentDTO.lenderDetailsDTO = lendersTableView.getSelectionModel().getSelectedItem();
-        uiPaymentDTO.operation = "closeLoan";
+        uiPaymentDTO.customerName = parentController.getCustomerNameProperty().getValue();
+        uiPaymentDTO.operation = "payToLender";
 
         postPayment(uiPaymentDTO);
     }

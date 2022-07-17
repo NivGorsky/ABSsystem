@@ -5,6 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jsonDeserializer.GsonWrapper;
 
 import javax.security.auth.login.Configuration;
 import java.io.IOException;
@@ -39,7 +40,7 @@ public class ShowLoansInfoServlet extends HttpServlet
             loansInfo = mainSystem.showLoansInfo();
         }
 
-        String loansInfoAsJsonString = ServletUtils.GSON.toJson(loansInfo);
+        String loansInfoAsJsonString = GsonWrapper.GSON.toJson(loansInfo);
         response.getWriter().print(loansInfoAsJsonString);
         response.getWriter().flush();
         response.getWriter().close();

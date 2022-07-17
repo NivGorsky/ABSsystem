@@ -5,6 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jsonDeserializer.GsonWrapper;
 
 import java.io.IOException;
 
@@ -20,7 +21,7 @@ public class NotificationsServlet extends HttpServlet {
 
         try{
             NotificationsDTO notificationsDTO = engine.getNotificationsDTO(customerName);
-            String notificationsDTOAsJson = ServletUtils.GSON.toJson(notificationsDTO);
+            String notificationsDTOAsJson = GsonWrapper.GSON.toJson(notificationsDTO);
             response.getWriter().print(notificationsDTOAsJson);
         }
 

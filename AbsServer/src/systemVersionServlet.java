@@ -4,6 +4,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jsonDeserializer.GsonWrapper;
 
 import java.io.IOException;
 
@@ -19,12 +20,12 @@ public class systemVersionServlet extends HttpServlet {
         switch (consumer) {
             case "CUSTOMER": {
                 int custVersion = ServletUtils.getCustomerVersion();
-                response.getWriter().println(ServletUtils.GSON.toJson(custVersion));
+                response.getWriter().println(GsonWrapper.GSON.toJson(custVersion));
                 break;
             }
             case "ADMIN": {
                 int adminVersion = ServletUtils.getAdminVersion();
-                response.getWriter().println(ServletUtils.GSON.toJson(adminVersion));
+                response.getWriter().println(GsonWrapper.GSON.toJson(adminVersion));
                 break;
             }
         }

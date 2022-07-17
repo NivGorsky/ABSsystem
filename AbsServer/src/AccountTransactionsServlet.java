@@ -6,6 +6,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jsonDeserializer.GsonWrapper;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class AccountTransactionsServlet extends HttpServlet
         CustomerDTO customerDTO = mainSystem.getCustomerDTO(customerName);
 
         ArrayList<AccountMovementDTO> accountMovementDTOArrayList = mainSystem.getCustomerDTO(customerName).getAccountMovements();
-        String accountTransactionsInfoAsJsonString = ServletUtils.GSON.toJson(accountMovementDTOArrayList);
+        String accountTransactionsInfoAsJsonString = GsonWrapper.GSON.toJson(accountMovementDTOArrayList);
 
         response.getWriter().print(accountTransactionsInfoAsJsonString);
         response.getWriter().flush();

@@ -5,6 +5,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jsonDeserializer.GsonWrapper;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -18,7 +20,7 @@ public class ShowCustomersInfoServlet extends HttpServlet
         MainSystem mainSystem = ServletUtils.getAbsSystem(getServletContext());
 
         ArrayList<CustomerDTO> customersInfo = mainSystem.showCustomersInfo();
-        String customersInfoAsJsonString = ServletUtils.GSON.toJson(customersInfo);
+        String customersInfoAsJsonString = GsonWrapper.GSON.toJson(customersInfo);
         response.getWriter().print(customersInfoAsJsonString);
         response.getWriter().flush();
         response.getWriter().close();
