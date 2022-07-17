@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import customerBase.CustomerBaseController;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -32,6 +33,7 @@ public class CreateLoanSceneController {
     @FXML private TextField totalYazToPayTF;
     @FXML private TextField interestPerPaymentTF;
     @FXML private TextField paymentsRateTF;
+    @FXML private TextField writeCategoryTF;
     @FXML private ComboBox<String> categoriesCB;
     @FXML private Button createLoanButton;
 
@@ -43,7 +45,8 @@ public class CreateLoanSceneController {
         createLoanButton.disableProperty().bind(totalYazToPayTF.textProperty().isEmpty());
         createLoanButton.disableProperty().bind(interestPerPaymentTF.textProperty().isEmpty());
         createLoanButton.disableProperty().bind(paymentsRateTF.textProperty().isEmpty());
-        createLoanButton.disableProperty().bind(categoriesCB.selectionModelProperty().isNull());
+        createLoanButton.disableProperty().bind(
+                writeCategoryTF.textProperty().isEmpty().or(categoriesCB.selectionModelProperty().isNull()));
     }
 
     public void setParentController(ParentController parentController) {
@@ -58,9 +61,17 @@ public class CreateLoanSceneController {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/createLoan").newBuilder();
         String finalUrl = urlBuilder.build().toString();
 
+        String category=null;
+        if(writeCategoryTF.getText() != null){
+            category = writeCategoryTF.getText();
+        }
+        else {
+           category = categoriesCB.getSelectionModel().getSelectedItem();
+        }
+
         LoanDTO newLoan = new LoanDTO(loanNameTF.getText(), custName, Integer.parseInt(amountTF.getText()), Integer.parseInt(totalYazToPayTF.getText()),
                 Integer.parseInt(interestPerPaymentTF.getText()), totalInterestForLoan, Integer.parseInt(paymentsRateTF.getText()), "NEW",
-                categoriesCB.getSelectionModel().getSelectedItem(), 0, 0, 0, 0);
+                category, 0, 0, 0, 0);
 
         Request request = new Request.Builder().url(finalUrl).post(RequestBody.create(
                 Configurations.GSON.toJson(newLoan).getBytes())).build();
@@ -74,18 +85,14 @@ public class CreateLoanSceneController {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (response.code() != 200) {
-                    String responseBody = response.body().string();
+                String responseBody = response.body().string();
+                int responseCode = response.code();
+                response.close();
+                if (responseCode != 200) {
+
                     Platform.runLater(() ->
                             parentController.createExceptionDialog(new Exception(responseBody)));
                 }
-                else {
-                    Platform.runLater(() -> {
-                        //TODO: loansTableOnShow
-                    });
-                }
-
-                response.close();
             }
         };
 

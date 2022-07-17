@@ -312,6 +312,37 @@ public class CustomerSceneController implements ParentController {
     }
 
     private void updateIsRewindMode() {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/rewindMode").newBuilder();
+        String finalUrl = urlBuilder.build().toString();
+        Request request = new Request.Builder().url(finalUrl).build();
+
+        Call call = Configurations.HTTP_CLIENT.newCall(request);
+        Callback rewindCallBack = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                parentController.createExceptionDialog(e);
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String responseBody = Configurations.GSON.fromJson(response.body().string(), String.class);
+                int responseCode = response.code();
+                response.close();
+
+                if (responseCode != 200) {
+                    Platform.runLater(() ->
+                            parentController.createExceptionDialog(new Exception()));
+                }
+
+                else{
+                    Platform.runLater(() -> {
+                            isRewindMode.set(Boolean.parseBoolean(responseBody));
+                    });
+                }
+            }
+        };
+
+        call.enqueue(rewindCallBack);
     }
 
     public void startRefresher() {

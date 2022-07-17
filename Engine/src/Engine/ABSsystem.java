@@ -597,6 +597,7 @@ public class ABSsystem implements MainSystem, SystemService {
         Loan loan = new Loan(newLoan.getLoanName(), newLoan.getCustomerName(), newLoan.getInitialAmount(),
                 newLoan.getMaxYazToPay(), newLoan.getYazPerPayment(), newLoan.getInterestPerPayment(), newLoan.getCategory(), getCurrYaz());
         loans.add(loan);
+        LoanCategories.addCategory(newLoan.getCategory());
 
         name2customer.get(newLoan.getCustomerName()).addLoanAsLender(loan);
     }

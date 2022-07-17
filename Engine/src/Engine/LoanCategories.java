@@ -7,7 +7,9 @@ public class LoanCategories {
 
     public static void addCategory(java.lang.String category)
     {
-        categories.add(category);
+        if(categories.contains(category) == false) {
+            categories.add(category);
+        }
     }
 
     public static ArrayList<String> getCategories() {
