@@ -46,6 +46,14 @@ public class InformationController implements ParentController
         this.parentController = parentController;
     }
 
+    public Button getChargeButton() {
+        return chargeButton;
+    }
+
+    public Button getWithdrawButton() {
+        return withdrawButton;
+    }
+
     public void setCustomerNameProperty(String newName){
         customerNameProperty.set(newName);
     }

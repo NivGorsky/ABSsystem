@@ -78,6 +78,7 @@ public class CustomerSceneController implements ParentController {
 
     private SimpleBooleanProperty isFileSelected;
     private SimpleIntegerProperty currentYAZ;
+    private SimpleBooleanProperty isRewindMode;
 
     ObservableList<String> displayModeOptions =  FXCollections.observableArrayList("Light Mode", "Dark Mode", "MTA Mode", "Barbi Mode");
 
@@ -96,6 +97,7 @@ public class CustomerSceneController implements ParentController {
         customerNameProperty = new SimpleStringProperty();
         isFileSelected = new SimpleBooleanProperty(false);
         currentYAZ = new SimpleIntegerProperty(1);
+        isRewindMode = new SimpleBooleanProperty(false);
     }
 
     @FXML public void initialize() {
@@ -111,7 +113,17 @@ public class CustomerSceneController implements ParentController {
         paymentController.setParentController(this);
         loansTradingController.setParentController(this);
         createNewLoanController.setParentController(this);
+
+        createNewLoanTab.disableProperty().bind(isRewindMode);
+        scrambleTab.disableProperty().bind(isRewindMode);
+        paymentTab.disableProperty().bind(isRewindMode);
+        loanTradingTab.disableProperty().bind(isRewindMode);
+        loadFileButton.disableProperty().bind(isRewindMode);
+        informationController.getChargeButton().disableProperty().bind(isRewindMode);
+        informationController.getWithdrawButton().disableProperty().bind(isRewindMode);
     }
+
+    public SimpleBooleanProperty getIsRewindMode() { return isRewindMode; }
 
     private boolean areControllersInitialized(InformationController customerController, ScrambleController scrambleController, PaymentController paymentController){
 
@@ -289,6 +301,7 @@ public class CustomerSceneController implements ParentController {
 
     public void onShow() {
         updateCurrentYaz();
+        updateIsRewindMode();
         if(isFileSelected.get())
         {
             informationController.onShow();
@@ -296,6 +309,9 @@ public class CustomerSceneController implements ParentController {
             loansTradingController.onShow();
             createNewLoanController.onShow();
         }
+    }
+
+    private void updateIsRewindMode() {
     }
 
     public void startRefresher() {

@@ -72,6 +72,9 @@ public class AdminSceneController implements ParentController {
         }
 
         rewindYazChooseCB.disableProperty().bind(isRewindMode.not());
+        rewindYazChooseCB.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            sendRewindRequest(rewindYazChooseCB.getSelectionModel().getSelectedItem());
+        });
         startRefresher();
     }
 
@@ -86,11 +89,6 @@ public class AdminSceneController implements ParentController {
     public void setAdmin(String name) {
         adminName.set(name);
         heyAdminLabel.setText("Hey " + name + "!");
-    }
-
-    public void setIncreaseYAZButtonDisable(SimpleBooleanProperty isFileSelected)
-    {
-        increaseYazButton.disableProperty().bind(isFileSelected.not());
     }
 
     @FXML public void increaseYazButtonClicked() {
@@ -126,47 +124,53 @@ public class AdminSceneController implements ParentController {
     }
 
     @FXML public void rewindButtonClicked() {
-        setRewindData();
-//        Request request = createCurrentYazRequest("-");
-//        Call call = Configurations.HTTP_CLIENT.newCall(request);
-//        Callback currentYazCallBack = new Callback() {
-//            @Override
-//            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-//                parentController.createExceptionDialog(e);
-//            }
-//
-//            @Override
-//            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-//                if (response.code() != 200) {
-//                    String responseBody = response.body().string();
-//                    Platform.runLater(() ->
-//                            parentController.createExceptionDialog(new Exception(responseBody)));
-//                }
-//                else {
-//                    Platform.runLater(() -> {
-//                        String body = response.body().toString();
-//                        currentYAZ.set(Integer.parseInt(body));
-//                        //TODO-move timeline back
-//                    });
-//                }
-//
-//                response.close();
-//            }
-//        };
-//
-//        call.enqueue(currentYazCallBack);
-
-    }
-
-    private void setRewindData() {
         if(isRewindMode.get() == false) {
             isRewindMode.set(true);
             rewindButton.setText("Finish Rewind");
+
+            ObservableList<Integer> yaz = FXCollections.observableArrayList();
+            for (int i=1; i<=currentYAZ.get(); i++) {
+                yaz.add(i);
+            }
+
+            rewindYazChooseCB.setItems(yaz);
         }
         else {
             isRewindMode.set(false);
             rewindButton.setText("Rewind");
+            sendRewindRequest(0);
         }
+    }
+
+    private void sendRewindRequest(int chosenYaz) {
+        Request request = createCurrentYazRequest("-", chosenYaz);
+        Call call = Configurations.HTTP_CLIENT.newCall(request);
+        Callback currentYazCallBack = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                parentController.createExceptionDialog(e);
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String body = response.body().string();
+                int responseCode = response.code();
+                response.close();
+
+                if (responseCode != 200) {
+                    Platform.runLater(() ->
+                            parentController.createExceptionDialog(new Exception(body)));
+                }
+                else {
+                    Platform.runLater(() -> {
+                        currentYAZ.set(Integer.parseInt(body));
+                        onShow();
+                    });
+                }
+            }
+        };
+
+        call.enqueue(currentYazCallBack);
     }
 
     public void setParentController(ParentController parentController)
@@ -207,9 +211,10 @@ public class AdminSceneController implements ParentController {
         timer.schedule(refresher, REFRESH_RATE, REFRESH_RATE);
     }
 
-    public Request createCurrentYazRequest(String moveDirection) {
+    public Request createCurrentYazRequest(String moveDirection, Integer... chosenYazToRewind) {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/currentYaz").newBuilder();
         urlBuilder.addQueryParameter("move-direction", moveDirection);
+        urlBuilder.addQueryParameter("yaz-rewind", chosenYazToRewind.toString());
         String finalUrl = urlBuilder.build().toString();
 
         return new Request.Builder().url(finalUrl).build();
