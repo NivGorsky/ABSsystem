@@ -217,6 +217,11 @@ public class ABSsystem implements MainSystem, SystemService {
     //------------------------ TIMELINE METHODS ---------------------------------------------------//
 
     @Override
+    public Map<String, Loan> getLoansForSale(){
+        return seller2loansForSale;
+    }
+
+    @Override
     public Map<String, LoanDTO> getSeller2loansForSale() {
         ArrayList<LoanDTO> loansDto = new ArrayList<>();
         for(Loan loan : seller2loansForSale.values()) {

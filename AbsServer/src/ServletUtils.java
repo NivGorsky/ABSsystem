@@ -1,6 +1,4 @@
-import DTO.LoanDTO;
-import DTO.LoanPlacingDTO;
-import DTO.UIPaymentDTO;
+import DTO.*;
 import Engine.ABSsystem;
 import Engine.MainSystem;
 import com.google.gson.Gson;
@@ -16,11 +14,15 @@ public class ServletUtils {
     private static final Object mainSystemLock = new Object();
     private static final Object customerVersionLock = new Object();
     private static final Object adminVersionLock = new Object();
-    public final static Gson GSON = new GsonBuilder()
-            .registerTypeAdapter(LoanPlacingDTO.class, new LoanPlacingDTODeserializer())
-            .registerTypeAdapter(UIPaymentDTO.class, new UIPaymentsDTODeserializer())
-            .registerTypeAdapter(LoanDTO.class, new LoanDtoDeserializer())
-            .create();
+//    public final static Gson GSON = new GsonBuilder()
+//            .registerTypeAdapter(LoanDTO.LenderDetailsDTO.class, new LenderDetailsDTODeserializer())
+//            .registerTypeAdapter(LoanCategoriesDTO.class, new LoanCategoriesDeserializer())
+//            .registerTypeAdapter(LoanDTO.class, new LoanDtoDeserializer())
+//            .registerTypeAdapter(LoanPlacingDTO.class, new LoanPlacingDTODeserializer())
+//            .registerTypeAdapter(NotificationsDTO.class, new NotificationsDTODeserializer())
+//            .registerTypeAdapter(UIPaymentDTO.class, new UIPaymentsDTODeserializer())
+//            .registerTypeAdapter(UIPaymentDTO.class, new UIPaymentsDTODeserializer())
+//            .create();
 
     public static int customerVersion = 1;
     public static int adminVersion = 1;
@@ -37,9 +39,9 @@ public class ServletUtils {
         return (MainSystem) servletContext.getAttribute(MAIN_SYSTEM_ATTRIBUTE_NAME);
     }
 
-    public static Gson getGson(){
-        return GSON;
-    }
+//    public static Gson getGson(){
+//        return GSON;
+//    }
 
     public static int getCustomerVersion() {
             return customerVersion;

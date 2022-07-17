@@ -53,6 +53,20 @@ public class MoveTimeLine {
 //            allLoansAsBorrower.clear();
             allRelevantLoansForCurrentBorrower.clear();
         }
+
+        removeLoansThatAreInRiskFromLoansForSale(absSystem);
+    }
+
+    private static void removeLoansThatAreInRiskFromLoansForSale(SystemService absSystem){
+        Map<String, Loan> seller2LoansForSale = absSystem.getLoansForSale();
+
+        for (String seller: seller2LoansForSale.keySet()){
+            Loan loan = seller2LoansForSale.get(seller);
+
+            if(loan.getStatus().equals(Loan.LoanStatus.IN_RISK)){
+                seller2LoansForSale.remove(seller);
+            }
+        }
     }
 
     private static void IterateThroughSortedLoansAndChangedUnpayedActiveLoansToInRisk(LinkedList<Loan> allRelevantLoans, Customer borrower, SystemService absSystem){
