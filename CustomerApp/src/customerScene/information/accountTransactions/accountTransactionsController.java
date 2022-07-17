@@ -72,7 +72,9 @@ public class accountTransactionsController {
                     }
 
                     else{
-                        parentController.createExceptionDialog(new Exception(Integer.toString(responseCode)));
+                        Platform.runLater(() ->{
+                            parentController.createExceptionDialog(new Exception(Integer.toString(responseCode)));
+                        });
                     }
                 }
             };

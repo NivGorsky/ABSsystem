@@ -130,6 +130,8 @@ public class ScrambleController implements UIController {
                 LoanPlacingDTO loanPlacingDTO = new LoanPlacingDTO(amountToInvest, categoriesWillingToInvestIn, minimumInterestPerYaz, minimumYazForLoan, maximumPercentOwnership, maximumOpenLoansForBorrower, customerName);
                 //parentController.getModel().assignLoansToLender(loanPlacingDTO);
 //                parentController.getModel().assignLoansToLenderWithTask(loanPlacingDTO, numberOfLoansPlaced::set);
+
+
                 postPlaceToLoans(loanPlacingDTO);
             }
 
@@ -147,6 +149,11 @@ public class ScrambleController implements UIController {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/loan-placing").newBuilder();
         String finalUrl = urlBuilder.build().toString();
         String loanPlacingDTOAsJson = Configurations.GSON.toJson(loanPlacingDTO);
+
+        //test
+        Configurations.printToFile(loanPlacingDTOAsJson);
+        //
+
         Request request = new Request.Builder()
                 .url(finalUrl)
                 .post(RequestBody.create(loanPlacingDTOAsJson.getBytes()))

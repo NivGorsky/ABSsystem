@@ -604,7 +604,8 @@ public class ABSsystem implements MainSystem, SystemService {
         loans.add(loan);
         LoanCategories.addCategory(newLoan.getCategory());
 
-        name2customer.get(newLoan.getCustomerName()).addLoanAsLender(loan);
+        name2customer.get(newLoan.getCustomerName()).addLoanAsBorrower(loan);
+        injectSystemServiceInterfaceToLoans();
     }
 
     @Override

@@ -1,0 +1,1 @@
+{"customerName":"b","amountToInvest":2000.0,"categoriesWillingToInvestIn":["shopping"],"minimumInterestPerYaz":-1.0,"minimumYazForReturn":-1,"maximumPercentOwnership":-1,"maximumOpenLoansForBorrower":-1}

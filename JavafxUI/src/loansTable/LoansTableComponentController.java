@@ -235,7 +235,9 @@ public class LoansTableComponentController implements ParentController {
                 }
 
                 else{
-                    parentController.createExceptionDialog(new Exception(Integer.toString(responseCode)));
+                    Platform.runLater(() -> {
+                        parentController.createExceptionDialog(new Exception(Integer.toString(responseCode)));
+                    });
                 }
             }
         };
@@ -278,7 +280,9 @@ public class LoansTableComponentController implements ParentController {
                 }
 
                 else{
-                    parentController.createExceptionDialog(new Exception(Integer.toString(responseCode)));
+                    Platform.runLater(() -> {
+                        parentController.createExceptionDialog(new Exception(Integer.toString(responseCode)));
+                    });
                 }
             }
         };
