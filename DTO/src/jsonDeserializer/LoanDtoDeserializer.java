@@ -12,8 +12,6 @@ import java.util.SortedMap;
 
 public class LoanDtoDeserializer implements JsonDeserializer<LoanDTO> {
 
-    private Gson gson = new Gson();
-
     @Override
     public LoanDTO deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 
@@ -41,19 +39,19 @@ public class LoanDtoDeserializer implements JsonDeserializer<LoanDTO> {
         Type unpaidPaymentsType = new TypeToken<HashMap<Integer, LoanDTO.PaymentDTO>>(){}.getType();
         JsonElement unpaidPaymentsAsJsonObject = jsonObject.get("unpaidPayments");
         HashMap<Integer, LoanDTO.PaymentDTO> unpaidPaymentsInHashMap = new HashMap<>();
-        unpaidPaymentsInHashMap = gson.fromJson(unpaidPaymentsAsJsonObject, unpaidPaymentsType);
+        unpaidPaymentsInHashMap = GsonWrapper.GSON.fromJson(unpaidPaymentsAsJsonObject, unpaidPaymentsType);
         loanDTO.unpaidPayments.putAll(unpaidPaymentsInHashMap);
 
         //init paid payments
         Type paidPaymentsType = new TypeToken<HashMap<Integer, LoanDTO.PaymentDTO>>(){}.getType();
         JsonObject paidPaymentsAsJsonObject = jsonObject.getAsJsonObject("paidPayments");
-        HashMap<Integer, LoanDTO.PaymentDTO> paidPaymentsInHashMap = gson.fromJson(unpaidPaymentsAsJsonObject, paidPaymentsType);
+        HashMap<Integer, LoanDTO.PaymentDTO> paidPaymentsInHashMap = GsonWrapper.GSON.fromJson(paidPaymentsAsJsonObject, paidPaymentsType);
         loanDTO.paidPayments.putAll(paidPaymentsInHashMap);
 
         //init lenderDetails
         Type lenderDetailsType = new TypeToken<List<LoanDTO.LenderDetailsDTO>>(){}.getType();
         JsonArray lenderDetailsAsJsonObject = jsonObject.getAsJsonArray("lendersNameAndAmount");
-        List<LoanDTO.LenderDetailsDTO> lenderDetailsInList = gson.fromJson(lenderDetailsAsJsonObject, lenderDetailsType);
+        List<LoanDTO.LenderDetailsDTO> lenderDetailsInList = GsonWrapper.GSON.fromJson(lenderDetailsAsJsonObject, lenderDetailsType);
         loanDTO.lendersNameAndAmount.addAll(lenderDetailsInList);
 
         return loanDTO;

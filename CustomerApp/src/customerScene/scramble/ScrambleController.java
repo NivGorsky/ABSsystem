@@ -162,7 +162,7 @@ public class ScrambleController implements UIController {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                String responseBodyAsJson =  Configurations.GSON.fromJson(response.body().string(), String.class);
+                String responseBody =  response.body().string();
                 int responseCode = response.code();
                 boolean isResponseSuccessful = response.isSuccessful();
                 response.close();
@@ -170,7 +170,14 @@ public class ScrambleController implements UIController {
                 if (!isResponseSuccessful) {
                     Platform.runLater(() ->
                             parentController.createExceptionDialog(new Exception(responseCode
-                                    + "\n" + responseBodyAsJson)));
+                                    + "\n" + responseBody)));
+                }
+
+                else{
+                    Platform.runLater(() -> {
+                        findLoansProgressionBar.progressProperty().setValue(1);
+                        findLoansButton.textProperty().set("finished!");
+                    });
                 }
             }
         };
@@ -386,6 +393,8 @@ public class ScrambleController implements UIController {
 
     public void onShow(){
         getLoanCategoriesToTable();
+        findLoansButton.setText("Find loans");
+        findLoansProgressionBar.progressProperty().setValue(0);
     }
 
     private void getLoanCategoriesToTable(){

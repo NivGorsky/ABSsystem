@@ -51,11 +51,17 @@ public class AdminSceneController implements ParentController {
     private Timer timer;
     private final int REFRESH_RATE = 2;
     private SimpleStringProperty adminName = new SimpleStringProperty();
-    private SimpleIntegerProperty currentYAZ = new SimpleIntegerProperty(1);
+    private SimpleIntegerProperty currentYAZ;
     private ParentController parentController;
     private SimpleBooleanProperty isRewindMode = new SimpleBooleanProperty(false);
 
     ObservableList<String> displayModeOptions =  FXCollections.observableArrayList("Light Mode", "Dark Mode", "MTA Mode", "Barbi Mode");
+
+    public AdminSceneController(){
+        currentYAZ = new SimpleIntegerProperty();
+        getCurrentYaz();
+    }
+
 
     @FXML public void initialize()
     {
@@ -103,20 +109,21 @@ public class AdminSceneController implements ParentController {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (response.code() != 200) {
-                    String responseBody = response.body().string();
+                int responseCode = response.code();
+                boolean isResponseSuccessful = response.isSuccessful();
+                String responseBody = response.body().string();
+                response.close();
+
+                if (!isResponseSuccessful) {
                     Platform.runLater(() ->
-                            parentController.createExceptionDialog(new Exception(responseBody)));
+                            parentController.createExceptionDialog(new Exception(responseCode + "\n" + responseBody)));
                 }
                 else {
                     Platform.runLater(() -> {
-                        String body = response.body().toString();
-                        currentYAZ.set(Integer.parseInt(body));
+                        currentYAZ.set(Integer.parseInt(responseBody));
                         //payments??
                     });
                 }
-
-                response.close();
             }
         };
 
@@ -218,6 +225,39 @@ public class AdminSceneController implements ParentController {
         String finalUrl = urlBuilder.build().toString();
 
         return new Request.Builder().url(finalUrl).build();
+    }
+
+    public void getCurrentYaz(){
+        Request request = createCurrentYazRequest("=");
+        Call call = Configurations.HTTP_CLIENT.newCall(request);
+        Callback currentYazCallBack = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                parentController.createExceptionDialog(e);
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                int responseCode = response.code();
+                boolean isResponseSuccessful = response.isSuccessful();
+                String responseBody = response.body().string();
+                response.close();
+
+                if (!isResponseSuccessful) {
+                    Platform.runLater(() ->
+                            parentController.createExceptionDialog(new Exception(responseCode + "\n" + responseBody)));
+                }
+                else {
+                    Platform.runLater(() -> {
+                        currentYAZ.set(Integer.parseInt(responseBody));
+                        //payments??
+                    });
+                }
+            }
+        };
+
+        call.enqueue(currentYazCallBack);
+
     }
 
 }

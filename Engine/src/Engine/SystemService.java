@@ -1,5 +1,7 @@
 package Engine;
 
+import DTO.LoanDTO;
+
 import java.util.Map;
 
 public interface SystemService {
@@ -8,4 +10,5 @@ public interface SystemService {
     public Map<String, Customer> getAllCustomers();
     public Timeline getTimeLine();
     public void addNotificationToCustomer(Customer customer, Notification notification);
+    public Map<String, Loan> getLoansForSale();
 }

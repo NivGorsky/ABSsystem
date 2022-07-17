@@ -4,6 +4,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jsonDeserializer.GsonWrapper;
 
 import javax.security.auth.login.Configuration;
 import java.io.IOException;
@@ -19,7 +20,7 @@ public class LoginServlet extends HttpServlet
 
         MainSystem absSystem = ServletUtils.getAbsSystem(getServletContext());
         String loginType = request.getParameter("Login-type");
-        String name = ServletUtils.GSON.fromJson(request.getReader().readLine(), String.class);
+        String name = GsonWrapper.GSON.fromJson(request.getReader().readLine(), String.class);
         name = name.trim();
 
         switch (loginType) {
@@ -46,7 +47,7 @@ public class LoginServlet extends HttpServlet
                 synchronized (this) {
                     if (absSystem.isCustomerExists(name)) {
                         String errorMessage = "Username " + name + " already exists. Please enter a different username.";
-                        response.getWriter().println(ServletUtils.GSON.toJson(errorMessage));
+                        response.getWriter().println(GsonWrapper.GSON.toJson(errorMessage));
                         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     }
                     else{

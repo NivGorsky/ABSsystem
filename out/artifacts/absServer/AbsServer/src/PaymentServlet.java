@@ -6,6 +6,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jsonDeserializer.GsonWrapper;
 import sun.misc.IOUtils;
 
 import javax.security.auth.login.Configuration;
@@ -22,8 +23,7 @@ public class PaymentServlet extends HttpServlet
         MainSystem engine = ServletUtils.getAbsSystem(getServletContext());
 
         BufferedReader reader = request.getReader();
-        Gson gson = new Gson();
-        UIPaymentDTO uiPaymentDTO = gson.fromJson(reader, UIPaymentDTO.class);
+        UIPaymentDTO uiPaymentDTO = GsonWrapper.GSON.fromJson(reader, UIPaymentDTO.class);
 
         try {
             synchronized (this) {

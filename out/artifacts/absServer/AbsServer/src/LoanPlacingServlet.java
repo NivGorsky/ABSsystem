@@ -7,6 +7,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jsonDeserializer.GsonWrapper;
 import sun.misc.IOUtils;
 
 import javax.security.auth.login.Configuration;
@@ -23,8 +24,7 @@ public class LoanPlacingServlet extends HttpServlet
         MainSystem engine = ServletUtils.getAbsSystem(getServletContext());
 
         BufferedReader reader = request.getReader();
-        Gson gson = new Gson();
-        LoanPlacingDTO loanPlacingDTO = gson.fromJson(reader, LoanPlacingDTO.class);
+        LoanPlacingDTO loanPlacingDTO = GsonWrapper.GSON.fromJson(reader, LoanPlacingDTO.class);
 
         try{
             handleRequest(loanPlacingDTO, engine);

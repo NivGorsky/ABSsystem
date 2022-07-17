@@ -4,6 +4,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jsonDeserializer.GsonWrapper;
 
 import java.io.IOException;
 
@@ -16,7 +17,7 @@ public class GetSellersAndLoansForSale extends HttpServlet {
         response.setContentType("application/json");
         MainSystem AbsSystem = ServletUtils.getAbsSystem(getServletContext());
 
-        ServletUtils.GSON.toJson(AbsSystem.getSeller2loansForSale());
+        GsonWrapper.GSON.toJson(AbsSystem.getSeller2loansForSale());
         response.getWriter().close();
     }
 }

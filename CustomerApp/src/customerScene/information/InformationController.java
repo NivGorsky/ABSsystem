@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 
 
-public class InformationController implements ParentController
+public class  InformationController implements ParentController
 {
     @FXML private ScrollPane accountTransactions;
     @FXML private accountTransactionsController accountTransactionsController;

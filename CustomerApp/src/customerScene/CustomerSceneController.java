@@ -231,7 +231,12 @@ public class CustomerSceneController implements ParentController {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (response.code() != 200) {
+                int responseCode = response.code();
+                boolean isResponseSuccessful = response.isSuccessful();
+                response.close();
+
+
+                if (!isResponseSuccessful) {
                     String responseBody = response.body().string();
                     Platform.runLater(() ->
                             parentController.createExceptionDialog(new Exception(responseBody)));
@@ -242,8 +247,6 @@ public class CustomerSceneController implements ParentController {
                         onShow();
                     });
                 }
-
-                response.close();
            }
         };
 

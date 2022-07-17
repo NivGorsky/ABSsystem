@@ -4,6 +4,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jsonDeserializer.GsonWrapper;
 
 import java.io.IOException;
 
@@ -15,7 +16,7 @@ public class CategoriesServlet extends HttpServlet {
         response.setContentType("application/json");
         MainSystem AbsSystem = ServletUtils.getAbsSystem(getServletContext());
 
-        response.getWriter().println(ServletUtils.GSON.toJson(AbsSystem.getSystemLoanCategories()));
+        response.getWriter().println(GsonWrapper.GSON.toJson(AbsSystem.getSystemLoanCategories()));
         response.getWriter().close();
     }
 }

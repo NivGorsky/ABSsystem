@@ -1,11 +1,12 @@
-import DTO.LoanDTO;
-import DTO.LoanPlacingDTO;
+import DTO.*;
 import Engine.ABSsystem;
 import Engine.MainSystem;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import jakarta.servlet.ServletContext;
-import jsonDeserializer.LoanDtoDeserializer;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
+import jsonDeserializer.*;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
