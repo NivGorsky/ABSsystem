@@ -42,15 +42,17 @@ public class AdminComponentsRefresher extends TimerTask {
         Callback versionCallBack = new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                adminSceneToUpdate.createExceptionDialog(e);
+                Platform.runLater(() ->
+                    adminSceneToUpdate.createExceptionDialog(e));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 String responseBody = response.body().string();
-                if (response.code() != 200) {
-                    Platform.runLater(() ->
-                            adminSceneToUpdate.createExceptionDialog(new Exception(responseBody)));
+                int responseCode = response.code();
+                response.close();
+                if (responseCode != 200) {
+                    Platform.runLater(() -> adminSceneToUpdate.createExceptionDialog(new Exception(responseBody)));
                 }
                 else {
                     Platform.runLater(() -> {
@@ -64,8 +66,6 @@ public class AdminComponentsRefresher extends TimerTask {
                         }
                     });
                 }
-
-                response.close();
             }
         };
 

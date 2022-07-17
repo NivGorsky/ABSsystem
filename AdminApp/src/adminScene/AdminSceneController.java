@@ -121,7 +121,6 @@ public class AdminSceneController implements ParentController {
                 else {
                     Platform.runLater(() -> {
                         currentYAZ.set(Integer.parseInt(responseBody));
-                        //payments??
                     });
                 }
             }

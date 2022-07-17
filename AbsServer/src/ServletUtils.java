@@ -56,6 +56,9 @@ public class ServletUtils {
     }
 
     public static void saveCurrentSystem (ServletContext servletContext) {
+        if(servletContext.getAttribute(MAIN_SYSTEM_EACH_YAZ_ARRAY_NAME) == null) {
+            servletContext.setAttribute(MAIN_SYSTEM_EACH_YAZ_ARRAY_NAME, new ArrayList<MainSystem>());
+        }
             MainSystem currentAbsSystem = (MainSystem) servletContext.getAttribute(MAIN_SYSTEM_ATTRIBUTE_NAME);
             ArrayList<MainSystem> array = (ArrayList<MainSystem>) (servletContext.getAttribute(MAIN_SYSTEM_EACH_YAZ_ARRAY_NAME));
             int currentYAZ = currentAbsSystem.getCurrYaz();
