@@ -1,4 +1,5 @@
 import Engine.MainSystem;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -19,14 +20,17 @@ public class CurrentYazServlet extends HttpServlet {
 
         switch (moveDirection) {
             case "+": {
-                //increase yaz
-                engine.moveTimeLine();
+                synchronized (this) {
+                    ServletUtils.saveCurrentSystem(getServletContext());
+                    engine.moveTimeLine();
+                }
                 ServletUtils.setAdminVersion(ServletUtils.getAdminVersion() + 1);
                 ServletUtils.setCustomerVersion(ServletUtils.getCustomerVersion() + 1);
                 break;
             }
             case "-": {
-                //decrease yaz
+                int yazToRewind = Integer.parseInt(request.getParameter("yaz-rewind"));
+                rewindOrStopRewind(yazToRewind);
                 ServletUtils.setAdminVersion(ServletUtils.getAdminVersion() + 1);
                 ServletUtils.setCustomerVersion(ServletUtils.getCustomerVersion() + 1);
                 break;
@@ -38,5 +42,23 @@ public class CurrentYazServlet extends HttpServlet {
 
         response.getWriter().print(engine.getCurrYaz());
         response.getWriter().close();
+    }
+
+
+    private void rewindOrStopRewind(int yazToRewind) {
+        ServletContext servletContext = getServletContext();
+        int lastYaz = ServletUtils.getLastYaz(servletContext);
+        MainSystem system = null;
+
+        if(yazToRewind == 0) {
+            ServletUtils.setIsRewind(false);
+            system = ServletUtils.getAbsSystemInSpecificYaz(servletContext,lastYaz);
+            ServletUtils.setAbsSystem(servletContext, system);
+        }
+        else {
+            ServletUtils.setIsRewind(true);
+            system =  ServletUtils.getAbsSystemInSpecificYaz(servletContext, yazToRewind);
+            ServletUtils.setAbsSystem(servletContext, system);
+        }
     }
 }

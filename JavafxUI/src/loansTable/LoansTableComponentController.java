@@ -176,8 +176,12 @@ public class LoansTableComponentController implements ParentController {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if(response.isSuccessful()){
-                    String rawBody = response.body().string();
+                String rawBody = response.body().string();
+                boolean isResSuccessful = response.isSuccessful();
+                int responseCode = response.code();
+                response.close();
+                if(isResSuccessful){
+
                     Type arrayListLoanDtoType = new TypeToken<ArrayList<LoanDTO>>(){}.getType();
                     ArrayList<LoanDTO> loans = Configurations.GSON.fromJson(rawBody, arrayListLoanDtoType);
 
@@ -185,12 +189,11 @@ public class LoansTableComponentController implements ParentController {
                         putLoansInTable(loans);
                     });
                 }
-
                 else{
-                    parentController.createExceptionDialog(new Exception(Integer.toString(response.code())));
+                    Platform.runLater(() -> {
+                        parentController.createExceptionDialog(new Exception(Integer.toString(responseCode)));
+                    });
                 }
-
-                response.close();
             }
         };
 
