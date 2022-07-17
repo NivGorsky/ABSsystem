@@ -23,7 +23,7 @@ public class Configurations {
             .registerTypeAdapter(LoanCategoriesDTO.class, new LoanCategoriesDeserializer())
             .registerTypeAdapter(NotificationsDTO.class, new NotificationsDTODeserializer())
             .create();
-    
+
 //    public final static File logFile = new File("/Users/nivos/projects/ABSsystem/logFile.txt");
 //    public final static void printToFile(String objectToPrint){
 //        try{
