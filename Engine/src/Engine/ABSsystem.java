@@ -601,6 +601,8 @@ public class ABSsystem implements MainSystem, SystemService {
     public void createNewLoan(LoanDTO newLoan) {
         Loan loan = new Loan(newLoan.getLoanName(), newLoan.getCustomerName(), newLoan.getInitialAmount(),
                 newLoan.getMaxYazToPay(), newLoan.getYazPerPayment(), newLoan.getInterestPerPayment(), newLoan.getCategory(), getCurrYaz());
+        loan.getPaymentsData().createAllLoanPayments(loan.getMaxYazToPay(), loan.getPaymentRateInYaz(), loan.getInitialAmount(),
+        loan.getInterestPerPaymentSetByBorrowerInPercents(), loan.getBorrowerName());
         loans.add(loan);
         LoanCategories.addCategory(newLoan.getCategory());
 

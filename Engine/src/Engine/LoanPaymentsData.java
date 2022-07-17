@@ -102,7 +102,7 @@ public class LoanPaymentsData {
         return p;
     }
 
-    public void createAllLoanPayments(int maxYazToPay, int paymentRateInYaz, double initialAmount, double interestPerPaymentSetByBorrowerInPercents, String borrowerName){
+    public void createAllLoanPayments(int maxYazToPay, int paymentRateInYaz, int initialAmount, double interestPerPaymentSetByBorrowerInPercents, String borrowerName){
         int numberOfPayments = maxYazToPay / paymentRateInYaz;
         double loanPartOfEachPayment = initialAmount / numberOfPayments;
         double interestPartOfEachPayment = (interestPerPaymentSetByBorrowerInPercents / 100) * loanPartOfEachPayment;
