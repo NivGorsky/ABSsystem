@@ -37,6 +37,7 @@ public class CustomerComponentsRefresher extends TimerTask {
                 shouldUpdate();
                 if(update) {
                     customerSceneToUpdate.updateCurrentYaz();
+                    customerSceneToUpdate.onShow();
                 }
             }
         }
@@ -66,6 +67,7 @@ public class CustomerComponentsRefresher extends TimerTask {
                 else {
                     Platform.runLater(() -> {
                        int versionResponse = Configurations.GSON.fromJson(responseBody, int.class);
+
                        if(version != versionResponse) {
                            update = true;
                            version++;

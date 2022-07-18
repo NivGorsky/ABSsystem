@@ -8,4 +8,12 @@ public class RewindCustomerDTO {
         this.customerDTO = i_customerDto;
         this.yaz = i_yaz;
     }
+
+    public CustomerDTO getCustomerDTO() {
+        return customerDTO;
+    }
+
+    public int getYaz() {
+        return yaz;
+    }
 }

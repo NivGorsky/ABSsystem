@@ -1,5 +1,6 @@
 package customerScene;
 import DTO.CustomerDTO;
+import DTO.RewindCustomerDTO;
 import customerScene.createLoanScene.CreateLoanSceneController;
 import customerScene.information.InformationController;
 import customerScene.loanTrading.LoanTradingSceneController;
@@ -90,7 +91,7 @@ public class CustomerSceneController implements ParentController {
 
     private Timer timer;
     private final int REFRESH_RATE = 2;
-    private CustomerDTO customerDTO;
+    private RewindCustomerDTO rewindCustomerDTO;
 
     //.............................................................................................//
 
@@ -306,9 +307,18 @@ public class CustomerSceneController implements ParentController {
 
     private void onShowRewind(){
         getRewindDTO();
-        informationController.getBorrowerLoansTableComponentController().putLoansInTable(customerDTO.getLoansAsBorrower());
-        informationController.getLenderLoansTableComponentController().putLoansInTable(customerDTO.getLoansAsLender());
-        informationController.getAccountTransactionsController().updateAccountMovementsTable(customerDTO.getAccountMovements());
+
+        if(rewindCustomerDTO != null){
+            informationController.getBorrowerLoansTableComponentController().clearTable();
+            informationController.getBorrowerLoansTableComponentController().putLoansInTable(rewindCustomerDTO.getCustomerDTO().getLoansAsBorrower());
+
+            informationController.getLenderLoansTableComponentController().clearTable();
+            informationController.getLenderLoansTableComponentController().putLoansInTable(rewindCustomerDTO.getCustomerDTO().getLoansAsLender());
+
+
+            informationController.getAccountTransactionsController().updateAccountMovementsTable(rewindCustomerDTO.getCustomerDTO().getAccountMovements());
+            currentYAZ.set(rewindCustomerDTO.getYaz());
+        }
     }
 
     private void getRewindDTO(){
@@ -338,7 +348,7 @@ public class CustomerSceneController implements ParentController {
 
                 else{
                     Platform.runLater(() -> {
-                        customerDTO = GsonWrapper.GSON.fromJson(responseBodyAsJson, CustomerDTO.class);
+                        rewindCustomerDTO = GsonWrapper.GSON.fromJson(responseBodyAsJson, RewindCustomerDTO.class);
                     });
                 }
             }
@@ -350,18 +360,13 @@ public class CustomerSceneController implements ParentController {
     public void onShow() {
         updateCurrentYaz();
         updateIsRewindMode();
-        if(isRewindMode.getValue()){
-            onShowRewind();
-        }
 
-        else{
-            if(isFileSelected.get())
-            {
-                informationController.onShow();
-                paymentController.onShow();
-                loansTradingController.onShow();
-                createNewLoanController.onShow();
-            }
+        if(isFileSelected.get())
+        {
+            informationController.onShow();
+            paymentController.onShow();
+            loansTradingController.onShow();
+            createNewLoanController.onShow();
         }
     }
 
@@ -390,7 +395,10 @@ public class CustomerSceneController implements ParentController {
 
                 else{
                     Platform.runLater(() -> {
-                            isRewindMode.set(Boolean.parseBoolean(responseBody));
+                        isRewindMode.set(Boolean.parseBoolean(responseBody));
+                        if(isRewindMode.getValue()){
+                            onShowRewind();
+                        }
                     });
                 }
             }
