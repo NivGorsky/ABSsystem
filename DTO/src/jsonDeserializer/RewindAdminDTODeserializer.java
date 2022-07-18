@@ -1,7 +1,7 @@
 package jsonDeserializer;
 import DTO.CustomerDTO;
 import DTO.LoanDTO;
-import DTO.RewindDTO;
+import DTO.RewindAdminDTO;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
@@ -9,10 +9,10 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RewindDTODeserializer implements JsonDeserializer<RewindDTO> {
+public class RewindAdminDTODeserializer implements JsonDeserializer<RewindAdminDTO> {
 
     @Override
-    public RewindDTO deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+    public RewindAdminDTO deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();
 
         //deserialize customer dtos
@@ -31,7 +31,7 @@ public class RewindDTODeserializer implements JsonDeserializer<RewindDTO> {
 
         int currentYaz = jsonObject.get("currentYaz").getAsInt();
 
-        RewindDTO rewindDTO = new RewindDTO(currentYaz, customersDTOS, loansDTOS);
+        RewindAdminDTO rewindDTO = new RewindAdminDTO(currentYaz, customersDTOS, loansDTOS);
 
         return rewindDTO;
     }

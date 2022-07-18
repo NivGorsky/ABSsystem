@@ -2,13 +2,13 @@ package DTO;
 
 import java.util.ArrayList;
 
-public class RewindDTO {
+public class RewindAdminDTO {
 
     private int currentYaz;
     private ArrayList<CustomerDTO> customers;
     private ArrayList<LoanDTO> loans;
 
-    public RewindDTO(int yaz, ArrayList<CustomerDTO> customers, ArrayList<LoanDTO> loans) {
+    public RewindAdminDTO(int yaz, ArrayList<CustomerDTO> customers, ArrayList<LoanDTO> loans) {
         this.currentYaz = yaz;
         this.customers = customers;
         this.loans = loans;

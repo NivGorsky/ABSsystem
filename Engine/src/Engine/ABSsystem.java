@@ -20,7 +20,7 @@ public class ABSsystem implements MainSystem, SystemService {
     private ArrayList<String> admins;
     private boolean isAdminLoggedIn;
     private Map<String, Loan> seller2loansForSale;
-    private final Map<Integer, RewindDTO> yaz2SystemState;
+    private final Map<Integer, RewindAdminDTO> yaz2SystemState;
 
     public ABSsystem() {
         systemTimeline = new Timeline();
@@ -219,7 +219,7 @@ public class ABSsystem implements MainSystem, SystemService {
             customerDTOs.add(createCustomerDTO(customer));
         }
 
-        RewindDTO rewindDTO = new RewindDTO(currentYaz, customerDTOs, loanDTOs);
+        RewindAdminDTO rewindDTO = new RewindAdminDTO(currentYaz, customerDTOs, loanDTOs);
         yaz2SystemState.put(currentYaz, rewindDTO);
     }
 
@@ -231,14 +231,16 @@ public class ABSsystem implements MainSystem, SystemService {
     //------------------------ TIMELINE METHODS ---------------------------------------------------//
 
     @Override
-    public RewindDTO getAdminRewindData(int yaz) {
+    public RewindAdminDTO getAdminRewindData(int yaz) {
         return yaz2SystemState.get(yaz);
     }
 
     @Override
-    public  CustomerDTO getCustomerRewindData(int yaz, String customerName) {
-        RewindDTO systemState = yaz2SystemState.get(yaz);
-        return systemState.findCustomer(customerName);
+    public  RewindCustomerDTO getCustomerRewindData(int yaz, String customerName) {
+        RewindAdminDTO systemState = yaz2SystemState.get(yaz);
+        CustomerDTO customerDTO = systemState.findCustomer(customerName);
+
+        return new RewindCustomerDTO(customerDTO, yaz);
     }
 
     @Override

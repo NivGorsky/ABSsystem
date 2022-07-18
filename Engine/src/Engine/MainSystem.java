@@ -5,7 +5,6 @@ import javax.xml.bind.JAXBException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.function.Consumer;
 
 
 public interface MainSystem {
@@ -42,6 +41,6 @@ public interface MainSystem {
     void sellLoan(LoanForSaleDTO loanForSale) throws Exception;
     void buyLoan(LoanForSaleDTO loanToBuy) throws Exception;
     Map<String, LoanDTO> getSeller2loansForSale();
-    RewindDTO getAdminRewindData(int yaz);
-    CustomerDTO getCustomerRewindData(int yaz, String customerName);
+    RewindAdminDTO getAdminRewindData(int yaz);
+    RewindCustomerDTO getCustomerRewindData(int yaz, String customerName);
 }
