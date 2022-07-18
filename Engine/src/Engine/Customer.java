@@ -8,7 +8,7 @@ public class Customer implements Comparable{
     private final String name;
     private ArrayList<Loan> loansAsBorrower;
     private ArrayList<Loan> loansAsLender;
-    private final Account account;
+    private Account account;
 
     public Customer (String custName, double balance)
     {
@@ -22,6 +22,7 @@ public class Customer implements Comparable{
     public ArrayList<Loan> getLoansAsBorrower() { return loansAsBorrower; }
     public ArrayList<Loan> getLoansAsLender() { return loansAsLender; }
     public Account getAccount() { return account; }
+    public void setAccount(Account newAccount){this.account = newAccount;}
 
     public void withdrawMoney(int yaz, double amount) throws ValueOutOfRangeException
     {

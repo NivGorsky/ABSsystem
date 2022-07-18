@@ -33,6 +33,8 @@ public class ABSsystem implements MainSystem, SystemService {
         seller2loansForSale = new HashMap<>();
     }
 
+    public LinkedList<Loan> getAllLoans(){return this.loans;}
+
     //------------------------ XML FILE METHODS ---------------------------------------------------//
     @Override
     public void loadXML(String contentType, InputStream inputStream, String customer) throws XMLFileException, JAXBException {
