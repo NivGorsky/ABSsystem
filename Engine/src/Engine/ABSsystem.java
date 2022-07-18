@@ -121,7 +121,7 @@ public class ABSsystem implements MainSystem, SystemService {
 
     private LoanDTO createLoanDTO(Loan l) {
         LoanDTO loanDTO = new LoanDTO(l.getLoanName(), l.getBorrowerName(), l.getInitialAmount(),
-                l.getMaxYazToPay(), l.getInterestPerPaymentSetByBorrowerInPercents(), l.getTotalInterestForLoan(),
+                l.getTotalYazToPay(), l.getInterestPerPaymentSetByBorrowerInPercents(), l.getTotalInterestForLoan(),
                 l.getPaymentRateInYaz(), l.getStatus().toString(), l.getCategory(), l.getInterestPaid(), l.getAmountPaid(),
                 l.getDebt(), l.getLoanAmountFinancedByLenders());
 
@@ -601,7 +601,7 @@ public class ABSsystem implements MainSystem, SystemService {
     public void createNewLoan(LoanDTO newLoan) {
         Loan loan = new Loan(newLoan.getLoanName(), newLoan.getCustomerName(), newLoan.getInitialAmount(),
                 newLoan.getMaxYazToPay(), newLoan.getYazPerPayment(), newLoan.getInterestPerPayment(), newLoan.getCategory(), getCurrYaz());
-        loan.getPaymentsData().createAllLoanPayments(loan.getMaxYazToPay(), loan.getPaymentRateInYaz(), loan.getInitialAmount(),
+        loan.getPaymentsData().createAllLoanPayments(loan.getTotalYazToPay(), loan.getPaymentRateInYaz(), loan.getInitialAmount(),
         loan.getInterestPerPaymentSetByBorrowerInPercents(), loan.getBorrowerName());
         loans.add(loan);
         LoanCategories.addCategory(newLoan.getCategory());
