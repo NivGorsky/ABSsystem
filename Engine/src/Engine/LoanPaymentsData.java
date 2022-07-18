@@ -69,6 +69,7 @@ public class LoanPaymentsData {
             this.interestPartThatWasPaid += interestPartThatWasPaidInAmount;
         }
 
+
         public double getBothPartsOfPaymentThatWasPaid(){return this.loanPartThatWasPaid + this.interestPartThatWasPaid;}
 
         public int compare(LoanPaymentsData.Payment p1, LoanPaymentsData.Payment p2) { return (p1.scheduledYaz - p2.scheduledYaz); }
@@ -76,12 +77,16 @@ public class LoanPaymentsData {
 
 //    private final Engine.Loan containingLoan;
 
-    private final Map<LoanPaymentsData.PaymentType, PaymentsDB> paymentsDataBases;
+    private Map<LoanPaymentsData.PaymentType, PaymentsDB> paymentsDataBases;
 
     public LoanPaymentsData(){
 //        this.containingLoan = containingLoan;
         this.paymentsDataBases = new TreeMap<LoanPaymentsData.PaymentType, PaymentsDB>();
         this.initPaymentDataBases();
+    }
+
+    public void setLoanPaymentsData(Map<LoanPaymentsData.PaymentType, PaymentsDB> newPaymentsDB){
+        this.paymentsDataBases = newPaymentsDB;
     }
 
     private void initPaymentDataBases()

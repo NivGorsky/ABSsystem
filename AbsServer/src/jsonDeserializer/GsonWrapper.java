@@ -12,7 +12,7 @@ public class GsonWrapper {
     public static ABSsystem currentSystem;
     public static Gson GSON = new GsonBuilder()
             .registerTypeAdapter(Customer.class, new CustomerDeserializer(currentSystem))
-            .registerTypeAdapter(Loan.class, new LoanDeserializer(currentSystem))
+            .registerTypeAdapter(Loan.class, new LoanDeserializer())
             .registerTypeAdapter(LoanPaymentsData.class, new LoanPaymentsDataDeserializer())
             .create();
 }

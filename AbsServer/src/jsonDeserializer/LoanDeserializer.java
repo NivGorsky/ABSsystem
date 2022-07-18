@@ -14,10 +14,6 @@ import java.util.List;
 
 public class LoanDeserializer implements JsonDeserializer<Loan> {
 
-    private final ABSsystem system;
-
-    public LoanDeserializer(ABSsystem system) { this.system = system; }
-
     @Override
     public Loan deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();
@@ -43,7 +39,6 @@ public class LoanDeserializer implements JsonDeserializer<Loan> {
         double interestPaid = jsonObject.get("interestPaid").getAsDouble();
         double amountPaid = jsonObject.get("amountPaid").getAsDouble();
         double debt = jsonObject.get("debt").getAsDouble();
-
 
                                     //time line data
         int totalYazToPay = jsonObject.getAsJsonObject("maxYazToPay").get("value").getAsInt();
