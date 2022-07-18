@@ -306,7 +306,9 @@ public class MoveTimeLine {
         LinkedList<Loan.LenderDetails> lenders = loan.getLendersDetails();
 
         for (Loan.LenderDetails lenderDetails: lenders){
-            Account lendersAccount = lenderDetails.lender.getAccount();
+            Customer lender = absSystem.getCustomerByName(lenderDetails.lenderName);
+
+            Account lendersAccount = lender.getAccount();
             Account loansAccount = loan.getLoanAccount();
             double amountInLoan = loansAccount.getBalance();
             double lendersPartOfLoanInPercent = lenderDetails.lendersPartOfLoanInPercent;

@@ -5,7 +5,6 @@ import Exceptions.*;
 
 public class Loan
 {
-    static int loansNum = 0;
     private SystemService systemService;
 
     public enum LoanStatus {
@@ -13,7 +12,7 @@ public class Loan
     }
 
     public class LenderDetails {
-        public Customer lender;
+        public String lenderName;
         public double lendersAmount;
         public double lendersPartOfLoanInPercent;
 
@@ -21,7 +20,6 @@ public class Loan
 
     //loan's general data
     private final String loanName;
-    private final int loanId; //string uuid
     private final String category;
     private final int initialAmount;
     private final String borrowerName;
@@ -38,7 +36,7 @@ public class Loan
     private double debt;
 
     //time-line data
-    private final int maxYazToPay;
+    private final int totalYazToPay;
     private int activationYaz;
     private int yazRemainingToPay;
     private int finishYaz;
@@ -53,8 +51,6 @@ public class Loan
     {
         //init loan's general data
         this.loanName = loanName;
-        this.loanId = loansNum;
-        loansNum++;
 
         this.category = category;
         this.initialAmount = originalLoanAmount;
@@ -72,20 +68,19 @@ public class Loan
         this.debt = 0;
 
         //init time-line data
-        this.maxYazToPay = yaz;
+        this.totalYazToPay = yaz;
         this.activationYaz = -1;
         this.yazRemainingToPay = yaz;
         this.finishYaz = -1;
 
         //init loan's lenders data
-        this.lendersBelongToLoan = new LinkedList<LenderDetails>();
+        this.lendersBelongToLoan = new LinkedList<>();
         this.loanPercentageTakenByLenders = 0;
         this.loanAmountFinancedByLenders = 0;
     }
 
 
     //getters
-    public int getLoanId() { return loanId; }
     public  String getLoanName() { return loanName; }
     public String getBorrowerName() {
         return borrowerName;
@@ -93,8 +88,8 @@ public class Loan
     public int getInitialAmount() {
         return initialAmount;
     }
-    public int getMaxYazToPay() {
-        return maxYazToPay;
+    public int getTotalYazToPay() {
+        return totalYazToPay;
     }
     public int getPaymentRateInYaz() {
         return paymentRateInYaz;
@@ -157,29 +152,26 @@ public class Loan
                 activationYaz = currentYaz;
                 break;
             }
-
             case PENDING:
                 break;
             case IN_RISK:
-
                 break;
-            case FINISHED:
-                    setDebt(0);
-                    setFinishYaz(currentYaz);
-
-                    break;
-
+            case FINISHED: {
+                setDebt(0);
+                setFinishYaz(currentYaz);
+                break;
+            }
             case NEW:
                 break;
         }
     }
 
     //methods
-    public void addNewLender(Engine.Customer newLender, double lendersPartOfLoanAmount) throws Exception
+    public void addNewLender(String newLenderName, double lendersPartOfLoanAmount) throws Exception
     {
         double amountOpenToLend = this.getInitialAmount() - this.getLoanAmountFinancedByLenders();
 
-        if(newLender.getName().equals(this.getBorrowerName())){
+        if(newLenderName.equals(this.getBorrowerName())){
             throw new SystemRestrictionsException(this, "User is not allowed to register to a loan as lender when the user is already registered as borrower");
         }
 
@@ -189,7 +181,7 @@ public class Loan
 
         for(LenderDetails lender : this.lendersBelongToLoan)
         {
-            if(newLender.getName().equals(lender.lender.getName()))
+            if(newLenderName.equals(lender.lenderName))
             {
                 lender.lendersAmount += lendersPartOfLoanAmount;
                 lender.lendersPartOfLoanInPercent += (lendersPartOfLoanAmount/initialAmount)*100;
@@ -201,7 +193,7 @@ public class Loan
         }
 
         Loan.LenderDetails newLenderDetails = new Loan.LenderDetails();
-        newLenderDetails.lender = newLender;
+        newLenderDetails.lenderName = newLenderName;
         newLenderDetails.lendersAmount = lendersPartOfLoanAmount;
         newLenderDetails.lendersPartOfLoanInPercent = (lendersPartOfLoanAmount / this.initialAmount) * 100;
         this.lendersBelongToLoan.add(newLenderDetails);

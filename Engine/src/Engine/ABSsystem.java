@@ -126,12 +126,12 @@ public class ABSsystem implements MainSystem, SystemService {
 
     private LoanDTO createLoanDTO(Loan l) {
         LoanDTO loanDTO = new LoanDTO(l.getLoanName(), l.getBorrowerName(), l.getInitialAmount(),
-                l.getMaxYazToPay(), l.getInterestPerPaymentSetByBorrowerInPercents(), l.getTotalInterestForLoan(),
+                l.getTotalYazToPay(), l.getInterestPerPaymentSetByBorrowerInPercents(), l.getTotalInterestForLoan(),
                 l.getPaymentRateInYaz(), l.getStatus().toString(), l.getCategory(), l.getInterestPaid(), l.getAmountPaid(),
                 l.getDebt(), l.getLoanAmountFinancedByLenders());
 
         for (Loan.LenderDetails ld : l.getLendersDetails()) {
-            loanDTO.addToLendersNameAndAmount(ld.lender.getName(), ld.lendersAmount);
+            loanDTO.addToLendersNameAndAmount(ld.lenderName, ld.lendersAmount);
         }
 
         setLoanDTOUnpaidPayments(l.getPaymentsData().getPaymentsDataBases().get(LoanPaymentsData.PaymentType.UNPAID), loanDTO);
@@ -293,7 +293,7 @@ public class ABSsystem implements MainSystem, SystemService {
 
     private double getLendersPartOfLoanInAmount(Loan loan, Customer lender) throws Exception {
         for (Loan.LenderDetails lenderDetails : loan.getLendersDetails()) {
-            if (lenderDetails.lender.getName().equals(lender.getName())) {
+            if (lenderDetails.lenderName.equals(lender.getName())) {
                 return lenderDetails.lendersAmount;
             }
         }
@@ -303,7 +303,7 @@ public class ABSsystem implements MainSystem, SystemService {
 
     private double getLendersPartOfLoanInPercent(Loan loan, Customer lender) throws Exception {
         for (Loan.LenderDetails lenderDetails : loan.getLendersDetails()) {
-            if (lenderDetails.lender.getName().equals(lender.getName())) {
+            if (lenderDetails.lenderName.equals(lender.getName())) {
                 return lenderDetails.lendersPartOfLoanInPercent;
             }
         }
@@ -316,7 +316,7 @@ public class ABSsystem implements MainSystem, SystemService {
         LinkedList<Loan.LenderDetails> lendersDetails = loan.getLendersDetails();
 
         for (Loan.LenderDetails lenderDetails : lendersDetails) {
-            if (lenderDetails.lender.getName().equals(customerName)) {
+            if (lenderDetails.lenderName.equals(customerName)) {
                 result = true;
                 break;
             }
@@ -367,7 +367,8 @@ public class ABSsystem implements MainSystem, SystemService {
         LinkedList<Loan.LenderDetails> lenders = loan.getLendersDetails();
 
         for (Loan.LenderDetails lenderDetails: lenders){
-            Account lendersAccount = lenderDetails.lender.getAccount();
+            Customer lender = getCustomerByName(lenderDetails.lenderName);
+            Account lendersAccount = lender.getAccount();
             Account loansAccount = loan.getLoanAccount();
             double amountInLoan = loansAccount.getBalance();
             double lendersPartOfLoanInPercent = lenderDetails.lendersPartOfLoanInPercent;
@@ -606,7 +607,7 @@ public class ABSsystem implements MainSystem, SystemService {
     public void createNewLoan(LoanDTO newLoan) {
         Loan loan = new Loan(newLoan.getLoanName(), newLoan.getCustomerName(), newLoan.getInitialAmount(),
                 newLoan.getMaxYazToPay(), newLoan.getYazPerPayment(), newLoan.getInterestPerPayment(), newLoan.getCategory(), getCurrYaz());
-        loan.getPaymentsData().createAllLoanPayments(loan.getMaxYazToPay(), loan.getPaymentRateInYaz(), loan.getInitialAmount(),
+        loan.getPaymentsData().createAllLoanPayments(loan.getTotalYazToPay(), loan.getPaymentRateInYaz(), loan.getInitialAmount(),
         loan.getInterestPerPaymentSetByBorrowerInPercents(), loan.getBorrowerName());
         loans.add(loan);
         LoanCategories.addCategory(newLoan.getCategory());
@@ -649,7 +650,9 @@ public class ABSsystem implements MainSystem, SystemService {
         }
 
         for(Loan.LenderDetails details : loanToSell.getLendersDetails()){
-            if(details.lender == seller) {
+            Customer lender = getCustomerByName(details.lenderName);
+
+            if(lender == seller) {
                 lendersPartInLoan = details.lendersPartOfLoanInPercent;
                 break;
             }
@@ -661,7 +664,7 @@ public class ABSsystem implements MainSystem, SystemService {
 
         try {
             loanToSell.getLendersDetails().remove(seller);
-            loanToSell.addNewLender(buyer, lendersPartInLoan);
+            loanToSell.addNewLender(buyer.getName(), lendersPartInLoan);
         }
         catch (Exception ex) {
             throw ex;
