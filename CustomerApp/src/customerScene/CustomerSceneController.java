@@ -302,16 +302,28 @@ public class CustomerSceneController implements ParentController {
         call.enqueue(currentYazCallBack);
     }
 
+    private void onShowRewind(){
+        
+    }
+
     public void onShow() {
         updateCurrentYaz();
         updateIsRewindMode();
-        if(isFileSelected.get())
-        {
-            informationController.onShow();
-            paymentController.onShow();
-            loansTradingController.onShow();
-            createNewLoanController.onShow();
+        if(isRewindMode.getValue()){
+            onShowRewind();
         }
+
+        else{
+            if(isFileSelected.get())
+            {
+                informationController.onShow();
+                paymentController.onShow();
+                loansTradingController.onShow();
+                createNewLoanController.onShow();
+            }
+        }
+
+
     }
 
     private void updateIsRewindMode() {

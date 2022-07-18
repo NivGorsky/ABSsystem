@@ -12,6 +12,8 @@ public class RewindModeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
+        String rewindQuery = request.getParameter("move-direction");
+
         response.setContentType("application/json");
         boolean res = ServletUtils.getIsRewind();
         response.getWriter().println(ServletUtils.GSON.toJson(res));

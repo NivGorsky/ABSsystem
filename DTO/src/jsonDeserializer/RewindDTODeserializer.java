@@ -31,10 +31,7 @@ public class RewindDTODeserializer implements JsonDeserializer<RewindDTO> {
 
         int currentYaz = jsonObject.get("currentYaz").getAsInt();
 
-        RewindDTO rewindDTO = new RewindDTO();
-        rewindDTO.currentYaz = currentYaz;
-        rewindDTO.customers = customersDTOS;
-        rewindDTO.loans = loansDTOS;
+        RewindDTO rewindDTO = new RewindDTO(currentYaz, customersDTOS, loansDTOS);
 
         return rewindDTO;
     }

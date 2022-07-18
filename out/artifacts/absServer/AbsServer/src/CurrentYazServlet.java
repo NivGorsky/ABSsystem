@@ -1,3 +1,4 @@
+import Engine.ABSsystem;
 import Engine.MainSystem;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
@@ -21,7 +22,6 @@ public class CurrentYazServlet extends HttpServlet {
         switch (moveDirection) {
             case "+": {
                 synchronized (this) {
-                    ServletUtils.saveCurrentSystem(getServletContext());
                     engine.moveTimeLine();
                 }
                 ServletUtils.setAdminVersion(ServletUtils.getAdminVersion() + 1);
@@ -47,19 +47,17 @@ public class CurrentYazServlet extends HttpServlet {
 
 
     private void rewindOrStopRewind(int yazToRewind) {
-        ServletContext servletContext = getServletContext();
-        int lastYaz = ServletUtils.getLastYaz(servletContext);
-        MainSystem system = null;
-
-        if(yazToRewind == 0) {
-            ServletUtils.setIsRewind(false);
-            system = ServletUtils.getAbsSystemInSpecificYaz(servletContext,lastYaz-1);
-            ServletUtils.setAbsSystem(servletContext, system);
-        }
-        else {
-            ServletUtils.setIsRewind(true);
-            system =  ServletUtils.getAbsSystemInSpecificYaz(servletContext, yazToRewind);
-            ServletUtils.setAbsSystem(servletContext, system);
-        }
+//        MainSystem system = null;
+//
+//        if(yazToRewind == 0) {
+//            ServletUtils.setIsRewind(false);
+//            system = ServletUtils.getAbsSystemInSpecificYaz(servletContext,lastYaz-1);
+//            ServletUtils.setAbsSystem(servletContext, system);
+//        }
+//        else {
+//            ServletUtils.setIsRewind(true);
+//            system =  ServletUtils.getAbsSystemInSpecificYaz(servletContext, yazToRewind);
+//            ServletUtils.setAbsSystem(servletContext, system);
+//        }
     }
 }

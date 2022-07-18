@@ -47,17 +47,14 @@ public class CurrentYazServlet extends HttpServlet {
 
 
     private void rewindOrStopRewind(int yazToRewind) {
-        MainSystem system = null;
+        MainSystem engine = ServletUtils.getAbsSystem(getServletContext());
 
-        if(yazToRewind == 0) {
+        if(yazToRewind == engine.getCurrYaz()) {
             ServletUtils.setIsRewind(false);
-            system = ServletUtils.getAbsSystemInSpecificYaz(servletContext,lastYaz-1);
-            ServletUtils.setAbsSystem(servletContext, system);
         }
+
         else {
             ServletUtils.setIsRewind(true);
-            system =  ServletUtils.getAbsSystemInSpecificYaz(servletContext, yazToRewind);
-            ServletUtils.setAbsSystem(servletContext, system);
         }
     }
 }
