@@ -47,27 +47,26 @@ public class ServletUtils {
     public static MainSystem getAbsSystemInSpecificYaz(ServletContext servletContext, int yaz) {
         synchronized (mainSystemLock) {
             if(servletContext.getAttribute(MAIN_SYSTEM_EACH_YAZ_ARRAY_NAME) == null) {
-                servletContext.setAttribute(MAIN_SYSTEM_EACH_YAZ_ARRAY_NAME, new ArrayList<String>());
+                servletContext.setAttribute(MAIN_SYSTEM_EACH_YAZ_ARRAY_NAME, new ArrayList<MainSystem>());
             }
         }
 
-        ArrayList<String> array =(ArrayList<String>) (servletContext.getAttribute(MAIN_SYSTEM_EACH_YAZ_ARRAY_NAME));
-
-        return GSON.fromJson(array.get(yaz),ABSsystem.class);
+        ArrayList<MainSystem> array =(ArrayList<MainSystem>) (servletContext.getAttribute(MAIN_SYSTEM_EACH_YAZ_ARRAY_NAME));
+        return array.get(yaz);
     }
 
     public static void saveCurrentSystem (ServletContext servletContext) {
         if(servletContext.getAttribute(MAIN_SYSTEM_EACH_YAZ_ARRAY_NAME) == null) {
-            servletContext.setAttribute(MAIN_SYSTEM_EACH_YAZ_ARRAY_NAME, new ArrayList<String>());
+            servletContext.setAttribute(MAIN_SYSTEM_EACH_YAZ_ARRAY_NAME, new ArrayList<MainSystem>());
         }
             MainSystem currentAbsSystem = (MainSystem) servletContext.getAttribute(MAIN_SYSTEM_ATTRIBUTE_NAME);
-            ArrayList<String> array = (ArrayList<String>) (servletContext.getAttribute(MAIN_SYSTEM_EACH_YAZ_ARRAY_NAME));
+            ArrayList<MainSystem> array = (ArrayList<MainSystem>) (servletContext.getAttribute(MAIN_SYSTEM_EACH_YAZ_ARRAY_NAME));
             int currentYAZ = currentAbsSystem.getCurrYaz();
-            array.add(currentYAZ - 1, GSON.toJson(currentAbsSystem));
+            array.add(currentYAZ - 1, currentAbsSystem);
     }
 
     public static int getLastYaz(ServletContext servletContext) {
-        ArrayList<String> array =(ArrayList<String>) (servletContext.getAttribute(MAIN_SYSTEM_EACH_YAZ_ARRAY_NAME));
+        ArrayList<MainSystem> array =(ArrayList<MainSystem>) (servletContext.getAttribute(MAIN_SYSTEM_EACH_YAZ_ARRAY_NAME));
         return array.size();
     }
 

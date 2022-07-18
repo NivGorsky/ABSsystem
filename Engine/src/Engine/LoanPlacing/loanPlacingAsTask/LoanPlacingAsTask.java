@@ -182,7 +182,7 @@ public class LoanPlacingAsTask extends Task<Boolean> {
             loansAccount = loanEntry.loan.getLoanAccount();
             absService.moveMoneyBetweenAccounts(lendersAccount, loansAccount, currentAmountToTransfer);
             //absService.moveMoneyBetweenAccounts(loansAccount, borrowersAccount, currentAmountToTransfer);
-            loanEntry.loan.addNewLender(lender.getName(), currentAmountToTransfer);
+            loanEntry.loan.addNewLender(lender, currentAmountToTransfer);
             lender.addLoanAsLender(loanEntry.loan);
         }
     }

@@ -1,5 +1,6 @@
 package Engine.XML_Handler;
 
+import Engine.Customer;
 import Engine.Loan;
 import Engine.LoanPaymentsData;
 
@@ -11,7 +12,7 @@ public class JAXBConvertor {
                 generatedLoan.absPaysEveryYaz, generatedLoan.absIntristPerPayment, generatedLoan.absCategory.trim(), currentYaz);
 
         LoanPaymentsData loanPayments = loan.getPaymentsData();
-        loanPayments.createAllLoanPayments(loan.getTotalYazToPay(), loan.getPaymentRateInYaz(), loan.getInitialAmount(), loan.getInterestPerPaymentSetByBorrowerInPercents(), loan.getBorrowerName());
+        loanPayments.createAllLoanPayments(loan.getMaxYazToPay(), loan.getPaymentRateInYaz(), loan.getInitialAmount(), loan.getInterestPerPaymentSetByBorrowerInPercents(), loan.getBorrowerName());
 
         return loan;
     }
