@@ -231,6 +231,17 @@ public class ABSsystem implements MainSystem, SystemService {
     //------------------------ TIMELINE METHODS ---------------------------------------------------//
 
     @Override
+    public RewindDTO getAdminRewindData(int yaz) {
+        return yaz2SystemState.get(yaz);
+    }
+
+    @Override
+    public  CustomerDTO getCustomerRewindData(int yaz, String customerName) {
+        RewindDTO systemState = yaz2SystemState.get(yaz);
+        return systemState.findCustomer(customerName);
+    }
+
+    @Override
     public Map<String, Loan> getLoansForSale(){
         return seller2loansForSale;
     }
