@@ -6,8 +6,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet("/rewindMode")
-public class RewindModeServlet extends HttpServlet {
+@WebServlet("/isRewindMode")
+public class IsRewindModeServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

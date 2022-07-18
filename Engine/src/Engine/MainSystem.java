@@ -42,4 +42,6 @@ public interface MainSystem {
     void sellLoan(LoanForSaleDTO loanForSale) throws Exception;
     void buyLoan(LoanForSaleDTO loanToBuy) throws Exception;
     Map<String, LoanDTO> getSeller2loansForSale();
+    RewindDTO getAdminRewindData(int yaz);
+    CustomerDTO getCustomerRewindData(int yaz, String customerName);
 }

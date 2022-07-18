@@ -367,7 +367,7 @@ public class CustomerSceneController implements ParentController {
     }
 
     private void updateIsRewindMode() {
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/rewindMode").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/isRewindMode").newBuilder();
         String finalUrl = urlBuilder.build().toString();
         Request request = new Request.Builder().url(finalUrl).build();
 

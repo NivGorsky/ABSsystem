@@ -18,11 +18,13 @@ public class ServletUtils {
     private static final Object customerVersionLock = new Object();
     private static final Object adminVersionLock = new Object();
     private static final Object isRewindLock = new Object();
+    private static final Object currentYazLock = new Object();
     public final static Gson GSON = new GsonBuilder().registerTypeAdapter(LoanPlacingDTO.class, new LoanDtoDeserializer()).create();
 
     private static int customerVersion = 1;
     private static int adminVersion = 1;
     private static boolean isRewind = false;
+    private static int currentYaz = 1;
 
     //------------------------------METHODS------------------------------------------//
 
@@ -43,6 +45,16 @@ public class ServletUtils {
     }
 
     public static boolean getIsRewind() { return isRewind; }
+
+    public static int getCurrentYaz() {
+        return currentYaz;
+    }
+
+    public static void setCurrentYaz(int currentYaz) {
+        synchronized (currentYazLock) {
+            ServletUtils.currentYaz = currentYaz;
+        }
+    }
 
     public static Gson getGson(){
         return GSON;

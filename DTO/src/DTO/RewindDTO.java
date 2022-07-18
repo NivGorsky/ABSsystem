@@ -38,4 +38,16 @@ public class RewindDTO {
         this.loans = loans;
     }
 
+    public CustomerDTO findCustomer(String customerName) {
+        CustomerDTO toReturn = null;
+        for(CustomerDTO customer : customers) {
+            if(customer.getCustomerName() == customerName) {
+                toReturn = customer;
+                break;
+            }
+        }
+
+        return toReturn;
+    }
+
 }
