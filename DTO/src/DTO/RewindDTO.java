@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class RewindDTO {
 
-    private int currentYaz;
-    private ArrayList<CustomerDTO> customers;
-    private ArrayList<LoanDTO> loans;
+    public int currentYaz;
+    public ArrayList<CustomerDTO> customers;
+    public ArrayList<LoanDTO> loans;
 }

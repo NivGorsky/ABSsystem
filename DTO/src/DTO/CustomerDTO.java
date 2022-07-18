@@ -25,12 +25,8 @@ public class CustomerDTO
 
     public String getCustomerName() { return customerName.get(); }
     public SimpleStringProperty getCustomerNameProperty() { return customerName; }
-
-
     public ArrayList<AccountMovementDTO> getAccountMovements() { return accountMovements; }
-
     public ArrayList<LoanDTO> getLoansAsBorrower() { return loansAsBorrower; }
-
     public ArrayList<LoanDTO> getLoansAsLender() { return loansAsLender; }
 
     public double getBalance() { return balance.get(); }
@@ -81,9 +77,6 @@ public class CustomerDTO
 
         return new SimpleIntegerProperty(count);
     }
-
-
-
 
     public SimpleIntegerProperty getAmountOfLoanerLoansProperty() {
         return new SimpleIntegerProperty(loansAsBorrower.size());
