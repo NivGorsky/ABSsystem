@@ -25,4 +25,17 @@ public class RewindDTO {
     public ArrayList<LoanDTO> getLoans() {
         return loans;
     }
+
+    public void setCurrentYaz(int currentYaz) {
+        this.currentYaz = currentYaz;
+    }
+
+    public void setCustomers(ArrayList<CustomerDTO> customers) {
+        this.customers = customers;
+    }
+
+    public void setLoans(ArrayList<LoanDTO> loans) {
+        this.loans = loans;
+    }
+
 }

@@ -20,6 +20,7 @@ public class ABSsystem implements MainSystem, SystemService {
     private ArrayList<String> admins;
     private boolean isAdminLoggedIn;
     private Map<String, Loan> seller2loansForSale;
+    private final Map<Integer, RewindDTO> yaz2SystemState;
 
     public ABSsystem() {
         systemTimeline = new Timeline();
@@ -30,6 +31,7 @@ public class ABSsystem implements MainSystem, SystemService {
         admins = new ArrayList<>();
         isAdminLoggedIn = false;
         seller2loansForSale = new HashMap<>();
+        yaz2SystemState = new HashMap<>();
     }
 
 
@@ -203,6 +205,24 @@ public class ABSsystem implements MainSystem, SystemService {
 
         return timeline;
     }
+
+    private void saveCurrentSystem() {
+        ArrayList<LoanDTO> loanDTOs = new ArrayList<>();
+        ArrayList<CustomerDTO> customerDTOs = new ArrayList<>();
+        int currentYaz = getCurrYaz();
+
+        for (Loan loan:loans) {
+            loanDTOs.add(createLoanDTO(loan));
+        }
+
+        for (Customer customer: name2customer.values()){
+            customerDTOs.add(createCustomerDTO(customer));
+        }
+
+        RewindDTO rewindDTO = new RewindDTO(currentYaz, customerDTOs, loanDTOs);
+        yaz2SystemState.put(currentYaz, rewindDTO);
+    }
+
 
     @Override
     public Timeline getTimeLine() {
