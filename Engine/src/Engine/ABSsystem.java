@@ -126,7 +126,7 @@ public class ABSsystem implements MainSystem, SystemService {
                 l.getDebt(), l.getLoanAmountFinancedByLenders());
 
         for (Loan.LenderDetails ld : l.getLendersDetails()) {
-            loanDTO.addToLendersNameAndAmount(ld.lender.getName(), ld.lendersAmount);
+            loanDTO.addToLendersNameAndAmount(ld.lenderName, ld.lendersAmount);
         }
 
         setLoanDTOUnpaidPayments(l.getPaymentsData().getPaymentsDataBases().get(LoanPaymentsData.PaymentType.UNPAID), loanDTO);
@@ -288,7 +288,7 @@ public class ABSsystem implements MainSystem, SystemService {
 
     private double getLendersPartOfLoanInAmount(Loan loan, Customer lender) throws Exception {
         for (Loan.LenderDetails lenderDetails : loan.getLendersDetails()) {
-            if (lenderDetails.lender.getName().equals(lender.getName())) {
+            if (lenderDetails.lenderName.equals(lender.getName())) {
                 return lenderDetails.lendersAmount;
             }
         }
@@ -298,7 +298,7 @@ public class ABSsystem implements MainSystem, SystemService {
 
     private double getLendersPartOfLoanInPercent(Loan loan, Customer lender) throws Exception {
         for (Loan.LenderDetails lenderDetails : loan.getLendersDetails()) {
-            if (lenderDetails.lender.getName().equals(lender.getName())) {
+            if (lenderDetails.lenderName.equals(lender.getName())) {
                 return lenderDetails.lendersPartOfLoanInPercent;
             }
         }
@@ -311,7 +311,7 @@ public class ABSsystem implements MainSystem, SystemService {
         LinkedList<Loan.LenderDetails> lendersDetails = loan.getLendersDetails();
 
         for (Loan.LenderDetails lenderDetails : lendersDetails) {
-            if (lenderDetails.lender.getName().equals(customerName)) {
+            if (lenderDetails.lenderName.equals(customerName)) {
                 result = true;
                 break;
             }
@@ -362,7 +362,8 @@ public class ABSsystem implements MainSystem, SystemService {
         LinkedList<Loan.LenderDetails> lenders = loan.getLendersDetails();
 
         for (Loan.LenderDetails lenderDetails: lenders){
-            Account lendersAccount = lenderDetails.lender.getAccount();
+            Customer lender = getCustomerByName(lenderDetails.lenderName);
+            Account lendersAccount = lender.getAccount();
             Account loansAccount = loan.getLoanAccount();
             double amountInLoan = loansAccount.getBalance();
             double lendersPartOfLoanInPercent = lenderDetails.lendersPartOfLoanInPercent;
@@ -644,7 +645,9 @@ public class ABSsystem implements MainSystem, SystemService {
         }
 
         for(Loan.LenderDetails details : loanToSell.getLendersDetails()){
-            if(details.lender == seller) {
+            Customer lender = getCustomerByName(details.lenderName);
+
+            if(lender == seller) {
                 lendersPartInLoan = details.lendersPartOfLoanInPercent;
                 break;
             }
@@ -656,7 +659,7 @@ public class ABSsystem implements MainSystem, SystemService {
 
         try {
             loanToSell.getLendersDetails().remove(seller);
-            loanToSell.addNewLender(buyer, lendersPartInLoan);
+            loanToSell.addNewLender(buyer.getName(), lendersPartInLoan);
         }
         catch (Exception ex) {
             throw ex;

@@ -12,7 +12,7 @@ public class Loan
     }
 
     public class LenderDetails {
-        public Customer lender;
+        public String lenderName;
         public double lendersAmount;
         public double lendersPartOfLoanInPercent;
 
@@ -167,11 +167,11 @@ public class Loan
     }
 
     //methods
-    public void addNewLender(Engine.Customer newLender, double lendersPartOfLoanAmount) throws Exception
+    public void addNewLender(String newLenderName, double lendersPartOfLoanAmount) throws Exception
     {
         double amountOpenToLend = this.getInitialAmount() - this.getLoanAmountFinancedByLenders();
 
-        if(newLender.getName().equals(this.getBorrowerName())){
+        if(newLenderName.equals(this.getBorrowerName())){
             throw new SystemRestrictionsException(this, "User is not allowed to register to a loan as lender when the user is already registered as borrower");
         }
 
@@ -181,7 +181,7 @@ public class Loan
 
         for(LenderDetails lender : this.lendersBelongToLoan)
         {
-            if(newLender.getName().equals(lender.lender.getName()))
+            if(newLenderName.equals(lender.lenderName))
             {
                 lender.lendersAmount += lendersPartOfLoanAmount;
                 lender.lendersPartOfLoanInPercent += (lendersPartOfLoanAmount/initialAmount)*100;
@@ -193,7 +193,7 @@ public class Loan
         }
 
         Loan.LenderDetails newLenderDetails = new Loan.LenderDetails();
-        newLenderDetails.lender = newLender;
+        newLenderDetails.lenderName = newLenderName;
         newLenderDetails.lendersAmount = lendersPartOfLoanAmount;
         newLenderDetails.lendersPartOfLoanInPercent = (lendersPartOfLoanAmount / this.initialAmount) * 100;
         this.lendersBelongToLoan.add(newLenderDetails);

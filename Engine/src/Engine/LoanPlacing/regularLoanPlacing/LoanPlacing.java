@@ -135,7 +135,7 @@ public abstract class LoanPlacing {
             loansAccount = loanEntry.loan.getLoanAccount();
             absService.moveMoneyBetweenAccounts(lendersAccount, loansAccount, currentAmountToTransfer);
             //absService.moveMoneyBetweenAccounts(loansAccount, borrowersAccount, currentAmountToTransfer);
-            loanEntry.loan.addNewLender(lender, currentAmountToTransfer);
+            loanEntry.loan.addNewLender(lender.getName(), currentAmountToTransfer);
             lender.addLoanAsLender(loanEntry.loan);
         }
     }
