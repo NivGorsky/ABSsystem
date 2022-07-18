@@ -1,6 +1,5 @@
 import DTO.*;
-import Engine.ABSsystem;
-import Engine.MainSystem;
+import Engine.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import jakarta.servlet.ServletContext;
@@ -19,7 +18,12 @@ public class ServletUtils {
     private static final Object customerVersionLock = new Object();
     private static final Object adminVersionLock = new Object();
     private static final Object isRewindLock = new Object();
-    public final static Gson GSON = new GsonBuilder().registerTypeAdapter(LoanPlacingDTO.class, new LoanDtoDeserializer()).create();
+    public final static Gson GSON = new GsonBuilder().registerTypeAdapter(LoanPlacingDTO.class, new LoanDtoDeserializer())
+            .registerTypeAdapter(Customer .class, new CustomerDeserializer())
+            .registerTypeAdapter(Loan .class, new LoanDeserializer(currentSystem))
+            .registerTypeAdapter(LoanPaymentsData .class, new LoanPaymentsDataDeserializer())
+            .create();
+
 
     private static int customerVersion = 1;
     private static int adminVersion = 1;

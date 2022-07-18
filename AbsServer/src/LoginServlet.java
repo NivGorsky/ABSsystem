@@ -1,12 +1,10 @@
 import Engine.MainSystem;
-import com.google.gson.Gson;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jsonDeserializer.GsonWrapper;
 
-import javax.security.auth.login.Configuration;
 import java.io.IOException;
 
 @WebServlet("/login")

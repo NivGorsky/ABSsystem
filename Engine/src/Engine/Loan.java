@@ -20,44 +20,77 @@ public class Loan
     }
 
     //loan's general data
-    private final String loanName;
-    private final String category;
-    private final int initialAmount;
-    private final String borrowerName;
-    private final double interestPerPaymentSetByBorrowerInPercents;
-    private final double totalInterestForLoan;
+    private String loanName;
+    private String category;
+    private int initialAmount;
+    private String borrowerName;
+    private double interestPerPaymentSetByBorrowerInPercents;
+    private double totalInterestForLoan;
     private LoanStatus status;
-    private final Account account;
+    private Account account;
 
     //payments data
     private LoanPaymentsData paymentsData;
-    private final int paymentRateInYaz;
+    private int paymentRateInYaz;
     private double interestPaid;
     private double amountPaid;
     private double debt;
 
+
+    public void setLoanFromJson(String loanName, String category, int initialAmount, String borrowerName,
+                           double interestPerPaymentSetByBorrowerInPercents, double totalInterestForLoan,
+                           LoanStatus status, Account account,
+                           LoanPaymentsData paymentsData, int paymentRateInYaz, double interestPaid,
+                           double amountPaid, double debt,
+                           int totalYazToPay, int activationYaz, int yazRemainingToPay,
+                                int finishYaz, LinkedList<LenderDetails> lendersBelongToLoan,
+                                double loanPercentageTakenByLenders, double loanAmountFinancedByLenders){
+        this.loanName = loanName;
+        this.category = category;
+        this.initialAmount = initialAmount;
+        this.borrowerName = borrowerName;
+        this.interestPerPaymentSetByBorrowerInPercents = interestPerPaymentSetByBorrowerInPercents;
+        this.totalInterestForLoan = totalInterestForLoan;
+        this.status = status;
+        this.account = account;
+        this.paymentsData = paymentsData;
+        this.paymentRateInYaz = paymentRateInYaz;
+        this.interestPaid = interestPaid;
+        this.amountPaid = amountPaid;
+        this.debt = debt;
+        this.totalYazToPay = totalYazToPay;
+        this.activationYaz = activationYaz;
+        this.yazRemainingToPay = yazRemainingToPay;
+        this.finishYaz = finishYaz;
+        this.lendersBelongToLoan = lendersBelongToLoan;
+        this.loanPercentageTakenByLenders = loanPercentageTakenByLenders;
+        this.loanAmountFinancedByLenders = loanAmountFinancedByLenders;
+    }
+
+
     //time-line data
-    private final int totalYazToPay;
+    private int totalYazToPay;
     private int activationYaz;
     private int yazRemainingToPay;
-    private int finishYaz;
 
+    private int finishYaz;
     //loan's lenders' data
-    private final LinkedList<LenderDetails> lendersBelongToLoan;
+    private LinkedList<LenderDetails> lendersBelongToLoan;
     private double loanPercentageTakenByLenders;
+
     private double loanAmountFinancedByLenders;
 
-    public Loan(String loanName, String borrowerName, int originalLoanAmount, int yaz, int paymentRateInYaz,
-                double interestPercentPerPayment, String category, int currentYaz)
+    public Loan(String loanName, String borrowerName, int originalLoanAmount, int totalYazToPay, int paymentRateInYaz,
+                double interestPerPaymentSetByBorrowerInPercents, String category, int currentYaz)
     {
         //init loan's general data
         this.loanName = loanName;
+        this.borrowerName = borrowerName;
+        this.initialAmount = originalLoanAmount;
 
         this.category = category;
-        this.initialAmount = originalLoanAmount;
-        this.borrowerName = borrowerName;
-        this.interestPerPaymentSetByBorrowerInPercents = interestPercentPerPayment;
-        this.totalInterestForLoan = ((interestPerPaymentSetByBorrowerInPercents*initialAmount)/100);
+        this.interestPerPaymentSetByBorrowerInPercents = interestPerPaymentSetByBorrowerInPercents;
+        this.totalInterestForLoan = ((this.interestPerPaymentSetByBorrowerInPercents *initialAmount)/100);
         this.setLoanStatus(LoanStatus.NEW, currentYaz);
         this.account = new Account(0);
 
@@ -69,9 +102,9 @@ public class Loan
         this.debt = 0;
 
         //init time-line data
-        this.totalYazToPay = yaz;
+        this.totalYazToPay = totalYazToPay;
         this.activationYaz = -1;
-        this.yazRemainingToPay = yaz;
+        this.yazRemainingToPay = totalYazToPay;
         this.finishYaz = -1;
 
         //init loan's lenders data
@@ -80,6 +113,7 @@ public class Loan
         this.loanAmountFinancedByLenders = 0;
     }
 
+    public Loan(){}
 
     //getters
     public  String getLoanName() { return loanName; }
@@ -125,8 +159,11 @@ public class Loan
     public Account getLoanAccount(){return this.account;}
     public void setSystemService(SystemService systemService){this.systemService = systemService;}
 
-
     //setters
+    public void setLoanPaymentsData(LoanPaymentsData newPaymentsData){
+        this.paymentsData = newPaymentsData;
+}
+
     public void setAmountPaid(double paymentAmount) {
         amountPaid+=paymentAmount;
     }

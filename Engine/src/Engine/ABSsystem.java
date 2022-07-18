@@ -3,12 +3,14 @@ package Engine;
 import java.io.*;
 import java.util.*;
 import Engine.PaymentsDB.PaymentsDB;
+import jsonDeserializer.GsonWrapper;
 import Exceptions.*;
 import Engine.LoanPlacing.regularLoanPlacing.LoanPlacing;
 import Engine.TimeLineMoving.MoveTimeLine;
 import DTO.*;
 import Engine.XML_Handler.*;
 import Exceptions.XMLFileException;
+
 import javax.xml.bind.JAXBException;
 
 public class ABSsystem implements MainSystem, SystemService {
@@ -31,6 +33,7 @@ public class ABSsystem implements MainSystem, SystemService {
         admins = new ArrayList<>();
         isAdminLoggedIn = false;
         seller2loansForSale = new HashMap<>();
+        GsonWrapper.setCurrentSystem(this);
     }
 
     public LinkedList<Loan> getAllLoans(){return this.loans;}

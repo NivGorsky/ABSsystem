@@ -1,4 +1,3 @@
-import DTO.CustomerDTO;
 import DTO.LoanDTO;
 import Engine.MainSystem;
 import jakarta.servlet.annotation.WebServlet;
@@ -7,7 +6,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jsonDeserializer.GsonWrapper;
 
-import javax.security.auth.login.Configuration;
 import java.io.IOException;
 import java.util.ArrayList;
 
