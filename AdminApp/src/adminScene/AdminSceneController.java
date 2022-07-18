@@ -144,7 +144,8 @@ public class AdminSceneController implements ParentController {
             isRewindMode.set(false);
             rewindButton.setText("Rewind");
             rewindYazChooseCB.getSelectionModel().clearSelection();
-            sendRewindRequest(0);
+            getCurrentYaz();
+//            sendRewindRequest(currentYAZ.get());
         }
     }
 

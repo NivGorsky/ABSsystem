@@ -82,6 +82,12 @@ public class accountTransactionsController {
             call.enqueue(showLoansInfoCallBack);
     }
 
+    public void updateAccountMovementsTable(ArrayList<AccountMovementDTO> accountMovementDTOS){
+        accountMovements.clear();
+        accountMovements.addAll(accountMovementDTOS);
+        accountTransactionsTableView.setItems(accountMovements);
+    }
+
     public accountTransactionsController(){
         accountMovements = FXCollections.observableArrayList();
         customerNameProperty = new SimpleStringProperty();

@@ -1,5 +1,6 @@
 package customerScene;
-import Engine.MainSystem;
+import DTO.CustomerDTO;
+import DTO.RewindDTO;
 import customerScene.createLoanScene.CreateLoanSceneController;
 import customerScene.information.InformationController;
 import customerScene.loanTrading.LoanTradingSceneController;
@@ -15,6 +16,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import jsonDeserializer.GsonWrapper;
 import main.Configurations;
 import mutualInterfaces.ParentController;
 import okhttp3.*;
@@ -89,6 +91,7 @@ public class CustomerSceneController implements ParentController {
 
     private Timer timer;
     private final int REFRESH_RATE = 2;
+    private CustomerDTO customerDTO;
 
     //.............................................................................................//
 
@@ -303,7 +306,46 @@ public class CustomerSceneController implements ParentController {
     }
 
     private void onShowRewind(){
-        
+        getRewindDTO();
+        informationController.getBorrowerLoansTableComponentController().putLoansInTable(customerDTO.getLoansAsBorrower());
+        informationController.getLenderLoansTableComponentController().putLoansInTable(customerDTO.getLoansAsLender());
+        informationController.getAccountTransactionsController().updateAccountMovementsTable(customerDTO.getAccountMovements());
+    }
+
+    private void getRewindDTO(){
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/getRewindData").newBuilder();
+        urlBuilder.addQueryParameter("consumer", "customer");
+        urlBuilder.addQueryParameter("customerName", customerNameProperty.getValue());
+        String finalUrl = urlBuilder.build().toString();
+        Request request = new Request.Builder().url(finalUrl).build();
+
+        Call call = Configurations.HTTP_CLIENT.newCall(request);
+        Callback rewindCallBack = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                parentController.createExceptionDialog(e);
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String responseBodyAsJson = Configurations.GSON.fromJson(response.body().string(), String.class);
+                int responseCode = response.code();
+                response.close();
+
+                if (responseCode != 200) {
+                    Platform.runLater(() ->
+                            parentController.createExceptionDialog(new Exception()));
+                }
+
+                else{
+                    Platform.runLater(() -> {
+                        customerDTO = GsonWrapper.GSON.fromJson(responseBodyAsJson, CustomerDTO.class);
+                    });
+                }
+            }
+        };
+
+        call.enqueue(rewindCallBack);
     }
 
     public void onShow() {
@@ -322,8 +364,6 @@ public class CustomerSceneController implements ParentController {
                 createNewLoanController.onShow();
             }
         }
-
-
     }
 
     private void updateIsRewindMode() {

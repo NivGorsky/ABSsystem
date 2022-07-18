@@ -34,6 +34,18 @@ public class  InformationController implements ParentController
     @FXML private ScrollPane lenderLoansTableComponent;
     @FXML private LoansTableComponentController lenderLoansTableComponentController;
 
+    public LoansTableComponentController getBorrowerLoansTableComponentController() {
+        return borrowerLoansTableComponentController;
+    }
+
+    public LoansTableComponentController getLenderLoansTableComponentController() {
+        return lenderLoansTableComponentController;
+    }
+
+    public customerScene.information.accountTransactions.accountTransactionsController getAccountTransactionsController() {
+        return accountTransactionsController;
+    }
+
     private StringProperty customerNameProperty;
     private CustomerSceneController parentController;
     private SimpleBooleanProperty isTabSelected;

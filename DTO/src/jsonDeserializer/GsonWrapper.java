@@ -1,8 +1,6 @@
 package jsonDeserializer;
 
-import DTO.LoanDTO;
-import DTO.LoanPlacingDTO;
-import DTO.UIPaymentDTO;
+import DTO.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -14,5 +12,7 @@ public class GsonWrapper {
             .registerTypeAdapter(UIPaymentDTO.class, new UIPaymentsDTODeserializer())
             .registerTypeAdapter(LoanDTO.class, new LoanDtoDeserializer())
             .registerTypeAdapter(LoanDTO.LenderDetailsDTO.class, new LenderDetailsDTODeserializer())
+            .registerTypeAdapter(CustomerDTO.class, new CustomerDTODeserializer())
+            .registerTypeAdapter(RewindDTO.class, new RewindDTODeserializer())
             .create();
 }
