@@ -19,7 +19,6 @@ public class ABSsystem implements MainSystem, SystemService {
     private Integer numberOfLoansAssignedInSinglePlacingAlgorithmRun;
     private ArrayList<String> admins;
     private boolean isAdminLoggedIn;
-
     private Map<String, Loan> seller2loansForSale;
 
     public ABSsystem() {
@@ -81,6 +80,12 @@ public class ABSsystem implements MainSystem, SystemService {
         }
     }
     //------------------------ XML FILE METHODS ---------------------------------------------------//
+
+    //------------------------ JSON DESERIALIZER METHODS ---------------------------------------------------//
+
+    public LinkedList<Loan> getAllLoans(){return loans;}
+
+    //------------------------ JSON DESERIALIZER METHODS ---------------------------------------------------//
 
 
     //------------------------ DTO METHODS ---------------------------------------------------//
