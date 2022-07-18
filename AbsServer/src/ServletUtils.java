@@ -14,7 +14,6 @@ import java.util.ArrayList;
 public class ServletUtils {
 
     public static final String MAIN_SYSTEM_ATTRIBUTE_NAME = "mainSystem";
-    public static final String MAIN_SYSTEM_EACH_YAZ_ARRAY_NAME = "mainSystemAllYazArray";
     private static final Object mainSystemLock = new Object();
     private static final Object customerVersionLock = new Object();
     private static final Object adminVersionLock = new Object();
@@ -35,39 +34,6 @@ public class ServletUtils {
             }
         }
         return (MainSystem) servletContext.getAttribute(MAIN_SYSTEM_ATTRIBUTE_NAME);
-    }
-
-    public static void setAbsSystem(ServletContext servletContext, MainSystem absSystem) {
-        synchronized (mainSystemLock) {
-            saveCurrentSystem(servletContext);
-            servletContext.setAttribute(MAIN_SYSTEM_ATTRIBUTE_NAME, absSystem);
-        }
-    }
-
-    public static MainSystem getAbsSystemInSpecificYaz(ServletContext servletContext, int yaz) {
-        synchronized (mainSystemLock) {
-            if(servletContext.getAttribute(MAIN_SYSTEM_EACH_YAZ_ARRAY_NAME) == null) {
-                servletContext.setAttribute(MAIN_SYSTEM_EACH_YAZ_ARRAY_NAME, new ArrayList<MainSystem>());
-            }
-        }
-
-        ArrayList<MainSystem> array =(ArrayList<MainSystem>) (servletContext.getAttribute(MAIN_SYSTEM_EACH_YAZ_ARRAY_NAME));
-        return array.get(yaz);
-    }
-
-    public static void saveCurrentSystem (ServletContext servletContext) {
-        if(servletContext.getAttribute(MAIN_SYSTEM_EACH_YAZ_ARRAY_NAME) == null) {
-            servletContext.setAttribute(MAIN_SYSTEM_EACH_YAZ_ARRAY_NAME, new ArrayList<MainSystem>());
-        }
-            MainSystem currentAbsSystem = (MainSystem) servletContext.getAttribute(MAIN_SYSTEM_ATTRIBUTE_NAME);
-            ArrayList<MainSystem> array = (ArrayList<MainSystem>) (servletContext.getAttribute(MAIN_SYSTEM_EACH_YAZ_ARRAY_NAME));
-            int currentYAZ = currentAbsSystem.getCurrYaz();
-            array.add(currentYAZ - 1, currentAbsSystem);
-    }
-
-    public static int getLastYaz(ServletContext servletContext) {
-        ArrayList<MainSystem> array =(ArrayList<MainSystem>) (servletContext.getAttribute(MAIN_SYSTEM_EACH_YAZ_ARRAY_NAME));
-        return array.size();
     }
 
     public static void setIsRewind(boolean newValue) {

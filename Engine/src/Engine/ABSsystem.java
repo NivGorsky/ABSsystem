@@ -32,6 +32,7 @@ public class ABSsystem implements MainSystem, SystemService {
         seller2loansForSale = new HashMap<>();
     }
 
+
     //------------------------ XML FILE METHODS ---------------------------------------------------//
     @Override
     public void loadXML(String contentType, InputStream inputStream, String customer) throws XMLFileException, JAXBException {
@@ -196,6 +197,7 @@ public class ABSsystem implements MainSystem, SystemService {
     public TimelineDTO moveTimeLine() {
         TimelineDTO timeline;
 
+        saveCurrentSystem();
         MoveTimeLine.moveTimeLineInOneYaz(this, systemTimeline);
         timeline = new TimelineDTO(systemTimeline.getCurrentYaz());
 

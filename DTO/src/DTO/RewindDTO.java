@@ -4,7 +4,38 @@ import java.util.ArrayList;
 
 public class RewindDTO {
 
-    public int currentYaz;
-    public ArrayList<CustomerDTO> customers;
-    public ArrayList<LoanDTO> loans;
+    private int currentYaz;
+    private ArrayList<CustomerDTO> customers;
+    private ArrayList<LoanDTO> loans;
+
+    public RewindDTO(int yaz, ArrayList<CustomerDTO> customers, ArrayList<LoanDTO> loans) {
+        this.currentYaz = yaz;
+        this.customers = customers;
+        this.loans = loans;
+    }
+
+    public int getCurrentYaz() {
+        return currentYaz;
+    }
+
+    public ArrayList<CustomerDTO> getCustomers() {
+        return customers;
+    }
+
+    public ArrayList<LoanDTO> getLoans() {
+        return loans;
+    }
+
+    public void setCurrentYaz(int currentYaz) {
+        this.currentYaz = currentYaz;
+    }
+
+    public void setCustomers(ArrayList<CustomerDTO> customers) {
+        this.customers = customers;
+    }
+
+    public void setLoans(ArrayList<LoanDTO> loans) {
+        this.loans = loans;
+    }
+
 }
