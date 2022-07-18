@@ -13,7 +13,7 @@ public class Loan
     }
 
     public class LenderDetails {
-        public Customer lender;
+        public String lenderName;
         public double lendersAmount;
         public double lendersPartOfLoanInPercent;
 
