@@ -129,6 +129,10 @@ public class CustomerSceneController implements ParentController {
             if(newValue == true){
                 onShowRewind();
             }
+
+            else{
+                onShowRegularMode();
+            }
         });
     }
 
@@ -313,18 +317,27 @@ public class CustomerSceneController implements ParentController {
     }
 
     private void onShowRewind(){
-        getRewindDTO();
+        try{
+            getRewindDTO();
 
-        if(rewindCustomerDTO != null){
             informationController.getBorrowerLoansTableComponentController().clearTable();
-            informationController.getBorrowerLoansTableComponentController().putLoansInTable(rewindCustomerDTO.getCustomerDTO().getLoansAsBorrower());
-
             informationController.getLenderLoansTableComponentController().clearTable();
-            informationController.getLenderLoansTableComponentController().putLoansInTable(rewindCustomerDTO.getCustomerDTO().getLoansAsLender());
-
-
-            informationController.getAccountTransactionsController().updateAccountMovementsTable(rewindCustomerDTO.getCustomerDTO().getAccountMovements());
+            informationController.getAccountTransactionsController().clearTable();
             currentYAZ.set(rewindCustomerDTO.getYaz());
+
+            if(rewindCustomerDTO.getCustomerDTO() != null){
+                informationController.getBorrowerLoansTableComponentController().putLoansInTable(rewindCustomerDTO.getCustomerDTO().getLoansAsBorrower());
+                informationController.getLenderLoansTableComponentController().putLoansInTable(rewindCustomerDTO.getCustomerDTO().getLoansAsLender());
+                informationController.getAccountTransactionsController().updateAccountMovementsTable(rewindCustomerDTO.getCustomerDTO().getAccountMovements());
+            }
+
+            else{
+                parentController.createExceptionDialog(new Exception("system is in rewind, you were not logged to the system in that yaz"));
+            }
+        }
+
+        catch (Exception e){
+            System.out.println(e.getMessage());
         }
     }
 

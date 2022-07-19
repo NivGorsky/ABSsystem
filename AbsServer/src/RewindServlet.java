@@ -26,7 +26,7 @@ public class RewindServlet extends HttpServlet {
                 ServletUtils.setRewindYaz(yazToRewind);
                 ServletUtils.setAdminVersion(ServletUtils.getAdminVersion() + 1);
                 ServletUtils.setCustomerVersion(ServletUtils.getCustomerVersion() + 1);
-                System.out.println("customer version updated: "+ ServletUtils.getCustomerVersion());
+//                System.out.println("customer version updated: "+ ServletUtils.getCustomerVersion());
                 break;
             }
 

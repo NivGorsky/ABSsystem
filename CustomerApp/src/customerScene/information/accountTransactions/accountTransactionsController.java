@@ -88,6 +88,10 @@ public class accountTransactionsController {
         accountTransactionsTableView.setItems(accountMovements);
     }
 
+    public void clearTable(){
+        accountTransactionsTableView.getItems().clear();
+    }
+
     public accountTransactionsController(){
         accountMovements = FXCollections.observableArrayList();
         customerNameProperty = new SimpleStringProperty();

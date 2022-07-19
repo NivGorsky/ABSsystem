@@ -46,6 +46,7 @@ public class  InformationController implements ParentController
         return accountTransactionsController;
     }
 
+
     private StringProperty customerNameProperty;
     private CustomerSceneController parentController;
     private SimpleBooleanProperty isTabSelected;
