@@ -50,17 +50,4 @@ public class CurrentYazServlet extends HttpServlet {
         response.getWriter().print(engine.getCurrYaz());
         response.getWriter().close();
     }
-
-
-    private void rewindOrStopRewind(int yazToRewind) {
-        MainSystem engine = ServletUtils.getAbsSystem(getServletContext());
-
-        if(yazToRewind == engine.getCurrYaz()) {
-            ServletUtils.setIsRewind(false);
-        }
-
-        else {
-            ServletUtils.setIsRewind(true);
-        }
-    }
 }

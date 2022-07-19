@@ -224,10 +224,6 @@ public class ABSsystem implements MainSystem, SystemService {
 
         RewindAdminDTO rewindDTO = new RewindAdminDTO(currentYaz, customerDTOs, loanDTOs);
         yaz2SystemState.put(currentYaz, rewindDTO);
-
-        //test
-        Configurations.printToFile(GsonWrapper.GSON.toJson(yaz2SystemState));
-
     }
 
 

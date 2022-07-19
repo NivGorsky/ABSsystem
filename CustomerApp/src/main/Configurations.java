@@ -24,31 +24,6 @@ public class Configurations {
             .registerTypeAdapter(LoanCategoriesDTO.class, new LoanCategoriesDeserializer())
             .registerTypeAdapter(NotificationsDTO.class, new NotificationsDTODeserializer())
             .create();
-
-    public static PrintWriter logFileWriter = null;
-    public static void closeStream(){try{logFileWriter.close();} catch (Exception e){};}
-
-    public final static void printToFile(String objectToPrint){
-
-        if(logFileWriter == null){
-            try{
-                logFileWriter = new PrintWriter("/Users/nivos/projects/ABSsystem/customerLogFile.txt");
-            }
-
-            catch (Exception e){
-                System.out.println("could not write to file customer");
-
-            }
-        }
-
-        try{
-            logFileWriter.println(objectToPrint);
-        }
-
-        catch (Exception e){
-            System.out.println(e.getMessage());
-        }
-    }
 }
 
 

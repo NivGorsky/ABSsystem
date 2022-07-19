@@ -126,7 +126,6 @@ public class CustomerSceneController implements ParentController {
         informationController.getWithdrawButton().disableProperty().bind(isRewindMode);
 
         isRewindMode.addListener((observable, oldValue, newValue) -> {
-            Configurations.printToFile("isRewindMode - listener - started\n");
             if(newValue == true){
                 onShowRewind();
             }
@@ -314,11 +313,9 @@ public class CustomerSceneController implements ParentController {
     }
 
     private void onShowRewind(){
-        Configurations.printToFile("onShowRewind - started\n");
         getRewindDTO();
 
         if(rewindCustomerDTO != null){
-            Configurations.printToFile(rewindCustomerDTO.getCustomerDTO().toString());
             informationController.getBorrowerLoansTableComponentController().clearTable();
             informationController.getBorrowerLoansTableComponentController().putLoansInTable(rewindCustomerDTO.getCustomerDTO().getLoansAsBorrower());
 
@@ -333,11 +330,8 @@ public class CustomerSceneController implements ParentController {
 
     private void executeRequestSynchronized(Call call) {
         try{
-            Configurations.printToFile("executeRequestSynchronized - started\n");
-
             Response response = call.execute();
             String responseBodyAsJson = response.body().string();
-            Configurations.printToFile("response body as json: \n" + responseBodyAsJson + "\n");
             int responseCode = response.code();
             response.close();
 
@@ -347,10 +341,7 @@ public class CustomerSceneController implements ParentController {
             }
 
             else{
-                Configurations.printToFile("Response = 200 - started\n");
                 rewindCustomerDTO = GsonWrapper.GSON.fromJson(responseBodyAsJson, RewindCustomerDTO.class);
-                Configurations.printToFile("rewindCustomerDTO: \n" + GsonWrapper.GSON.toJson(rewindCustomerDTO) + "\n");
-//                Configurations.closeStream();
             }
         }
 
@@ -360,7 +351,6 @@ public class CustomerSceneController implements ParentController {
     }
 
     private void getRewindDTO() {
-        Configurations.printToFile("getRewindDTO - started\n");
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/getRewindData").newBuilder();
         urlBuilder.addQueryParameter("consumer", "CUSTOMER");
         urlBuilder.addQueryParameter("customerName", customerNameProperty.getValue());
@@ -389,8 +379,6 @@ public class CustomerSceneController implements ParentController {
     }
 
     private void updateIsRewindMode() {
-        Configurations.printToFile("updateIsRewindMode - start\n");
-
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/isRewindMode").newBuilder();
         String finalUrl = urlBuilder.build().toString();
         Request request = new Request.Builder().url(finalUrl).build();
@@ -415,7 +403,6 @@ public class CustomerSceneController implements ParentController {
 
                 else{
                     Platform.runLater(() -> {
-                        Configurations.printToFile("updateIsRewindMode - response - " + Boolean.parseBoolean(responseBody) + "\n");
                         isRewindMode.set(Boolean.parseBoolean(responseBody));
 
                         if(isRewindMode.getValue() == false){

@@ -150,10 +150,6 @@ public class ScrambleController implements UIController {
         String finalUrl = urlBuilder.build().toString();
         String loanPlacingDTOAsJson = Configurations.GSON.toJson(loanPlacingDTO);
 
-        //test
-        Configurations.printToFile(loanPlacingDTOAsJson);
-        //
-
         Request request = new Request.Builder()
                 .url(finalUrl)
                 .post(RequestBody.create(loanPlacingDTOAsJson.getBytes()))
