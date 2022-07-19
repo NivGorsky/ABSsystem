@@ -221,6 +221,25 @@ public class ABSsystem implements MainSystem, SystemService {
 
         RewindAdminDTO rewindDTO = new RewindAdminDTO(currentYaz, customerDTOs, loanDTOs);
         yaz2SystemState.put(currentYaz, rewindDTO);
+
+        //test
+        String filePath = "/Users/nivos/projects/ABSsystem/logFileEngine.txt";
+        File logFile = new File(filePath);
+        printToFile(yaz2SystemState.toString(), filePath);
+        //
+
+    }
+
+    public void printToFile(String objectToPrint, String filePath){
+        try{
+            FileWriter myWriter = new FileWriter("/Users/nivos/projects/ABSsystem/logFile.txt");
+            myWriter.write(objectToPrint);
+            myWriter.close();
+        }
+
+        catch (Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 
 

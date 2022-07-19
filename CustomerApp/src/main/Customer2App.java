@@ -1,4 +1,5 @@
 package main;
+
 import Engine.ABSsystem;
 import Engine.MainSystem;
 import customerBase.CustomerBaseController;
@@ -7,8 +8,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
+
 import java.net.URL;
-public class App extends Application {
+
+public class Customer2App extends Application {
     public static void main(String[] args) {
         Application.launch(args);
     }

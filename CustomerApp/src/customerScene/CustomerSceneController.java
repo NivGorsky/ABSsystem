@@ -136,6 +136,7 @@ public class CustomerSceneController implements ParentController {
     public StringProperty getCustomerNameProperty(){
         return customerNameProperty;
     }
+
     public IntegerProperty getCurrentYazProperty(){return currentYAZ;}
 
     public void setParentController(ParentController parentController){
@@ -361,13 +362,20 @@ public class CustomerSceneController implements ParentController {
         updateCurrentYaz();
         updateIsRewindMode();
 
-        if(isFileSelected.get())
-        {
-            informationController.onShow();
-            paymentController.onShow();
-            loansTradingController.onShow();
-            createNewLoanController.onShow();
+        if(isRewindMode.getValue()){
+            onShowRewind();
         }
+
+        else{
+            if(isFileSelected.get())
+            {
+                informationController.onShow();
+                paymentController.onShow();
+                loansTradingController.onShow();
+                createNewLoanController.onShow();
+            }
+        }
+
     }
 
     private void updateIsRewindMode() {
@@ -394,12 +402,10 @@ public class CustomerSceneController implements ParentController {
                 }
 
                 else{
-                    Platform.runLater(() -> {
-                        isRewindMode.set(Boolean.parseBoolean(responseBody));
-                        if(isRewindMode.getValue()){
-                            onShowRewind();
-                        }
-                    });
+                    isRewindMode.set(Boolean.parseBoolean(responseBody));
+//                    Platform.runLater(() -> {
+//
+//                    });
                 }
             }
         };
