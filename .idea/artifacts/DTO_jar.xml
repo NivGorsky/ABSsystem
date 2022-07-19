@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" build-on-make="true" name="DTO:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts</output-path>
+    <output-path>$PROJECT_DIR$/../ABSsystem-Ex03</output-path>
     <root id="archive" name="DTO.jar">
       <element id="module-output" name="DTO" />
     </root>

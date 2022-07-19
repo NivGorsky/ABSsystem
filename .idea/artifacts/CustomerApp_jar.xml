@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="CustomerApp:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/CustomerApp_jar</output-path>
+    <output-path>$PROJECT_DIR$/../ABSsystem-Ex03</output-path>
     <root id="archive" name="CustomerApp.jar">
       <element id="module-output" name="CustomerApp" />
       <element id="module-output" name="JavafxUI" />

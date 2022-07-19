@@ -1,19 +1,14 @@
 package adminBase;
 
-import Engine.ABSsystem;
-import Engine.MainSystem;
 import adminScene.AdminSceneController;
 import exceptionDialog.ExceptionDialogCreator;
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import loginScene.LoginController;
 import main.Configurations;
 import mutualInterfaces.BaseController;
@@ -33,7 +28,6 @@ public class AdminBaseController implements ParentController, BaseController {
     @FXML private LoginController loginSceneController;
 
     private BooleanProperty isLoggedIn;
-    private MainSystem model;
     private Stage primaryStage;
 
     public AdminBaseController(){
@@ -141,10 +135,6 @@ public class AdminBaseController implements ParentController, BaseController {
         this.primaryStage = primaryStage;
     }
 
-    public void setModel(MainSystem model) {
-        this.model = model;
-    }
-
     public void setRoot(ScrollPane root){
         this.root = root;
     }
@@ -158,7 +148,7 @@ public class AdminBaseController implements ParentController, BaseController {
     private void loadAdminScene() {
         try {
             FXMLLoader loader = new FXMLLoader();
-            URL mainFXML = getClass().getResource("../adminScene/adminScene.fxml");
+            URL mainFXML = getClass().getResource("/adminScene/adminScene.fxml");
             loader.setLocation(mainFXML);
             adminScene = loader.load();
             adminSceneController = loader.getController();

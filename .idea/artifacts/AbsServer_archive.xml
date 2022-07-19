@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="war" name="AbsServer archive">
-    <output-path>$PROJECT_DIR$/out/artifacts/AbsServer_archive</output-path>
+    <output-path>$PROJECT_DIR$/../ABSsystem-Ex03</output-path>
     <root id="archive" name="AbsServer archive.war">
       <element id="artifact" artifact-name="AbsServer" />
     </root>

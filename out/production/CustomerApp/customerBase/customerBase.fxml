@@ -8,7 +8,7 @@
   <content>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="404.0" prefWidth="605.0" styleClass="root">
          <children>
-             <fx:include fx:id="loginScene" source="../../JavafxUI/loginScene/loginScene.fxml" />
+             <fx:include fx:id="loginScene" source="/loginScene/loginScene.fxml" />
          </children></AnchorPane>
   </content>
 </ScrollPane>

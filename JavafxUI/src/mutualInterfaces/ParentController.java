@@ -1,6 +1,5 @@
 package mutualInterfaces;
 
-import Engine.MainSystem;
 import javafx.stage.Stage;
 
 public interface ParentController {

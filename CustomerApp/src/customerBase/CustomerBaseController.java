@@ -1,6 +1,5 @@
 package customerBase;
 
-import Engine.MainSystem;
 import customerScene.CustomerSceneController;
 import exceptionDialog.ExceptionDialogCreator;
 import javafx.beans.property.BooleanProperty;
@@ -10,13 +9,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import loginScene.LoginController;
 import mutualInterfaces.BaseController;
 import mutualInterfaces.ParentController;
-
 import java.net.URL;
 
 public class CustomerBaseController implements ParentController, BaseController {
@@ -27,7 +24,6 @@ public class CustomerBaseController implements ParentController, BaseController 
     @FXML private BorderPane customerScene;
     @FXML private CustomerSceneController customerSceneController;
     
-    private MainSystem model;
     private Stage primaryStage;
     private BooleanProperty isLoggedIn;
 
@@ -65,9 +61,6 @@ public class CustomerBaseController implements ParentController, BaseController 
     {
         this.primaryStage = primaryStage;
     }
-    public void setModel(MainSystem model) {
-        this.model = model;
-    }
     public void setRoot(ScrollPane root){
         this.root = root;
     }
@@ -77,7 +70,7 @@ public class CustomerBaseController implements ParentController, BaseController 
     private void loadCustomerScene(){
         try{
             FXMLLoader loader = new FXMLLoader();
-            URL mainFXML = getClass().getResource("../customerScene/customerScene.fxml");
+            URL mainFXML = getClass().getResource("/customerScene/customerScene.fxml");
             loader.setLocation(mainFXML);
             customerScene = loader.load();
             customerSceneController = loader.getController();

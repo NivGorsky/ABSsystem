@@ -4,7 +4,6 @@ import DTO.AccountMovementDTO;
 import DTO.LoanDTO;
 import DTO.NotificationsDTO;
 import DTO.UIPaymentDTO;
-import Engine.MainSystem;
 import com.google.gson.reflect.TypeToken;
 import customerScene.CustomerSceneController;
 import javafx.application.Platform;

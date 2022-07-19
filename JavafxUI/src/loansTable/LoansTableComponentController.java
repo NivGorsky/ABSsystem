@@ -1,8 +1,6 @@
 package loansTable;
 
 import DTO.LoanDTO;
-import Engine.MainSystem;
-import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
