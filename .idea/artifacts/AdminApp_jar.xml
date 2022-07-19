@@ -1,0 +1,18 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="AdminApp:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/AdminApp_jar</output-path>
+    <root id="archive" name="AdminApp.jar">
+      <element id="module-output" name="AdminApp" />
+      <element id="module-output" name="JavafxUI" />
+      <element id="module-output" name="DTO" />
+      <element id="module-output" name="Exceptions" />
+      <element id="module-output" name="Engine" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/Gson/gson-2.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/okHttp/okio-2.8.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/okHttp/okhttp-4.9.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/okHttp/annotations-13.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/okHttp/kotlin-stdlib-1.4.10.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/okHttp/kotlin-stdlib-common-1.4.10.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
