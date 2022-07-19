@@ -41,7 +41,7 @@ public class RewindAdminDTO {
     public CustomerDTO findCustomer(String customerName) {
         CustomerDTO toReturn = null;
         for(CustomerDTO customer : customers) {
-            if(customer.getCustomerName() == customerName) {
+            if(customer.getCustomerName().equals(customerName)) {
                 toReturn = customer;
                 break;
             }

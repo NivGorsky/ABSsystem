@@ -124,6 +124,13 @@ public class CustomerSceneController implements ParentController {
         loadFileButton.disableProperty().bind(isRewindMode);
         informationController.getChargeButton().disableProperty().bind(isRewindMode);
         informationController.getWithdrawButton().disableProperty().bind(isRewindMode);
+
+        isRewindMode.addListener((observable, oldValue, newValue) -> {
+            Configurations.printToFile("isRewindMode - listener - started\n");
+            if(newValue == true){
+                onShowRewind();
+            }
+        });
     }
 
     public SimpleBooleanProperty getIsRewindMode() { return isRewindMode; }
@@ -307,9 +314,11 @@ public class CustomerSceneController implements ParentController {
     }
 
     private void onShowRewind(){
+        Configurations.printToFile("onShowRewind - started\n");
         getRewindDTO();
 
         if(rewindCustomerDTO != null){
+            Configurations.printToFile(rewindCustomerDTO.getCustomerDTO().toString());
             informationController.getBorrowerLoansTableComponentController().clearTable();
             informationController.getBorrowerLoansTableComponentController().putLoansInTable(rewindCustomerDTO.getCustomerDTO().getLoansAsBorrower());
 
@@ -322,51 +331,53 @@ public class CustomerSceneController implements ParentController {
         }
     }
 
-    private void getRewindDTO(){
+    private void executeRequestSynchronized(Call call) {
+        try{
+            Configurations.printToFile("executeRequestSynchronized - started\n");
+
+            Response response = call.execute();
+            String responseBodyAsJson = response.body().string();
+            Configurations.printToFile("response body as json: \n" + responseBodyAsJson + "\n");
+            int responseCode = response.code();
+            response.close();
+
+            if (responseCode != 200) {
+                Platform.runLater(() ->
+                        parentController.createExceptionDialog(new Exception()));
+            }
+
+            else{
+                Configurations.printToFile("Response = 200 - started\n");
+                rewindCustomerDTO = GsonWrapper.GSON.fromJson(responseBodyAsJson, RewindCustomerDTO.class);
+                Configurations.printToFile("rewindCustomerDTO: \n" + GsonWrapper.GSON.toJson(rewindCustomerDTO) + "\n");
+//                Configurations.closeStream();
+
+                Platform.runLater(() -> {
+                });
+            }
+        }
+
+        catch (Exception e){
+
+        }
+    }
+
+    private void getRewindDTO() {
+        Configurations.printToFile("getRewindDTO - started\n");
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/getRewindData").newBuilder();
-        urlBuilder.addQueryParameter("consumer", "customer");
+        urlBuilder.addQueryParameter("consumer", "CUSTOMER");
         urlBuilder.addQueryParameter("customerName", customerNameProperty.getValue());
         String finalUrl = urlBuilder.build().toString();
         Request request = new Request.Builder().url(finalUrl).build();
-
         Call call = Configurations.HTTP_CLIENT.newCall(request);
-        Callback rewindCallBack = new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                parentController.createExceptionDialog(e);
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                String responseBodyAsJson = Configurations.GSON.fromJson(response.body().string(), String.class);
-                int responseCode = response.code();
-                response.close();
-
-                if (responseCode != 200) {
-                    Platform.runLater(() ->
-                            parentController.createExceptionDialog(new Exception()));
-                }
-
-                else{
-                    Platform.runLater(() -> {
-                        rewindCustomerDTO = GsonWrapper.GSON.fromJson(responseBodyAsJson, RewindCustomerDTO.class);
-                    });
-                }
-            }
-        };
-
-        call.enqueue(rewindCallBack);
+        executeRequestSynchronized(call);
     }
 
     public void onShow() {
         updateCurrentYaz();
         updateIsRewindMode();
 
-        if(isRewindMode.getValue()){
-            onShowRewind();
-        }
-
-        else{
+        if(!isRewindMode.getValue()){
             if(isFileSelected.get())
             {
                 informationController.onShow();
@@ -375,10 +386,11 @@ public class CustomerSceneController implements ParentController {
                 createNewLoanController.onShow();
             }
         }
-
     }
 
     private void updateIsRewindMode() {
+        Configurations.printToFile("updateIsRewindMode - start\n");
+
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/isRewindMode").newBuilder();
         String finalUrl = urlBuilder.build().toString();
         Request request = new Request.Builder().url(finalUrl).build();
@@ -402,10 +414,10 @@ public class CustomerSceneController implements ParentController {
                 }
 
                 else{
-                    isRewindMode.set(Boolean.parseBoolean(responseBody));
-//                    Platform.runLater(() -> {
-//
-//                    });
+                    Platform.runLater(() -> {
+                        Configurations.printToFile("updateIsRewindMode - response - " + Boolean.parseBoolean(responseBody) + "\n");
+                        isRewindMode.set(Boolean.parseBoolean(responseBody));
+                    });
                 }
             }
         };

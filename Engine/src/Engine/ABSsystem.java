@@ -9,6 +9,9 @@ import Engine.TimeLineMoving.MoveTimeLine;
 import DTO.*;
 import Engine.XML_Handler.*;
 import Exceptions.XMLFileException;
+import com.google.gson.Gson;
+import jsonDeserializer.GsonWrapper;
+
 import javax.xml.bind.JAXBException;
 
 public class ABSsystem implements MainSystem, SystemService {
@@ -223,24 +226,10 @@ public class ABSsystem implements MainSystem, SystemService {
         yaz2SystemState.put(currentYaz, rewindDTO);
 
         //test
-        String filePath = "/Users/nivos/projects/ABSsystem/logFileEngine.txt";
-        File logFile = new File(filePath);
-        printToFile(yaz2SystemState.toString(), filePath);
-        //
+        Configurations.printToFile(GsonWrapper.GSON.toJson(yaz2SystemState));
 
     }
 
-    public void printToFile(String objectToPrint, String filePath){
-        try{
-            FileWriter myWriter = new FileWriter("/Users/nivos/projects/ABSsystem/logFile.txt");
-            myWriter.write(objectToPrint);
-            myWriter.close();
-        }
-
-        catch (Exception e){
-            System.out.println(e.getMessage());
-        }
-    }
 
 
     @Override

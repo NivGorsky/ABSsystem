@@ -24,12 +24,23 @@ public class Configurations {
             .registerTypeAdapter(NotificationsDTO.class, new NotificationsDTODeserializer())
             .create();
 
-    public final static File logFile = new File("/Users/nivos/projects/ABSsystem/logFileCustomer.txt");
+    public static FileWriter myWriter = null;
+    public static void closeStream(){try{myWriter.close();} catch (Exception e){};}
+
     public final static void printToFile(String objectToPrint){
+
+        if(myWriter == null){
+            try{
+                myWriter = new FileWriter("/Users/nivos/projects/ABSsystem/logFileCustomer.txt");
+            }
+
+            catch (Exception e){
+
+            }
+        }
+
         try{
-            FileWriter myWriter = new FileWriter("/Users/nivos/projects/ABSsystem/logFile.txt");
-            myWriter.write(objectToPrint);
-            myWriter.close();
+            myWriter.write(GSON.toJson(objectToPrint));
         }
 
         catch (Exception e){
