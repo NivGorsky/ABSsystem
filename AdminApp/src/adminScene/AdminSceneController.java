@@ -1,9 +1,7 @@
 package adminScene;
 import DTO.CustomerDTO;
-import Engine.MainSystem;
-import Exceptions.XMLFileException;
+import DTO.RewindAdminDTO;
 import customersInfoTable.CustomersInfoTableController;
-import exceptionDialog.ExceptionDialogCreator;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -14,8 +12,8 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import jsonDeserializer.GsonWrapper;
 import loansTable.LoansTableComponentController;
 import main.AdminComponentsRefresher;
 import main.Configurations;
@@ -23,8 +21,6 @@ import mutualInterfaces.ParentController;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
-import javax.xml.bind.JAXBException;
-import java.io.File;
 import java.io.IOException;
 import java.util.Timer;
 
@@ -54,6 +50,7 @@ public class AdminSceneController implements ParentController {
     private SimpleIntegerProperty currentYAZ;
     private ParentController parentController;
     private SimpleBooleanProperty isRewindMode = new SimpleBooleanProperty(false);
+    private RewindAdminDTO rewindAdminDTO;
 
     ObservableList<String> displayModeOptions =  FXCollections.observableArrayList("Light Mode", "Dark Mode", "MTA Mode", "Barbi Mode");
 
@@ -79,7 +76,9 @@ public class AdminSceneController implements ParentController {
 
         rewindYazChooseCB.disableProperty().bind(isRewindMode.not());
         rewindYazChooseCB.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            sendRewindRequest(rewindYazChooseCB.getSelectionModel().getSelectedItem().intValue());
+            if(!rewindYazChooseCB.getSelectionModel().isEmpty()){
+                sendStartRewindRequest(rewindYazChooseCB.getSelectionModel().getSelectedItem().intValue());
+            }
         });
         startRefresher();
     }
@@ -145,13 +144,13 @@ public class AdminSceneController implements ParentController {
             rewindButton.setText("Rewind");
             rewindYazChooseCB.getSelectionModel().clearSelection();
             getCurrentYaz();
-            sendRewindRequest(currentYAZ.get());
+            sendEndRewindRequest();
         }
     }
 
-    private void sendRewindRequest(int chosenYaz) {
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/currentYaz").newBuilder();
-        urlBuilder.addQueryParameter("move-direction", "-");
+    private void sendStartRewindRequest(int chosenYaz) {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/rewind").newBuilder();
+        urlBuilder.addQueryParameter("operation", "start");
         urlBuilder.addQueryParameter("yaz-rewind", String.valueOf(chosenYaz));
         String finalUrl = urlBuilder.build().toString();
 
@@ -176,7 +175,41 @@ public class AdminSceneController implements ParentController {
                 }
                 else {
                     Platform.runLater(() -> {
-                        currentYAZ.set(Integer.parseInt(body));
+                        onShowRewind();
+                    });
+                }
+            }
+        };
+
+        call.enqueue(currentYazCallBack);
+    }
+
+    private void sendEndRewindRequest() {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/rewind").newBuilder();
+        urlBuilder.addQueryParameter("operation", "end");
+        String finalUrl = urlBuilder.build().toString();
+
+        Request request = new Request.Builder().url(finalUrl).build();
+
+        Call call = Configurations.HTTP_CLIENT.newCall(request);
+        Callback currentYazCallBack = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                parentController.createExceptionDialog(e);
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String body = response.body().string();
+                int responseCode = response.code();
+                response.close();
+
+                if (responseCode != 200) {
+                    Platform.runLater(() ->
+                            parentController.createExceptionDialog(new Exception(body)));
+                }
+                else {
+                    Platform.runLater(() -> {
                         onShow();
                     });
                 }
@@ -184,6 +217,56 @@ public class AdminSceneController implements ParentController {
         };
 
         call.enqueue(currentYazCallBack);
+    }
+
+    private void onShowRewind(){
+        getRewindDTO();
+
+        if(rewindAdminDTO != null){
+            //load loans info
+            loansTableComponentController.clearTable();
+            loansTableComponentController.putLoansInTable(rewindAdminDTO.getLoans());
+
+            //load customers info
+            customersInfoTableController.clearTable();
+            customersInfoTableController.loadCustomers(rewindAdminDTO.getCustomers());
+
+            //update the yaz
+            currentYAZ.set(rewindAdminDTO.getCurrentYaz());
+        }
+    }
+
+    private void getRewindDTO(){
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/getRewindData").newBuilder();
+        urlBuilder.addQueryParameter("consumer", "ADMIN");
+        String finalUrl = urlBuilder.build().toString();
+        Request request = new Request.Builder().url(finalUrl).build();
+        Call call = Configurations.HTTP_CLIENT.newCall(request);
+        executeRequestSynchronized(call);
+    }
+
+    private void executeRequestSynchronized(Call call){
+        try{
+            Response response = call.execute();
+            String responseBodyAsJson = response.body().string();
+            int responseCode = response.code();
+            response.close();
+
+            if (responseCode != 200) {
+                Platform.runLater(() ->
+                        parentController.createExceptionDialog(new Exception()));
+            }
+
+            else{
+                rewindAdminDTO = GsonWrapper.GSON.fromJson(responseBodyAsJson, RewindAdminDTO.class);
+            }
+        }
+
+        catch (Exception e){
+            System.out.println(e.getMessage());
+
+        }
+
     }
 
     public void setParentController(ParentController parentController)

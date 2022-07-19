@@ -20,6 +20,11 @@ public class systemVersionServlet extends HttpServlet {
         switch (consumer) {
             case "CUSTOMER": {
                 int custVersion = ServletUtils.getCustomerVersion();
+
+                //test
+                System.out.println(custVersion);
+                //
+
                 response.getWriter().println(GsonWrapper.GSON.toJson(custVersion));
                 break;
             }

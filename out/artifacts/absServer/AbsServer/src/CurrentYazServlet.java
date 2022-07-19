@@ -23,19 +23,25 @@ public class CurrentYazServlet extends HttpServlet {
             case "+": {
                 synchronized (this) {
                     engine.moveTimeLine();
+                    ServletUtils.setCurrentYaz(ServletUtils.getCurrentYaz() + 1);
                 }
                 ServletUtils.setAdminVersion(ServletUtils.getAdminVersion() + 1);
                 ServletUtils.setCustomerVersion(ServletUtils.getCustomerVersion() + 1);
                 break;
             }
-            case "-": {
-                String yazAsString = request.getParameter("yaz-rewind");
-                int yazToRewind = Integer.parseInt(yazAsString);
-                rewindOrStopRewind(yazToRewind);
-                ServletUtils.setAdminVersion(ServletUtils.getAdminVersion() + 1);
-                ServletUtils.setCustomerVersion(ServletUtils.getCustomerVersion() + 1);
-                break;
-            }
+//            case "-": {
+//                String yazToRewindAsString = request.getParameter("yaz-rewind");
+//                int yazToRewind = Integer.parseInt(yazToRewindAsString);
+//                rewindOrStopRewind(yazToRewind);
+//
+//                if(ServletUtils.getIsRewind() == true){
+//                    ServletUtils.setRewindYaz(yazToRewind);
+//                }
+//                ServletUtils.setAdminVersion(ServletUtils.getAdminVersion() + 1);
+//                ServletUtils.setCustomerVersion(ServletUtils.getCustomerVersion() + 1);
+//                System.out.println("customer version updated: "+ ServletUtils.getCustomerVersion());
+//                break;
+//            }
             case "=": {
                 break;
             }

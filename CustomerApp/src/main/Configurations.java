@@ -13,6 +13,7 @@ import jsonDeserializer.LoanDtoDeserializer;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.PrintWriter;
 
 public class Configurations {
     public final static String BASE_URL = "http://localhost:8080/AbsServer";
@@ -24,23 +25,24 @@ public class Configurations {
             .registerTypeAdapter(NotificationsDTO.class, new NotificationsDTODeserializer())
             .create();
 
-    public static FileWriter myWriter = null;
-    public static void closeStream(){try{myWriter.close();} catch (Exception e){};}
+    public static PrintWriter logFileWriter = null;
+    public static void closeStream(){try{logFileWriter.close();} catch (Exception e){};}
 
     public final static void printToFile(String objectToPrint){
 
-        if(myWriter == null){
+        if(logFileWriter == null){
             try{
-                myWriter = new FileWriter("/Users/nivos/projects/ABSsystem/logFileCustomer.txt");
+                logFileWriter = new PrintWriter("/Users/nivos/projects/ABSsystem/customerLogFile.txt");
             }
 
             catch (Exception e){
+                System.out.println("could not write to file customer");
 
             }
         }
 
         try{
-            myWriter.write(GSON.toJson(objectToPrint));
+            logFileWriter.println(objectToPrint);
         }
 
         catch (Exception e){

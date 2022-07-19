@@ -63,6 +63,28 @@ public class CustomersInfoTableController {
         getCustomers();
     }
 
+    public void loadCustomers(ArrayList<CustomerDTO> customersDTOs){
+        customerNameColumn.setCellValueFactory(cellData -> cellData.getValue().getCustomerNameProperty());
+        loansAsLenderColumn.setCellValueFactory(cellData -> cellData.getValue().getAmountOfLenderLoansProperty().asObject());
+        loansAsLoanerColumn.setCellValueFactory(cellData -> cellData.getValue().getAmountOfLoanerLoansProperty().asObject());
+
+        newLoansColumn.setCellValueFactory(cellData -> cellData.getValue().getAmountOfLoansPropertyPerStatusAsLender("NEW").asObject());
+        pendingLoansColumn.setCellValueFactory(cellData -> cellData.getValue().getAmountOfLoansPropertyPerStatusAsLender("PENDING").asObject());
+        activeLoansColumn.setCellValueFactory(cellData -> cellData.getValue().getAmountOfLoansPropertyPerStatusAsLender("ACTIVE").asObject());
+        loansInRiskColumn.setCellValueFactory(cellData -> cellData.getValue().getAmountOfLoansPropertyPerStatusAsLender("IN_RISK").asObject());
+        finishedLoansColumn.setCellValueFactory(cellData -> cellData.getValue().getAmountOfLoansPropertyPerStatusAsLender("FINISHED").asObject());
+
+        newLoansLoanerColumn.setCellValueFactory(cellData -> cellData.getValue().getAmountOfLoansPropertyPerStatusAsLoaner("NEW").asObject());
+        pendingLoansLoanerColumn.setCellValueFactory(cellData -> cellData.getValue().getAmountOfLoansPropertyPerStatusAsLoaner("PENDING").asObject());
+        activeLoansLoanerColumn.setCellValueFactory(cellData -> cellData.getValue().getAmountOfLoansPropertyPerStatusAsLoaner("ACTIVE").asObject());
+        loansInRiskLoanerColumn.setCellValueFactory(cellData -> cellData.getValue().getAmountOfLoansPropertyPerStatusAsLoaner("IN_RISK").asObject());
+        finishedLoansLoanerColumn.setCellValueFactory(cellData -> cellData.getValue().getAmountOfLoansPropertyPerStatusAsLoaner("FINISHED").asObject());
+
+        ObservableList<CustomerDTO> customersForTable = FXCollections.observableArrayList();
+        customersForTable.addAll(customersDTOs);
+        customersInfoTable.setItems(customersForTable);
+    }
+
     private void getCustomers(){
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Configurations.BASE_URL + "/showCustomersInfo").newBuilder();
         String finalUrl = urlBuilder.build().toString();

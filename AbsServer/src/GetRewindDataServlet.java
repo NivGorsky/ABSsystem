@@ -24,13 +24,12 @@ public class GetRewindDataServlet extends HttpServlet {
 
         switch (consumer) {
             case "ADMIN": {
-                RewindAdminDTO res = engine.getAdminRewindData(ServletUtils.getCurrentYaz());
+                RewindAdminDTO res = engine.getAdminRewindData(ServletUtils.getRewindYaz());
                 response.getWriter().println(ServletUtils.GSON.toJson(res));
                 break;
             }
             case "CUSTOMER": {
-                RewindCustomerDTO res = engine.getCustomerRewindData(ServletUtils.getCurrentYaz(), customerName);
-
+                RewindCustomerDTO res = engine.getCustomerRewindData(ServletUtils.getRewindYaz(), customerName);
                 response.getWriter().println(ServletUtils.GSON.toJson(res));
 
                 break;

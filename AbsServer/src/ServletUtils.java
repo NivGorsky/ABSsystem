@@ -25,6 +25,7 @@ public class ServletUtils {
     private static int adminVersion = 1;
     private static boolean isRewind = false;
     private static int currentYaz = 1;
+    private static int rewindYaz = 1;
 
     //------------------------------METHODS------------------------------------------//
 
@@ -36,6 +37,16 @@ public class ServletUtils {
             }
         }
         return (MainSystem) servletContext.getAttribute(MAIN_SYSTEM_ATTRIBUTE_NAME);
+    }
+
+    public static void setRewindYaz(int yaz){
+        synchronized (isRewindLock){
+            rewindYaz = yaz;
+        }
+    }
+
+    public static int getRewindYaz(){
+        return rewindYaz;
     }
 
     public static void setIsRewind(boolean newValue) {
@@ -64,9 +75,9 @@ public class ServletUtils {
             return customerVersion;
     }
 
-    public static void setCustomerVersion(int customerVersion) {
+    public static void setCustomerVersion(int i_customerVersion) {
         synchronized(customerVersionLock) {
-            ServletUtils.customerVersion = customerVersion;
+            ServletUtils.customerVersion = i_customerVersion;
         }
     }
 

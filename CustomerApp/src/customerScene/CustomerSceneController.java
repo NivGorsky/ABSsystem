@@ -351,9 +351,6 @@ public class CustomerSceneController implements ParentController {
                 rewindCustomerDTO = GsonWrapper.GSON.fromJson(responseBodyAsJson, RewindCustomerDTO.class);
                 Configurations.printToFile("rewindCustomerDTO: \n" + GsonWrapper.GSON.toJson(rewindCustomerDTO) + "\n");
 //                Configurations.closeStream();
-
-                Platform.runLater(() -> {
-                });
             }
         }
 
@@ -374,9 +371,11 @@ public class CustomerSceneController implements ParentController {
     }
 
     public void onShow() {
-        updateCurrentYaz();
         updateIsRewindMode();
+    }
 
+    public void onShowRegularMode(){
+        updateCurrentYaz();
         if(!isRewindMode.getValue()){
             if(isFileSelected.get())
             {
@@ -386,6 +385,7 @@ public class CustomerSceneController implements ParentController {
                 createNewLoanController.onShow();
             }
         }
+
     }
 
     private void updateIsRewindMode() {
@@ -417,6 +417,10 @@ public class CustomerSceneController implements ParentController {
                     Platform.runLater(() -> {
                         Configurations.printToFile("updateIsRewindMode - response - " + Boolean.parseBoolean(responseBody) + "\n");
                         isRewindMode.set(Boolean.parseBoolean(responseBody));
+
+                        if(isRewindMode.getValue() == false){
+                            onShowRegularMode();
+                        }
                     });
                 }
             }
