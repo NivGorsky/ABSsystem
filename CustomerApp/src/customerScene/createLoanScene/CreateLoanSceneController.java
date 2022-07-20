@@ -45,8 +45,6 @@ public class CreateLoanSceneController {
         createLoanButton.disableProperty().bind(totalYazToPayTF.textProperty().isEmpty());
         createLoanButton.disableProperty().bind(interestPerPaymentTF.textProperty().isEmpty());
         createLoanButton.disableProperty().bind(paymentsRateTF.textProperty().isEmpty());
-        createLoanButton.disableProperty().bind(
-                writeCategoryTF.textProperty().isEmpty().or(categoriesCB.selectionModelProperty().isNull()));
     }
 
     public void setParentController(ParentController parentController) {
